@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "euller.mercado_livre.server.admin";
+option java_outer_classname = "AdminServerProto";
+option objc_class_prefix = "HLW";
+
+package server.admin;
+
+service ClienteService {
+  rpc inserirCliente (InserirClienteRequest) returns (InserirClienteResponse) {}
+  rpc modificarCliente (ModificarClienteRequest) returns (ModificarClienteResponse) {}
+  rpc recuperarCliente (RecuperarClienteRequest) returns (RecuperarClienteResponse) {}
+  rpc apagarCliente (ApagarClienteRequest) returns (ApagarClienteResponse) {}
+}
+
+message InserirClienteRequest { string CID = 1; string dadosDoCliente = 2;}
+message InserirClienteResponse { string message = 1; }
+message ModificarClienteRequest { string CID = 1; string dadosDoCliente = 2;}
+message ModificarClienteResponse { string message = 1; }
+message RecuperarClienteRequest { string CID = 1; }
+message RecuperarClienteResponse { string message = 1; }
+message ApagarClienteRequest { string CID = 1; }
+message ApagarClienteResponse { string message = 1; }
+
+service ProdutoService {
+  rpc inserirProduto (InserirProdutoRequest) returns (InserirProdutoResponse) {}
+  rpc modificarProduto (ModificarProdutoRequest) returns (ModificarProdutoResponse) {}
+  rpc recuperarProduto (RecuperarProdutoRequest) returns (RecuperarProdutoResponse) {}
+  rpc apagarProduto (ApagarProdutoRequest) returns (ApagarProdutoResponse) {}
+}
+
+message InserirProdutoRequest { string PID = 1; string dadosDoProduto = 2;}
+message InserirProdutoResponse { string message = 1; }
+message ModificarProdutoRequest { string PID = 1; string dadosDoProduto = 2;}
+message ModificarProdutoResponse { string message = 1; }
+message RecuperarProdutoRequest { string PID = 1; }
+message RecuperarProdutoResponse { string message = 1; }
+message ApagarProdutoRequest { string PID = 1; }
+message ApagarProdutoResponse { string message = 1; }
+
+
+
+
+

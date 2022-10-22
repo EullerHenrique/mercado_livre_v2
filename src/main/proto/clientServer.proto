@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "euller.mercado_livre.server.cliente";
+option java_outer_classname = "ClienteServerProto";
+option objc_class_prefix = "HLW";
+
+package server.client;
+
+service PedidoService {
+  rpc criarPedido( CriarPedidoRequest ) returns ( CriarPedidoResponse);
+  rpc modificarPedido( ModificarPedidoRequest ) returns ( ModificarPedidoResponse);
+  rpc listarPedido( ListarPedidoRequest ) returns ( ListarPedidoResponse);
+  rpc listarPedidos( ListarPedidosRequest ) returns ( ListarPedidosResponse);
+  rpc apagarPedido( ApagarPedidoRequest ) returns ( ApagarPedidoResponse);
+}
+
+message CriarPedidoRequest { string CID = 1; }
+message CriarPedidoResponse { string message = 1; }
+message ModificarPedidoRequest { string CID = 1; string OID = 2; }
+message ModificarPedidoResponse { string message = 1; }
+message ListarPedidoRequest { string CID = 1; string OID = 2; }
+message ListarPedidoResponse { string message = 1; }
+message ListarPedidosRequest { string CID = 1; }
+message ListarPedidosResponse { string message = 1; }
+message ApagarPedidoRequest { string CID = 1; string OID = 2; }
+message ApagarPedidoResponse { string message = 1; }
+

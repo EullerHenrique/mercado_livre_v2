@@ -1,0 +1,100 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
+
+proto_library(
+    name = "clientServer_proto",
+    srcs = ["src/main/proto/clientServer.proto"],
+)
+
+proto_library(
+    name = "adminServer_proto",
+    srcs = ["src/main/proto/adminServer.proto"],
+)
+
+java_proto_library(
+    name = "clientServer_java_proto",
+    deps = [":clientServer_proto"],
+)
+
+java_proto_library(
+    name = "adminServer_java_proto",
+    deps = [":adminServer_proto"],
+)
+
+java_grpc_library(
+    name = "clientServer_java_grpc",
+    srcs = [":clientServer_proto"],
+    deps = [":clientServer_java_proto"],
+)
+
+java_grpc_library(
+    name = "adminServer_java_grpc",
+    srcs = [":adminServer_proto"],
+    deps = [":adminServer_java_proto"],
+)
+
+java_library(
+    name = "examples",
+    testonly = 1,
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    resources = glob(
+        ["src/main/resources/**"],
+    ),
+    runtime_deps = [
+        "@io_grpc_grpc_java//netty",
+    ],
+    deps = [
+        ":clientServer_java_grpc",
+        ":clientServer_java_proto",
+        ":adminServer_java_grpc",
+        ":adminServer_java_proto",
+        "@com_google_protobuf//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java_util",
+        "@io_grpc_grpc_java//api",
+        "@io_grpc_grpc_java//protobuf",
+        "@io_grpc_grpc_java//stub",
+        "@maven//:com_google_api_grpc_proto_google_common_protos",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+java_binary(
+    name = "portal-cliente-client",
+    testonly = 1,
+    main_class = "euller.mercado_livre.client.cliente.ClienteServer",
+    runtime_deps = [
+        ":examples",
+    ],
+)
+
+java_binary(
+    name = "portal-cliente-server",
+    testonly = 1,
+    main_class = "euller.mercado_livre.server.cliente.ClienteServer",
+    runtime_deps = [
+        ":examples",
+    ],
+)
+
+java_binary(
+    name = "portal-admin-client",
+    testonly = 1,
+    main_class = "euller.mercado_livre.client.admin.AdminClient",
+    runtime_deps = [
+        ":examples",
+    ],
+)
+
+java_binary(
+    name = "portal-admin-server",
+    testonly = 1,
+    main_class = "euller.mercado_livre.server.admin.AdminServer",
+    runtime_deps = [
+        ":examples",
+    ],
+)
+
