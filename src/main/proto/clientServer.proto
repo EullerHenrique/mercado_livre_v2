@@ -15,9 +15,9 @@ service PedidoService {
   rpc apagarPedido( ApagarPedidoRequest ) returns ( ApagarPedidoResponse);
 }
 
-message CriarPedidoRequest { string CID = 1; }
+message CriarPedidoRequest { string CID = 1; string dados = 2; }
 message CriarPedidoResponse { string message = 1; }
-message ModificarPedidoRequest { string CID = 1; string OID = 2; }
+message ModificarPedidoRequest { string CID = 1; string OID = 2; string dados = 3; }
 message ModificarPedidoResponse { string message = 1; }
 message ListarPedidoRequest { string CID = 1; string OID = 2; }
 message ListarPedidoResponse { string message = 1; }
