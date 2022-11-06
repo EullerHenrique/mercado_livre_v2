@@ -3,6 +3,8 @@ package euller.mercado_livre.server.cliente;
 import euller.mercado_livre.server.cliente.service.PedidoServiceImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -11,12 +13,12 @@ public class ClienteServer {
   private static final Logger logger = Logger.getLogger(ClienteServer.class.getName());
   private Server server;
 
-  public static void main(String[] args) throws IOException, InterruptedException {
+  public static void main(String[] args) throws IOException, InterruptedException, MqttException {
     final ClienteServer server = new ClienteServer();
     server.start();
     server.blockUntilShutdown();
   }
-  private void start() throws IOException {
+  private void start() throws IOException, MqttException {
     /* The port on which the server should run */
     int port = 50051;
     server = ServerBuilder.forPort(port)

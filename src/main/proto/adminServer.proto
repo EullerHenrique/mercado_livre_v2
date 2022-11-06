@@ -8,34 +8,34 @@ option objc_class_prefix = "HLW";
 package server.admin;
 
 service ClienteService {
-  rpc inserirCliente (InserirClienteRequest) returns (InserirClienteResponse) {}
+  rpc criarCliente (CriarClienteRequest) returns (CriarClienteResponse) {}
   rpc modificarCliente (ModificarClienteRequest) returns (ModificarClienteResponse) {}
-  rpc recuperarCliente (RecuperarClienteRequest) returns (RecuperarClienteResponse) {}
+  rpc buscarCliente (BuscarClienteRequest) returns (BuscarClienteResponse) {}
   rpc apagarCliente (ApagarClienteRequest) returns (ApagarClienteResponse) {}
 }
 
-message InserirClienteRequest { string CID = 1; string dadosDoCliente = 2;}
-message InserirClienteResponse { string message = 1; }
-message ModificarClienteRequest { string CID = 1; string dadosDoCliente = 2;}
+message CriarClienteRequest { string dados = 1;}
+message CriarClienteResponse { string message = 1; }
+message ModificarClienteRequest { string CID = 1; string dados = 2;}
 message ModificarClienteResponse { string message = 1; }
-message RecuperarClienteRequest { string CID = 1; }
-message RecuperarClienteResponse { string message = 1; }
+message BuscarClienteRequest { string CID = 1; }
+message BuscarClienteResponse { string message = 1; }
 message ApagarClienteRequest { string CID = 1; }
 message ApagarClienteResponse { string message = 1; }
 
 service ProdutoService {
-  rpc inserirProduto (InserirProdutoRequest) returns (InserirProdutoResponse) {}
+  rpc criarProduto (CriarProdutoRequest) returns (CriarProdutoResponse) {}
   rpc modificarProduto (ModificarProdutoRequest) returns (ModificarProdutoResponse) {}
-  rpc recuperarProduto (RecuperarProdutoRequest) returns (RecuperarProdutoResponse) {}
+  rpc buscarProduto (BuscarProdutoRequest) returns (BuscarProdutoResponse) {}
   rpc apagarProduto (ApagarProdutoRequest) returns (ApagarProdutoResponse) {}
 }
 
-message InserirProdutoRequest { string PID = 1; string dadosDoProduto = 2;}
-message InserirProdutoResponse { string message = 1; }
-message ModificarProdutoRequest { string PID = 1; string dadosDoProduto = 2;}
+message CriarProdutoRequest { string dados = 1;}
+message CriarProdutoResponse { string message = 1; }
+message ModificarProdutoRequest { string PID = 1; string dados = 2;}
 message ModificarProdutoResponse { string message = 1; }
-message RecuperarProdutoRequest { string PID = 1; }
-message RecuperarProdutoResponse { string message = 1; }
+message BuscarProdutoRequest { string PID = 1; }
+message BuscarProdutoResponse { string message = 1; }
 message ApagarProdutoRequest { string PID = 1; }
 message ApagarProdutoResponse { string message = 1; }
 
