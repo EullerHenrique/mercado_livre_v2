@@ -8,6 +8,8 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -22,7 +24,7 @@ public class ClienteClient {
   /**
    * Construct cliente for accessing HelloWorld server using the existing channel.
    */
-  public ClienteClient(Channel channel) throws MqttException {
+  public ClienteClient(Channel channel) {
     // 'channel' here is a Channel, not a ManagedChannel, so it is not this code's responsibility to
     // shut it down.
 
@@ -44,7 +46,7 @@ public class ClienteClient {
     System.out.println("2 - Modificar Pedido                    ");
     System.out.println("3 - Consultar Pedido                    ");
     System.out.println("4 - Consultar Pedidos                   ");
-    System.out.println("5 - Excluir Pedidos                     ");
+    System.out.println("5 - Excluir Pedido                      ");
     System.out.println("----------------------------------------");
     System.out.println("Digite a opção desejada:                ");
   }
@@ -66,50 +68,49 @@ public class ClienteClient {
   }
 
   private static String lerIdDoProduto() throws MqttException {
-    Scanner s;
+    Scanner s = new Scanner(System.in);
     String pid;
-    s = new Scanner(System.in);
+    String produto;
     while(true) {
       System.out.println("\nDigite o id do produto:             ");
       if (s.hasNextLine()) {
         pid = s.nextLine();
-        if (pid != null && !pid.isEmpty() && mosquittoService.verifyIfPIDExistis(pid)) {
-          break;
-        }
+        if (pid != null && !pid.isEmpty()) {
+           produto = mosquittoService.buscarProduto(pid);
+          if(!Objects.equals(produto, "false"))
+            break;
+          }
       }
     }
-    return pid;
+
+    return pid + " , " + produto;
   }
 
-  public String buscarProduto(String pid){
-    return mosquittoService.buscarProduto(pid);
-  }
-
-  //public String modificarProduto(String pid, String produto){
-  //    mosquittoService.modificarProduto(pid);
-  //}
-
-  private static String lerPedido() throws MqttException {
-    String pid = lerIdDoProduto();
-    String produto = buscarProduto();
+  private static String lerPedido(String produto){
     String pedido;
     String nomeProduto;
     String precoProduto;
+    String quantidadeProduto;
     Scanner s = new Scanner(System.in);
-    pedido = "{ 'produto':" + "'"+"teste" + "'" +", ";
-    int quantidadeProduto;
-    s = new Scanner(System.in);
+    String[] produtoArray = produto.split(",");
+    nomeProduto = produtoArray[0].split(":")[1].split("'")[1].split("'")[0];
+    quantidadeProduto = produtoArray[1].split(":")[1].split("}")[0].split("'")[1].split("'")[0];
+    precoProduto = produtoArray[2].split(":")[1].split("}")[0].split("'")[1].split("'")[0];
+    System.out.println("\nNome do produto: " + nomeProduto);
+    pedido = "{ 'produto':" + "'"+ nomeProduto + "'" +", ";
+    int quantidadeProdutoPedido;
     while(true) {
       System.out.println("\nDigite a quantidade:                    ");
       if (s.hasNextInt()) {
-        quantidadeProduto = s.nextInt();
-        if (quantidadeProduto > 0) {
-          pedido += "'quantidade':" + "'"+quantidadeProduto + "'"+", ";;
+        quantidadeProdutoPedido = s.nextInt();
+        if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= Integer.parseInt(quantidadeProduto)) {
+          pedido += "'quantidade':" + "'"+quantidadeProdutoPedido + "'"+", ";;
           break;
         }
       }
     }
-    pedido += "'preco':" + "'"+"teste" +"'"+" }";;
+    int precoTotal = Integer.parseInt(precoProduto) * quantidadeProdutoPedido;
+    pedido += "'preco':" + "'"+ precoTotal +"'"+" }";;
     return pedido;
   }
 
@@ -120,9 +121,7 @@ public class ClienteClient {
       System.out.println("\nDigite o id do cliente:             ");
       if(s.hasNextLine()) {
         cid = s.nextLine();
-        boolean CIDExistis = mosquittoService.verifyIfCIDExistis(cid);
-        System.out.println("CIDDDD"+ CIDExistis);
-        if (CIDExistis) {
+        if (cid!= null && !cid.isEmpty() &&  mosquittoService.verifyIfCIDExistis(cid)) {
           break;
         }else {
             System.out.println("\nCliente não existe");
@@ -132,7 +131,7 @@ public class ClienteClient {
     return cid;
   }
 
-  public void criarPedido(String CID, String pedido) {
+  public void criarPedido(String PID, String CID, String pedido) {
     logger.info("Request: Insira o pedido " + pedido + " com o CID " + CID);
     CriarPedidoRequest request = CriarPedidoRequest.newBuilder().setCID(CID).setDados(pedido).build();
     CriarPedidoResponse response;
@@ -145,7 +144,7 @@ public class ClienteClient {
     logger.info(response.getMessage());
   }
 
-  private void modificarPedido(String CID, String OID, String pedido) {
+  private void modificarPedido(String PID, String CID, String OID, String pedido) {
     logger.info("Request: Modifique o pedido com o CID: " + CID + " e o OID: " + OID + " para " + pedido);
     ModificarPedidoRequest request = ModificarPedidoRequest.newBuilder().setCID(CID).setOID(OID).setDados(pedido).build();
     ModificarPedidoResponse response;
@@ -226,13 +225,19 @@ public class ClienteClient {
         int opcao = scanner.nextInt();
         if(opcao == 1){
           String cid = lerIdDoCliente();
-          String pedido = lerPedido();
-          clienteClient.criarPedido(cid, pedido);
+          String pidProduto = lerIdDoProduto();
+          String pid = pidProduto.split(" , ")[0];
+          String produto = pidProduto.split(" , ")[1];
+          String pedido = lerPedido(produto);
+          clienteClient.criarPedido(pid, cid, pedido);
         }else if(opcao == 2){
           String cid = lerIdDoCliente();
           String oid = lerIdDoPedido();
-          String pedido = lerPedido();
-          clienteClient.modificarPedido(cid, oid, pedido);
+          String pidProduto = lerIdDoProduto();
+          String pid = pidProduto.split(" , ")[0];
+          String produto = pidProduto.split(" , ")[1];
+          String pedido = lerPedido(produto);
+          clienteClient.modificarPedido(pid, cid, oid, pedido);
         }else if(opcao == 3){
           String cid =  lerIdDoCliente();
           String oid = lerIdDoPedido();

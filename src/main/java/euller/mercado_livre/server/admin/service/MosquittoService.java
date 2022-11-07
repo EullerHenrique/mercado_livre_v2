@@ -41,7 +41,7 @@ public class MosquittoService {
         });
     }
 
-    public void subscribeProduto(String topic, ProdutoRepository produtoRepository) throws MqttException {
+    public void subscribeProduto(String topicFrom, String topicTo, ProdutoRepository produtoRepository, int method) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
         MqttClient client = new MqttClient("tcp://localhost:1883", publisherId);
         MqttConnectOptions options = new MqttConnectOptions();
@@ -49,11 +49,17 @@ public class MosquittoService {
         options.setCleanSession(true);
         options.setConnectionTimeout(10);
         client.connect(options);
-        client.subscribe(topic, (topic1, message) -> {
+        client.subscribe(topicFrom, (topic1, message) -> {
             System.out.println("TOPIC: "+topic1);
             System.out.println("MSG: "+ new String(message.getPayload()));
             System.out.println("STATUS: "+produtoRepository.isProduto(new String(message.getPayload())));
-            publish("portal/admin/PID", produtoRepository.isProduto(new String(message.getPayload())));
+            System.out.println("PRODUTO: "+produtoRepository.buscarProduto(new String(message.getPayload())));
+            if(method == 1){
+                publish(topicTo, produtoRepository.buscarProduto(new String(message.getPayload())));
+            }else if(method == 2){
+                String mensagem = new String(message.getPayload());
+                publish(topicTo, produtoRepository.modificarProduto(new String(message.getPayload()), new String(message.getPayload())));
+            }
         });
     }
 

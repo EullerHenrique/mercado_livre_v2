@@ -26,7 +26,7 @@ public class ProdutoRepository {
         if(produtos.containsKey(PID)) {
             return produtos.get(PID);
         }
-        return " Produto não encontrado";
+        return "false";
     }
 
     public String isProduto(String PID){
