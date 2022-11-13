@@ -8,11 +8,11 @@ option objc_class_prefix = "HLW";
 package server.client;
 
 service PedidoService {
-  rpc criarPedido( CriarPedidoRequest ) returns ( CriarPedidoResponse);
-  rpc modificarPedido( ModificarPedidoRequest ) returns ( ModificarPedidoResponse);
-  rpc listarPedido( ListarPedidoRequest ) returns ( ListarPedidoResponse);
-  rpc listarPedidos( ListarPedidosRequest ) returns ( ListarPedidosResponse);
-  rpc apagarPedido( ApagarPedidoRequest ) returns ( ApagarPedidoResponse);
+  rpc criarPedido(CriarPedidoRequest) returns (CriarPedidoResponse);
+  rpc modificarPedido(ModificarPedidoRequest) returns (ModificarPedidoResponse);
+  rpc listarPedido(ListarPedidoRequest) returns (ListarPedidoResponse);
+  rpc listarPedidos(ListarPedidosRequest) returns (ListarPedidosResponse);
+  rpc apagarPedido(ApagarPedidoRequest) returns (ApagarPedidoResponse);
 }
 
 message CriarPedidoRequest { string CID = 1; string dados = 2; }
@@ -25,4 +25,21 @@ message ListarPedidosRequest { string CID = 1; }
 message ListarPedidosResponse { string message = 1; }
 message ApagarPedidoRequest { string CID = 1; string OID = 2; }
 message ApagarPedidoResponse { string message = 1; }
+
+service ClienteService {
+  rpc verificarSeClienteExiste(VerificarSeClienteExisteRequest) returns (VerificarSeClienteExisteResponse);
+}
+
+message VerificarSeClienteExisteRequest { string CID = 1; }
+message VerificarSeClienteExisteResponse { string message = 1; }
+
+service ProdutoService {
+  rpc buscarProduto(BuscarProdutoRequest) returns (BuscarProdutoResponse);
+  rpc modificarProduto(ModificarProdutoRequest) returns (ModificarProdutoResponse);
+}
+
+message BuscarProdutoRequest { string PID = 1; }
+message BuscarProdutoResponse { string message = 1; }
+message ModificarProdutoRequest { string PID = 1; string dados = 2; }
+message ModificarProdutoResponse { string message = 1; }
 

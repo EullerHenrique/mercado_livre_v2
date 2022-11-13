@@ -1,11 +1,13 @@
 package euller.mercado_livre.client.admin;
 
+import com.google.gson.Gson;
+import euller.mercado_livre.client.admin.domain.model.Cliente;
+import euller.mercado_livre.client.admin.domain.model.Produto;
 import euller.mercado_livre.server.admin.*;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.Scanner;
 import java.util.UUID;
@@ -13,190 +15,32 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static euller.mercado_livre.client.admin.service.InputsService.*;
+
 public class AdminClient {
     private static final Logger logger = Logger.getLogger(AdminClient.class.getName());
-
-    private final ClienteServiceGrpc.ClienteServiceBlockingStub blockingStub;
+    private final ClienteServiceGrpc.ClienteServiceBlockingStub blockingStubCliente;
     private final ProdutoServiceGrpc.ProdutoServiceBlockingStub blockingStubProduto;
 
-
-    /**
-     * Construct cliente for accessing HelloWorld server using the existing channel.
-     */
     public AdminClient(Channel channel) {
         // 'channel' here is a Channel, not a ManagedChannel, so it is not this code's responsibility to
         // shut it down.
 
         // Passing Channels to code makes code easier to test and makes it easier to reuse Channels.
-        blockingStub = ClienteServiceGrpc.newBlockingStub(channel);
+        blockingStubCliente = ClienteServiceGrpc.newBlockingStub(channel);
         blockingStubProduto = ProdutoServiceGrpc.newBlockingStub(channel);
 
     }
 
-    private static void exibePortal() {
-        System.out.println("----------------------------------------");
-        System.out.println("--------------Mercado Livre-------------");
-        System.out.println("--------------Portal Admin--------------");
-        System.out.println("----------------------------------------");
-    }
-
-    private static void exibeOpcoes() {
-        System.out.println("\n----------------Opções----------------");
-        System.out.println("1 - Criar Cliente                       ");
-        System.out.println("2 - Modificar Cliente                   ");
-        System.out.println("3 - Buscar Cliente                      ");
-        System.out.println("5 - Criar Produto                       ");
-        System.out.println("6 - Modificar Produto                   ");
-        System.out.println("7 - Buscar Produto                      ");
-        System.out.println("8 - Excluir Produto                     ");
-
-        System.out.println("----------------------------------------");
-        System.out.println("Digite a opção desejada:                ");
-    }
-
-    private static String lerIdDoPedido() {
-        Scanner s;
-        String oid;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o id do pedido:             ");
-            if (s.hasNextLine()) {
-                oid = s.nextLine();
-                if (oid != null && !oid.isEmpty()) {
-                    break;
-                }
-            }
-        }
-        return oid;
-    }
-
-    private static String lerCliente() {
-        String cliente;
-        String nome;
-        Scanner s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o nome do cliente:                    ");
-            if (s.hasNextLine()) {
-                nome = s.nextLine();
-                if (nome != null && !nome.isEmpty()) {
-                    cliente = "{ 'nome':" + "'"+nome + "'" +", ";
-                    break;
-                }
-            }
-        }
-        String email;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o email do cliente:                    ");
-            if (s.hasNextLine()) {
-                email = s.nextLine();
-                if (email != null && !email.isEmpty()) {
-                    cliente += "'email':" + "'"+email + "'"+", ";;
-                    break;
-                }
-            }
-            s.next();
-        }
-        String telefone;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o telefone do cliente:                ");
-            if (s.hasNextLine()) {
-                telefone = s.nextLine();
-                if (telefone != null && !telefone.isEmpty()) {
-                    cliente += "'telefone':" + "'"+telefone +"'"+" }";;
-                    break;
-                }
-            }
-            s.next();
-        }
-        return cliente;
-    }
-
-    private static String lerIdDoCliente() throws MqttException {
-        String cid;
-        Scanner s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o id do cliente:             ");
-            if(s.hasNextLine()) {
-                cid = s.nextLine();
-                if (cid != null && !cid.isEmpty()) {
-                    break;
-                }else {
-                    System.out.println("\nCliente não existe");
-                }
-            }
-        }
-        return cid;
-    }
-
-    private static String lerIdDoProduto() {
-        Scanner s;
-        String pid;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o id do produto:             ");
-            if (s.hasNextLine()) {
-                pid = s.nextLine();
-                if (pid != null && !pid.isEmpty()) {
-                    break;
-                }
-            }
-        }
-        return pid;
-    }
-
-    private static String lerProduto() {
-        String pedido;
-        String nomeProduto;
-        Scanner s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o nome do produto:                    ");
-            if (s.hasNextLine()) {
-                nomeProduto = s.nextLine();
-                if (nomeProduto != null && !nomeProduto.isEmpty()) {
-                    pedido = "{ 'produto':" + "'"+nomeProduto + "'" +", ";
-                    break;
-                }
-            }
-        }
-        int quantidadeProduto;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite a quantidade:                    ");
-            if (s.hasNextInt()) {
-                quantidadeProduto = s.nextInt();
-                if (quantidadeProduto > 0) {
-                    pedido += "'quantidade':" + "'"+quantidadeProduto + "'"+", ";;
-                    break;
-                }
-            }
-            s.next();
-        }
-        int precoProduto;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o preço:                ");
-            if (s.hasNextInt()) {
-                precoProduto = s.nextInt();
-                if (precoProduto > 0) {
-                    pedido += "'preco':" + "'"+precoProduto +"'"+" }";;
-                    break;
-                }
-            }
-            s.next();
-        }
-        return pedido;
-    }
-
-
-    public void criarCliente(String cliente) {
-        logger.info("Request: Insira o cliente " + cliente);
+    public void criarCliente(Cliente cliente) {
+        Gson gson = new Gson();
+        String clienteJson = gson.toJson(cliente);
+        logger.info("Request: Insira o cliente " + clienteJson);
         String CID = UUID.randomUUID().toString();
-        CriarClienteRequest request = CriarClienteRequest.newBuilder().setDados(cliente).build();
+        CriarClienteRequest request = CriarClienteRequest.newBuilder().setDados(clienteJson).build();
         CriarClienteResponse response;
         try {
-            response = blockingStub.criarCliente(request);
+            response = blockingStubCliente.criarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
@@ -204,12 +48,14 @@ public class AdminClient {
         logger.info(response.getMessage());
     }
 
-    private void modificarCliente(String CID, String cliente) {
+    public void modificarCliente(String CID, Cliente cliente) {
+        Gson gson = new Gson();
+        String clienteJson = gson.toJson(cliente);
         logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + cliente);
-        ModificarClienteRequest request = ModificarClienteRequest.newBuilder().setCID(CID).setDados(cliente).build();
+        ModificarClienteRequest request = ModificarClienteRequest.newBuilder().setCID(CID).setDados(clienteJson).build();
         ModificarClienteResponse response;
         try {
-            response = blockingStub.modificarCliente(request);
+            response = blockingStubCliente.modificarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());
@@ -218,13 +64,12 @@ public class AdminClient {
         logger.info(response.getMessage());
     }
 
-
     public void buscarCliente(String CID) {
         logger.info("Request: Busque o cliente com o CID: " + CID);
         BuscarClienteRequest request = BuscarClienteRequest.newBuilder().setCID(CID).build();
         BuscarClienteResponse response;
         try {
-            response = blockingStub.buscarCliente(request);
+            response = blockingStubCliente.buscarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());
@@ -238,7 +83,7 @@ public class AdminClient {
         ApagarClienteRequest request = ApagarClienteRequest.newBuilder().setCID(CID).build();
         ApagarClienteResponse response;
         try {
-            response = blockingStub.apagarCliente(request);
+            response = blockingStubCliente.apagarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());
@@ -247,11 +92,11 @@ public class AdminClient {
         logger.info(response.getMessage());
     }
 
-
-    public void criarProduto(String produto) {
-        logger.info("Request: Insira o produto " + produto);
-        String CID = UUID.randomUUID().toString();
-        CriarProdutoRequest request = CriarProdutoRequest.newBuilder().setDados(produto).build();
+    public void criarProduto(Produto produto) {
+        Gson gson = new Gson();
+        String produtoJson = gson.toJson(produto);
+        logger.info("Request: Insira o produto " + produtoJson);
+        CriarProdutoRequest request = CriarProdutoRequest.newBuilder().setDados(produtoJson).build();
         CriarProdutoResponse response;
         try {
             response = blockingStubProduto.criarProduto(request);
@@ -262,9 +107,11 @@ public class AdminClient {
         logger.info(response.getMessage());
     }
 
-    private void modificarProduto(String PID, String produto) {
-        logger.info("Request: Modifique o produto com o PID: " + PID +" para " + produto);
-        ModificarProdutoRequest request = ModificarProdutoRequest.newBuilder().setPID(PID).setDados(produto).build();
+    private void modificarProduto(String PID, Produto produto) {
+        Gson gson = new Gson();
+        String produtoJson = gson.toJson(produto);
+        logger.info("Request: Modifique o produto com o PID: " + PID +" para " + produtoJson);
+        ModificarProdutoRequest request = ModificarProdutoRequest.newBuilder().setPID(PID).setDados(produtoJson).build();
         ModificarProdutoResponse response;
         try {
             response = blockingStubProduto.modificarProduto(request);
@@ -275,7 +122,6 @@ public class AdminClient {
         }
         logger.info(response.getMessage());
     }
-
 
     public void buscarProduto(String PID) {
         logger.info("Request: Busque o produto com o PID: " + PID);
@@ -328,11 +174,11 @@ public class AdminClient {
                 exibeOpcoes();
                 int opcao = scanner.nextInt();
                 if(opcao == 1){
-                    String cliente = lerCliente();
+                    Cliente cliente = lerCliente();
                     adminClient.criarCliente(cliente);
                 }else if(opcao == 2){
                     String cid = lerIdDoCliente();
-                    String cliente = lerCliente();
+                    Cliente cliente = lerCliente();
                     adminClient.modificarCliente(cid, cliente);
                 }else if(opcao == 3){
                     String cid = lerIdDoCliente();
@@ -341,11 +187,11 @@ public class AdminClient {
                     String cid = lerIdDoCliente();
                     adminClient.apagarCliente(cid);
                 }else if(opcao == 5) {
-                    String produto = lerProduto();
+                    Produto produto = lerProduto();
                     adminClient.criarProduto(produto);
                 }else if(opcao == 6) {
                     String pid = lerIdDoProduto();
-                    String produto = lerProduto();
+                    Produto produto = lerProduto();
                     adminClient.modificarProduto(pid, produto);
                 }else if(opcao == 7) {
                     String pid = lerIdDoProduto();

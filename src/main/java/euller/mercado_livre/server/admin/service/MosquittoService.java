@@ -58,7 +58,11 @@ public class MosquittoService {
                 publish(topicTo, produtoRepository.buscarProduto(new String(message.getPayload())));
             }else if(method == 2){
                 String mensagem = new String(message.getPayload());
-                publish(topicTo, produtoRepository.modificarProduto(new String(message.getPayload()), new String(message.getPayload())));
+                String[] pidProduto = mensagem.split(" , ");
+                String pid = pidProduto[0];
+                String produto = pidProduto[1];
+                produtoRepository.modificarProduto(pid, produto);
+                //publish(topicTo, produtoRepository.modificarProduto(pid, produto));
             }
         });
     }

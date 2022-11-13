@@ -3,7 +3,6 @@ package euller.mercado_livre.server.cliente.service;
 import euller.mercado_livre.server.cliente.*;
 import euller.mercado_livre.server.cliente.respository.PedidoRepository;
 import io.grpc.stub.StreamObserver;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -49,5 +48,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
+
+
 
 }
