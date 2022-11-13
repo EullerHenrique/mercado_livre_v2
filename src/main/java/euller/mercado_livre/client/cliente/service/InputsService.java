@@ -5,7 +5,6 @@ import euller.mercado_livre.client.cliente.domain.model.Pedido;
 import euller.mercado_livre.client.cliente.domain.model.Produto;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
-import io.grpc.Channel;
 
 import java.util.Objects;
 import java.util.Scanner;
