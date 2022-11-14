@@ -1,9 +1,11 @@
 package euller.mercado_livre.server.admin.service;
 
+import euller.mercado_livre.client.admin.domain.model.Produto;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -12,9 +14,23 @@ public class StartService {
     private final Logger logger = Logger.getLogger(StartService.class.getName());
     private Server server;
 
+    public int lerPortaServidor() {
+        int port;
+        Scanner s = new Scanner(System.in);
+        while(true) {
+            System.out.println("\nDigite a porta desejada para a criacão do servidor:                    ");
+            if (s.hasNextInt()) {
+                port = s.nextInt();
+                if (port > 0) {
+                    break;
+                }
+            }
+        }
+        return port;
+    }
+
     public void start() throws IOException {
-        /* The port on which the server should run */
-        int port = 50052;
+        int port = lerPortaServidor();
         server = ServerBuilder.forPort(port)
                 .addService(new ClienteServiceImpl())
                 .addService(new ProdutoServiceImpl())

@@ -19,6 +19,7 @@ public class InputsService {
         System.out.println("1 - Criar Cliente                       ");
         System.out.println("2 - Modificar Cliente                   ");
         System.out.println("3 - Buscar Cliente                      ");
+        System.out.println("4 - Apagar Cliente                      ");
         System.out.println("5 - Criar Produto                       ");
         System.out.println("6 - Modificar Produto                   ");
         System.out.println("7 - Buscar Produto                      ");

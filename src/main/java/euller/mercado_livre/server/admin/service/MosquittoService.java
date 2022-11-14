@@ -21,6 +21,8 @@ public class MosquittoService {
         client.connect(options);
         MqttMessage message = new MqttMessage(content.getBytes());
         message.setQos(2);
+        System.out.println("Publishing topic: " + topic);
+        System.out.println("Publishing message: " + content);
         client.publish(topic, message);
         client.disconnect();
     }
@@ -34,10 +36,25 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topic, (topic1, message) -> {
-            System.out.println("TOPIC: "+topic1);
-            System.out.println("MSG: "+ new String(message.getPayload()));
-            System.out.println("STATUS: "+clienteRepository.isCliente(new String(message.getPayload())));
-            publish("portal/admin/CID", clienteRepository.isCliente(new String(message.getPayload())));
+            System.out.println("TOPIC: " + topic1);
+            System.out.println("MSG: " + new String(message.getPayload()));
+            System.out.println("STATUS: " + clienteRepository.isCliente(new String(message.getPayload())));
+            switch (topic) {
+                case "portal/client/CID":
+                    publish("portal/admin/CID", clienteRepository.isCliente(new String(message.getPayload())));
+                    break;
+                case "portal/client/cliente/criar":
+                    String[] dados = new String(message.getPayload()).split(" , ");
+                    clienteRepository.criarCliente(dados[0], dados[1], true);
+                    break;
+                case "portal/client/cliente/modificar":
+                    dados = new String(message.getPayload()).split(" , ");
+                    clienteRepository.modificarCLiente(dados[0], dados[1], true);
+                    break;
+                case "portal/client/cliente/apagar":
+                    clienteRepository.apagarCliente(new String(message.getPayload()), true);
+                    break;
+            }
         });
     }
 

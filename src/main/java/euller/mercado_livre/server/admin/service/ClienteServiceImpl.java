@@ -5,6 +5,8 @@ import euller.mercado_livre.server.admin.repository.ClienteRepository;
 import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.util.UUID;
+
 public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBase {
 
     private final ClienteRepository clienteRepository = new ClienteRepository();
@@ -13,6 +15,9 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
         try {
             MosquittoService mosquittoService = new MosquittoService();
             mosquittoService.subscribeCliente("portal/client/CID", clienteRepository);
+            mosquittoService.subscribeCliente("portal/client/cliente/criar", clienteRepository);
+            mosquittoService.subscribeCliente("portal/client/cliente/modificar", clienteRepository);
+            mosquittoService.subscribeCliente("portal/client/cliente/apagar", clienteRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
@@ -20,14 +25,15 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
 
     @Override
     public void criarCliente(CriarClienteRequest req, StreamObserver<CriarClienteResponse> responseObserver) {
-        String cliente = clienteRepository.criarCliente(req.getDados());
+        String CID = UUID.randomUUID().toString();
+        String cliente = clienteRepository.criarCliente(CID, req.getDados(), false);
         CriarClienteResponse reply = CriarClienteResponse.newBuilder().setMessage(cliente).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void modificarCliente(ModificarClienteRequest req, StreamObserver<ModificarClienteResponse> responseObserver) {
-        String dados = clienteRepository.modificarCLiente(req.getCID(), req.getDados());
+        String dados = clienteRepository.modificarCLiente(req.getCID(), req.getDados(), false);
         ModificarClienteResponse reply = ModificarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " Cliente: "+dados).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -41,7 +47,7 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     }
     @Override
     public void apagarCliente(ApagarClienteRequest req, StreamObserver<ApagarClienteResponse> responseObserver) {
-        String msg = clienteRepository.apagarCliente(req.getCID());
+        String msg = clienteRepository.apagarCliente(req.getCID(), false);
         ApagarClienteResponse reply = ApagarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " MSG:: "+msg).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();

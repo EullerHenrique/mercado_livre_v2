@@ -13,9 +13,24 @@ import static euller.mercado_livre.client.admin.service.InputsService.lerIdDoPro
 
 public class StartService {
 
-    public void start(int port) throws InterruptedException {
-        // Access a service running on the local machine on port 50051
-        String target = "localhost:50052";
+    public int lerPortaServidor() {
+        int port;
+        Scanner s = new Scanner(System.in);
+        while(true) {
+            System.out.println("\nDigite a porta desejada para a conexão com o servidor:                    ");
+            if (s.hasNextInt()) {
+                port = s.nextInt();
+                if (port > 0) {
+                    break;
+                }
+            }
+        }
+        return port;
+    }
+
+    public void start() throws InterruptedException {
+        int port = lerPortaServidor();
+        String target = "localhost:"+port;
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse
         // them until the application shuts down.

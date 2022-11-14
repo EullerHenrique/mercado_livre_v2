@@ -1,6 +1,5 @@
 package euller.mercado_livre.server.cliente.service;
 
-import euller.mercado_livre.server.cliente.ClienteServer;
 import euller.mercado_livre.server.cliente.service.external.ClienteServiceImpl;
 import euller.mercado_livre.server.cliente.service.external.ProdutoServiceImpl;
 import io.grpc.Server;
@@ -15,9 +14,7 @@ public class StartService {
     private final Logger logger = Logger.getLogger(StartService.class.getName());
     private Server server;
 
-    public void start() throws IOException{
-        /* The port on which the server should run */
-        int port = 50051;
+    public void start(int port) throws IOException{
         server = ServerBuilder.forPort(port)
                 .addService(new ClienteServiceImpl())
                 .addService(new ProdutoServiceImpl())
