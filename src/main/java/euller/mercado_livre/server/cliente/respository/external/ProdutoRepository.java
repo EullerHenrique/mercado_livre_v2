@@ -1,5 +1,6 @@
 package euller.mercado_livre.server.cliente.respository.external;
 
+import euller.mercado_livre.server.cliente.model.Produto;
 import euller.mercado_livre.server.cliente.service.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -11,8 +12,7 @@ public class ProdutoRepository {
         return mosquittoService.buscarProduto(PID);
     }
 
-    public void modificarProduto(String PID, String dados) throws MqttException {
-        mosquittoService.modificarProduto(PID+ " , "+dados);
-        mosquittoService.modificarProduto(PID+ " , "+dados);
+    public void modificarProduto(Produto produto) throws MqttException {
+        mosquittoService.modificarProduto(produto);
     }
 }

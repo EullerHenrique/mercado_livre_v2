@@ -1,6 +1,7 @@
 package euller.mercado_livre.client.cliente.service;
-import euller.mercado_livre.client.cliente.domain.model.Pedido;
-import euller.mercado_livre.client.cliente.domain.model.Produto;
+import com.google.gson.Gson;
+import euller.mercado_livre.client.cliente.model.Pedido;
+import euller.mercado_livre.client.cliente.model.Produto;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import io.grpc.ManagedChannel;
@@ -11,7 +12,23 @@ import java.util.concurrent.TimeUnit;
 
 public class StartService {
 
-    public void start(int port) throws InterruptedException {
+    public int lerPortaServidor() {
+        int port;
+        Scanner s = new Scanner(System.in);
+        while(true) {
+            System.out.println("\nDigite a porta desejada para a conexão com o servidor:                    ");
+            if (s.hasNextInt()) {
+                port = s.nextInt();
+                if (port > 0) {
+                    break;
+                }
+            }
+        }
+        return port;
+    }
+
+    public void start() throws InterruptedException {
+        int port = lerPortaServidor();
         // Access a service running on the local machine on port 50051
         String target = "localhost:"+port;
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
@@ -36,20 +53,38 @@ public class StartService {
                     String cid = inputsService.lerIdDoCliente();
                     Produto produto = inputsService.lerIdDoProduto();
                     Pedido pedido = inputsService.lerPedido(produto);
-                    pedidoService.criarPedido(cid, produto, pedido);
+                    pedido.setCID(cid);
+                    pedidoService.criarPedido(produto, pedido);
                 }else if(opcao == 2){
+                    Gson gson = new Gson();
                     String cid = inputsService.lerIdDoCliente();
                     String oid = inputsService.lerIdDoPedido();
-                    Produto produto = inputsService.lerIdDoProduto();
-                    Pedido pedido = inputsService.lerPedido(produto);
-                    pedidoService.modificarPedido(cid, oid, pedido);
+                    String pedidoAntigoJson = pedidoService.buscarPedido(cid, oid);
+                    String produtoJson;
+                    Pedido pedidoAntigo;
+                    Produto produto;
+                    if(pedidoAntigoJson != null){
+                        pedidoAntigo = gson.fromJson(pedidoAntigoJson, Pedido.class);
+                        produtoJson = produtoService.buscarProduto(pedidoAntigo.getPID());
+                        if(produtoJson != null){
+                            produto = gson.fromJson(produtoJson, Produto.class);
+                        }else{
+                            System.out.println("Produto não encontrado");
+                            continue;
+                        }
+                    }else{
+                        System.out.println("Pedido não encontrado");
+                        continue;
+                    }
+                    Pedido pedidoNovo = inputsService.lerPedidoAtualizado(pedidoAntigo, produto);
+                    pedidoService.modificarPedido(pedidoAntigo, pedidoNovo, produto);
                 }else if(opcao == 3){
                     String cid =  inputsService.lerIdDoCliente();
                     String oid = inputsService.lerIdDoPedido();
-                    pedidoService.listaPedido(cid, oid);
+                    pedidoService.buscarPedido(cid, oid);
                 }else if(opcao == 4) {
                     String cid = inputsService.lerIdDoCliente();
-                    pedidoService.listaPedidos(cid);
+                    pedidoService.buscarPedidos(cid);
                 }else if (opcao == 5) {
                     String cid = inputsService.lerIdDoCliente();
                     String oid = inputsService.lerIdDoPedido();

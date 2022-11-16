@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
-import euller.mercado_livre.client.admin.domain.model.Cliente;
-import euller.mercado_livre.client.admin.domain.model.Produto;
+import euller.mercado_livre.client.admin.model.Cliente;
+import euller.mercado_livre.client.admin.model.Produto;
 
 import java.util.Scanner;
 

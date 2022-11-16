@@ -1,9 +1,38 @@
-package euller.mercado_livre.client.cliente.domain.model;
+package euller.mercado_livre.client.cliente.model;
 
 public class Pedido {
+
+    private String CID;
+    private String PID;
+
+    private String OID;
     private String produto;
     private int quantidade;
     private int preco;
+
+    public String getPID() {
+        return PID;
+    }
+
+    public void setPID(String PID) {
+        this.PID = PID;
+    }
+
+    public String getCID() {
+        return CID;
+    }
+
+    public void setCID(String CID) {
+        this.CID = CID;
+    }
+
+    public String getOID() {
+        return OID;
+    }
+
+    public void setOID(String OID) {
+        this.OID = OID;
+    }
 
     public String getProduto() {
         return produto;

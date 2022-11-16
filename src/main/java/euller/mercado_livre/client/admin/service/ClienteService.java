@@ -1,13 +1,11 @@
 package euller.mercado_livre.client.admin.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.admin.AdminClient;
-import euller.mercado_livre.client.admin.domain.model.Cliente;
+import euller.mercado_livre.client.admin.model.Cliente;
 import euller.mercado_livre.server.admin.*;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +23,6 @@ public class ClienteService {
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
         logger.info("Request: Insira o cliente " + clienteJson);
-        String CID = UUID.randomUUID().toString();
         CriarClienteRequest request = CriarClienteRequest.newBuilder().setDados(clienteJson).build();
         CriarClienteResponse response;
         try {
@@ -37,7 +34,8 @@ public class ClienteService {
         logger.info(response.getMessage());
     }
 
-    public void modificarCliente(String CID, Cliente cliente) {
+    public void modificarCliente(Cliente cliente) {
+        String CID = cliente.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
         logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + cliente);

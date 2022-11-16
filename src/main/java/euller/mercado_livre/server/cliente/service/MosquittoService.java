@@ -1,4 +1,6 @@
 package euller.mercado_livre.server.cliente.service;
+import com.google.gson.Gson;
+import euller.mercado_livre.server.cliente.model.Produto;
 import org.eclipse.paho.client.mqttv3.*;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -45,8 +47,10 @@ public class MosquittoService {
         publish("portal/client/PID/1", content);
         return subscribe("portal/admin/PID/1");
     }
-    public void modificarProduto(String content) throws MqttException {
-        publish("portal/client/PID/2", content);
+    public void modificarProduto(Produto produto) throws MqttException {
+        Gson gson = new Gson();
+        String produtoJson = gson.toJson(produto);
+        publish("portal/client/PID/2", produtoJson);
     }
 
 }

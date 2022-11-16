@@ -1,8 +1,8 @@
 package euller.mercado_livre.client.cliente.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.domain.model.Pedido;
-import euller.mercado_livre.client.cliente.domain.model.Produto;
+import euller.mercado_livre.client.cliente.model.Pedido;
+import euller.mercado_livre.client.cliente.model.Produto;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 
@@ -86,6 +86,7 @@ public class InputsService {
         System.out.println("\nQuantidade Disponível " + quantidadeProduto);
         System.out.println("\nPreço: " + produto.getPreco());
         System.out.println("---------------------------------------");
+        pedido.setPID(produto.getPID());
         pedido.setProduto(nomeProduto);
         int quantidadeProdutoPedido;
         while(true) {
@@ -98,10 +99,39 @@ public class InputsService {
                 }
             }
         }
-        int precoTotal = precoProduto * quantidadeProdutoPedido;
-        pedido.setPreco(precoTotal);
+        int preco = precoProduto * quantidadeProdutoPedido;
+        pedido.setPreco(preco);
         return pedido;
     }
+
+    public Pedido lerPedidoAtualizado(Pedido pedidoAntigo, Produto produto){
+        Gson gson = new Gson();
+        Pedido pedidoNovo = gson.fromJson(gson.toJson(pedidoAntigo), Pedido.class);
+        String nomeProduto = produto.getProduto();
+        int precoProduto =  produto.getPreco();
+        int quantidadeProduto = produto.getQuantidade();
+        Scanner s = new Scanner(System.in);
+        System.out.println("---------------Produto-----------------");
+        System.out.println("\nNome: " + nomeProduto);
+        System.out.println("\nQuantidade Disponível " + quantidadeProduto);
+        System.out.println("\nQuantidade Presente No Pedido: " + pedidoAntigo.getQuantidade());
+        System.out.println("\nPreço: " + produto.getPreco());
+        System.out.println("---------------------------------------");
+        int quantidadeProdutoPedido;
+        while(true) {
+            System.out.println("\nDigite a nova quantidade:                    ");
+            if (s.hasNextInt()) {
+                quantidadeProdutoPedido = s.nextInt();
+                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+pedidoAntigo.getQuantidade()) {
+                        pedidoNovo.setQuantidade(quantidadeProdutoPedido);
+                    break;
+                }
+            }
+        }
+        pedidoNovo.setPreco(precoProduto * quantidadeProdutoPedido);
+        return pedidoNovo;
+    }
+
 
     public String lerIdDoCliente()  {
         String cid;

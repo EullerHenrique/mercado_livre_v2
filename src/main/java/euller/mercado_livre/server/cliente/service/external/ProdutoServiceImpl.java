@@ -1,5 +1,7 @@
 package euller.mercado_livre.server.cliente.service.external;
 
+import com.google.gson.Gson;
+import euller.mercado_livre.server.cliente.model.Produto;
 import euller.mercado_livre.server.cliente.*;
 import euller.mercado_livre.server.cliente.respository.external.ProdutoRepository;
 import io.grpc.stub.StreamObserver;
@@ -25,7 +27,9 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     @Override
     public void modificarProduto(ModificarProdutoRequest req, StreamObserver<ModificarProdutoResponse> responseObserver) {
         try {
-            produtoRepository.modificarProduto(req.getPID(), req.getDados());
+            Gson gson = new Gson();
+            Produto produto = gson.fromJson(req.getDados(), Produto.class);
+            produtoRepository.modificarProduto(produto);
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }

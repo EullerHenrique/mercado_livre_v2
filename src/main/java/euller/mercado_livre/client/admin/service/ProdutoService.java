@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.admin.domain.model.Produto;
+import euller.mercado_livre.client.admin.model.Produto;
 import euller.mercado_livre.server.admin.*;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
@@ -38,7 +38,8 @@ public class ProdutoService {
         logger.info(response.getMessage());
     }
 
-    public void modificarProduto(String PID, Produto produto) {
+    public void modificarProduto(Produto produto) {
+        String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
         logger.info("Request: Modifique o produto com o PID: " + PID +" para " + produtoJson);

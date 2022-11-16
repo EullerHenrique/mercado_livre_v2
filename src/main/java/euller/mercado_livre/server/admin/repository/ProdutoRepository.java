@@ -1,46 +1,71 @@
 package euller.mercado_livre.server.admin.repository;
 
 
+import com.google.gson.Gson;
+import euller.mercado_livre.server.admin.model.Produto;
+import euller.mercado_livre.server.admin.service.MosquittoService;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.util.Hashtable;
-import java.util.UUID;
 
 public class ProdutoRepository {
     private Hashtable<String, String> produtos = new Hashtable<>();
 
-    public String criarProduto(String dados) {
-        String PID = UUID.randomUUID().toString();
-        produtos.put(PID, dados);
+    private final MosquittoService mosquittoService = new MosquittoService();
+
+    public String criarProduto(Produto produto, boolean otherServerUpdate) {
+        String PID = produto.getPID();
+        Gson gson = new Gson();
+        String produtoJson = gson.toJson(produto);
+        produtos.put(PID, produtoJson);
+        if(!otherServerUpdate) {
+            try {
+                mosquittoService.publish("portal/admin/produto/criar", PID + " , " + buscarProduto(PID));
+            } catch (MqttException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return "PID: " + PID + " Produto: "+ buscarProduto(PID);
     }
 
-    public String modificarProduto(String PID, String dados){
+    public String modificarProduto(Produto produto, boolean otherServerUpdate) {
+        String PID = produto.getPID();
+        Gson gson = new Gson();
+        String produtoJson = gson.toJson(produto);
         if(produtos.containsKey(PID)){
             produtos.remove(PID);
-            produtos.put(PID, dados);
+            produtos.put(PID, produtoJson);
+            if(!otherServerUpdate) {
+                try {
+                    mosquittoService.publish("portal/admin/produto/modificar", buscarProduto(PID));
+                } catch (MqttException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             return buscarProduto(PID);
         }
-        return " Produto não encontrado";
+        return null;
     }
 
     public String buscarProduto(String PID){
         if(produtos.containsKey(PID)) {
             return produtos.get(PID);
         }
-        return "false";
+        return null;
     }
 
-    public String isProduto(String PID){
-        if(produtos.containsKey(PID)) {
-            return "true";
-        }
-        return "false";
-    }
-
-    public String apagarProduto(String PID){
+    public String apagarProduto(String PID, boolean otherServerUpdate){
         if (produtos.containsKey(PID)) {
             produtos.remove(PID);
+            if(!otherServerUpdate) {
+                try {
+                    mosquittoService.publish("portal/admin/produto/apagar", PID);
+                } catch (MqttException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             return " Produto apagado";
         }
-        return " Produto não encontrado";
+        return null;
     }
 }

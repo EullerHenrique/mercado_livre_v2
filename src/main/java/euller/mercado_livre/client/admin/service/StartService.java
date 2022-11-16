@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
-import euller.mercado_livre.client.admin.domain.model.Cliente;
-import euller.mercado_livre.client.admin.domain.model.Produto;
+import euller.mercado_livre.client.admin.model.Cliente;
+import euller.mercado_livre.client.admin.model.Produto;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -53,7 +53,8 @@ public class StartService {
                 }else if(opcao == 2){
                     String cid = lerIdDoCliente();
                     Cliente cliente = lerCliente();
-                    clienteService.modificarCliente(cid, cliente);
+                    cliente.setCID(cid);
+                    clienteService.modificarCliente(cliente);
                 }else if(opcao == 3){
                     String cid = lerIdDoCliente();
                     clienteService.buscarCliente(cid);
@@ -66,7 +67,8 @@ public class StartService {
                 }else if(opcao == 6) {
                     String pid = lerIdDoProduto();
                     Produto produto = lerProduto();
-                    produtoService.modificarProduto(pid, produto);
+                    produto.setPID(pid);
+                    produtoService.modificarProduto(produto);
                 }else if(opcao == 7) {
                     String pid = lerIdDoProduto();
                     produtoService.buscarProduto(pid);

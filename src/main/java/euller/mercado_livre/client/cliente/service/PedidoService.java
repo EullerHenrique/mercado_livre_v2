@@ -1,9 +1,8 @@
 package euller.mercado_livre.client.cliente.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.domain.model.Pedido;
-import euller.mercado_livre.client.cliente.domain.model.Produto;
-import euller.mercado_livre.client.cliente.service.external.ClienteService;
+import euller.mercado_livre.client.cliente.model.Pedido;
+import euller.mercado_livre.client.cliente.model.Produto;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.server.cliente.*;
 import io.grpc.Channel;
@@ -25,11 +24,8 @@ public class PedidoService {
         blockingStubPedido = PedidoServiceGrpc.newBlockingStub(channel);
     }
 
-    public PedidoServiceGrpc.PedidoServiceBlockingStub getBlockingStubPedido() {
-        return blockingStubPedido;
-    }
-
-    public void criarPedido(String CID, Produto produto, Pedido pedido) {
+    public void criarPedido(Produto produto, Pedido pedido) {
+        String CID = pedido.getCID();
         logger.info("Request: Insira o pedido " + pedido + " com o CID " + CID);
         Gson gson = new Gson();
         String pedidoJson = gson.toJson(pedido);
@@ -47,14 +43,24 @@ public class PedidoService {
         logger.info(response.getMessage());
     }
 
-    public void modificarPedido(String CID, String OID, Pedido pedido) {
+    public void modificarPedido(Pedido pedidoAntigo, Pedido pedidoNovo, Produto produto) {
+        String CID = pedidoAntigo.getCID();
+        String OID = pedidoAntigo.getOID();
         Gson gson = new Gson();
-        String pedidoJson = gson.toJson(pedido);
+        String pedidoJson = gson.toJson(pedidoNovo);
         logger.info("Request: Modifique o pedido com o CID: " + CID + " e o OID: " + OID + " para " + pedidoJson);
         ModificarPedidoRequest request = ModificarPedidoRequest.newBuilder().setCID(CID).setOID(OID).setDados(pedidoJson).build();
         ModificarPedidoResponse response;
         try {
             response = blockingStubPedido.modificarPedido(request);
+            int quantidadeProdutoAtualizada;
+            if(pedidoAntigo.getQuantidade() > pedidoNovo.getQuantidade()) {
+                quantidadeProdutoAtualizada = produto.getQuantidade() + (pedidoAntigo.getQuantidade() - pedidoNovo.getQuantidade());
+            } else {
+                quantidadeProdutoAtualizada = produto.getQuantidade() - (pedidoNovo.getQuantidade() - pedidoAntigo.getQuantidade());
+            }
+            produto.setQuantidade(quantidadeProdutoAtualizada);
+            produtoService.modificarProduto(produto);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());
@@ -63,26 +69,27 @@ public class PedidoService {
         logger.info(response.getMessage());
     }
 
-    public void listaPedido(String CID, String OID) {
+    public String buscarPedido(String CID, String OID) {
         logger.info("Request: Busque o pedido com o CID: " + CID+ " e o OID: " + OID);
-        ListarPedidoRequest request = ListarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();
-        ListarPedidoResponse response;
+        BuscarPedidoRequest request = BuscarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();
+        BuscarPedidoResponse response;
         try {
-            response = blockingStubPedido.listarPedido(request);
+            response = blockingStubPedido.buscarPedido(request);
+            logger.info(response.getMessage());
+            return response.getMessage();
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());
-            return;
         }
-        logger.info(response.getMessage());
+        return null;
     }
 
-    public void listaPedidos(String CID) {
+    public void buscarPedidos(String CID) {
         logger.info("Request: Busque os pedido com o CID: " + CID);
-        ListarPedidosRequest request = ListarPedidosRequest.newBuilder().setCID(CID).build();
-        ListarPedidosResponse response;
+        BuscarPedidosRequest request = BuscarPedidosRequest.newBuilder().setCID(CID).build();
+        BuscarPedidosResponse response;
         try {
-            response = blockingStubPedido.listarPedidos(request);
+            response = blockingStubPedido.buscarPedidos(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());

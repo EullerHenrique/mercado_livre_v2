@@ -1,6 +1,8 @@
 package euller.mercado_livre.server.admin.service;
 
+import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.*;
+import euller.mercado_livre.server.admin.model.Cliente;
 import euller.mercado_livre.server.admin.repository.ClienteRepository;
 import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -14,10 +16,10 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     public ClienteServiceImpl() {
         try {
             MosquittoService mosquittoService = new MosquittoService();
-            mosquittoService.subscribeCliente("portal/client/CID", clienteRepository);
-            mosquittoService.subscribeCliente("portal/client/cliente/criar", clienteRepository);
-            mosquittoService.subscribeCliente("portal/client/cliente/modificar", clienteRepository);
-            mosquittoService.subscribeCliente("portal/client/cliente/apagar", clienteRepository);
+            mosquittoService.subscribeCliente("portal/client/CID", "portal/admin/CID", clienteRepository);
+            mosquittoService.subscribeCliente("portal/admin/cliente/criar", "", clienteRepository);
+            mosquittoService.subscribeCliente("portal/admin/cliente/modificar", "", clienteRepository);
+            mosquittoService.subscribeCliente("portal/admin/cliente/apagar", "", clienteRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
@@ -25,16 +27,20 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
 
     @Override
     public void criarCliente(CriarClienteRequest req, StreamObserver<CriarClienteResponse> responseObserver) {
-        String CID = UUID.randomUUID().toString();
-        String cliente = clienteRepository.criarCliente(CID, req.getDados(), false);
-        CriarClienteResponse reply = CriarClienteResponse.newBuilder().setMessage(cliente).build();
+        Gson gson = new Gson();
+        Cliente cliente = gson.fromJson(req.getDados(), Cliente.class);
+        cliente.setCID(UUID.randomUUID().toString());
+        String clienteJson = clienteRepository.criarCliente(cliente, false);
+        CriarClienteResponse reply = CriarClienteResponse.newBuilder().setMessage(clienteJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void modificarCliente(ModificarClienteRequest req, StreamObserver<ModificarClienteResponse> responseObserver) {
-        String dados = clienteRepository.modificarCLiente(req.getCID(), req.getDados(), false);
-        ModificarClienteResponse reply = ModificarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " Cliente: "+dados).build();
+        Gson gson = new Gson();
+        Cliente cliente = gson.fromJson(req.getDados(), Cliente.class);
+        String clienteJson = clienteRepository.modificarCLiente(cliente, false);
+        ModificarClienteResponse reply = ModificarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " Cliente: "+clienteJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

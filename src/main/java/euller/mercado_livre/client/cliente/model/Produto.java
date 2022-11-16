@@ -1,12 +1,7 @@
-package euller.mercado_livre.client.admin.domain.dto;
-import euller.mercado_livre.client.cliente.domain.model.Produto;
-public class ProdutoDTO {
+package euller.mercado_livre.client.cliente.model;
 
-    public ProdutoDTO(Produto produto) {
-        this.produto = produto.getProduto();
-        this.quantidade = produto.getQuantidade();
-        this.preco = produto.getPreco();
-    }
+public class Produto {
+    private String PID;
 
     private String produto;
     private int quantidade;
@@ -34,5 +29,13 @@ public class ProdutoDTO {
 
     public void setPreco(int preco) {
         this.preco = preco;
+    }
+
+    public String getPID() {
+        return PID;
+    }
+
+    public void setPID(String PID) {
+        this.PID = PID;
     }
 }

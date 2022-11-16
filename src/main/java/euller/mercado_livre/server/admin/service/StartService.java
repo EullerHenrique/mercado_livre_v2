@@ -1,6 +1,5 @@
 package euller.mercado_livre.server.admin.service;
 
-import euller.mercado_livre.client.admin.domain.model.Produto;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 

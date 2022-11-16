@@ -1,6 +1,8 @@
-package euller.mercado_livre.client.admin.domain.model;
+package euller.mercado_livre.server.admin.model;
 
 public class Produto {
+
+    private String PID;
     private String produto;
     private int quantidade;
     private int preco;
@@ -24,6 +26,14 @@ public class Produto {
     }
     public int getPreco() {
         return preco;
+    }
+
+    public String getPID() {
+        return PID;
+    }
+
+    public void setPID(String PID) {
+        this.PID = PID;
     }
 
 }

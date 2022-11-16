@@ -1,5 +1,8 @@
 package euller.mercado_livre.server.admin.service;
 
+import com.google.gson.Gson;
+import euller.mercado_livre.server.admin.model.Cliente;
+import euller.mercado_livre.server.admin.model.Produto;
 import euller.mercado_livre.server.admin.repository.ClienteRepository;
 import euller.mercado_livre.server.admin.repository.ProdutoRepository;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -27,7 +30,7 @@ public class MosquittoService {
         client.disconnect();
     }
 
-    public void subscribeCliente(String topic, ClienteRepository clienteRepository) throws MqttException {
+    public void subscribeCliente(String topicFrom, String topicTo, ClienteRepository clienteRepository) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
         MqttClient client = new MqttClient("tcp://localhost:1883", publisherId);
         MqttConnectOptions options = new MqttConnectOptions();
@@ -35,30 +38,32 @@ public class MosquittoService {
         options.setCleanSession(true);
         options.setConnectionTimeout(10);
         client.connect(options);
-        client.subscribe(topic, (topic1, message) -> {
-            System.out.println("TOPIC: " + topic1);
+        client.subscribe(topicFrom, (topic, message) -> {
+            System.out.println("TOPIC: " + topic);
             System.out.println("MSG: " + new String(message.getPayload()));
             System.out.println("STATUS: " + clienteRepository.isCliente(new String(message.getPayload())));
-            switch (topic) {
+            Gson gson = new Gson();
+            Cliente cliente;
+            switch (topicFrom) {
                 case "portal/client/CID":
-                    publish("portal/admin/CID", clienteRepository.isCliente(new String(message.getPayload())));
+                    publish(topicTo, clienteRepository.isCliente(new String(message.getPayload())));
                     break;
-                case "portal/client/cliente/criar":
-                    String[] dados = new String(message.getPayload()).split(" , ");
-                    clienteRepository.criarCliente(dados[0], dados[1], true);
+                case "portal/admin/cliente/criar":
+                    cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
+                    clienteRepository.criarCliente(cliente, true);
                     break;
-                case "portal/client/cliente/modificar":
-                    dados = new String(message.getPayload()).split(" , ");
-                    clienteRepository.modificarCLiente(dados[0], dados[1], true);
+                case "portal/admin/cliente/modificar":
+                    cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
+                    clienteRepository.modificarCLiente(cliente, true);
                     break;
-                case "portal/client/cliente/apagar":
+                case "portal/admin/cliente/apagar":
                     clienteRepository.apagarCliente(new String(message.getPayload()), true);
                     break;
             }
         });
     }
 
-    public void subscribeProduto(String topicFrom, String topicTo, ProdutoRepository produtoRepository, int method) throws MqttException {
+    public void subscribeProduto(String topicFrom, String topicTo, ProdutoRepository produtoRepository) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
         MqttClient client = new MqttClient("tcp://localhost:1883", publisherId);
         MqttConnectOptions options = new MqttConnectOptions();
@@ -66,23 +71,40 @@ public class MosquittoService {
         options.setCleanSession(true);
         options.setConnectionTimeout(10);
         client.connect(options);
-        client.subscribe(topicFrom, (topic1, message) -> {
-            System.out.println("TOPIC: "+topic1);
+        client.subscribe(topicFrom, (topic, message) -> {
+            System.out.println("TOPIC: "+topic);
             System.out.println("MSG: "+ new String(message.getPayload()));
-            System.out.println("STATUS: "+produtoRepository.isProduto(new String(message.getPayload())));
             System.out.println("PRODUTO: "+produtoRepository.buscarProduto(new String(message.getPayload())));
-            if(method == 1){
-                publish(topicTo, produtoRepository.buscarProduto(new String(message.getPayload())));
-            }else if(method == 2){
-                String mensagem = new String(message.getPayload());
-                String[] pidProduto = mensagem.split(" , ");
-                String pid = pidProduto[0];
-                String produto = pidProduto[1];
-                produtoRepository.modificarProduto(pid, produto);
-                //publish(topicTo, produtoRepository.modificarProduto(pid, produto));
+            Gson gson = new Gson();
+            Produto produto;
+            switch (topicFrom){
+                case "portal/client/PID/1":
+                    String produtoJson = produtoRepository.buscarProduto(new String(message.getPayload()));
+                    if(produtoJson == null){
+                        publish(topicTo, "false");
+                    }else{
+                        publish(topicTo, produtoJson);
+                    }
+                    break;
+                case "portal/client/PID/2":
+                    produto = gson.fromJson(new String(message.getPayload()), Produto.class);
+                    produtoRepository.modificarProduto(produto, false);
+                    break;
+                case "portal/admin/produto/criar":
+                    produto = gson.fromJson(new String(message.getPayload()), Produto.class);
+                    produtoRepository.criarProduto(produto, true);
+                    break;
+                case "portal/admin/produto/modificar":
+                    produto = gson.fromJson(new String(message.getPayload()), Produto.class);
+                    produtoRepository.modificarProduto(produto, true);
+                    break;
+                case "portal/admin/produto/apagar":
+                    produtoRepository.apagarProduto(new String(message.getPayload()), true);
+                    break;
             }
         });
     }
+
 
 }
 

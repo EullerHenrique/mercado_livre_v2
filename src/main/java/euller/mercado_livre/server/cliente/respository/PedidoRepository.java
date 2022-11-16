@@ -1,5 +1,11 @@
 package euller.mercado_livre.server.cliente.respository;
 
+import com.google.gson.Gson;
+import euller.mercado_livre.server.admin.model.Produto;
+import euller.mercado_livre.server.admin.repository.ProdutoRepository;
+import euller.mercado_livre.server.cliente.model.Pedido;
+
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -7,9 +13,13 @@ import java.util.List;
 public class PedidoRepository {
     private final Hashtable<String, List<Hashtable<String, String>>> pedidos = new Hashtable<>();
 
-    public String criarPedido(String CID, String OID, String dados) {
+    public String criarPedido(Pedido pedidoModel) {
+        String CID = pedidoModel.getCID();
+        String OID = pedidoModel.getOID();
+        Gson gson = new Gson();
+        String pedidoJson = gson.toJson(pedidoModel);
         Hashtable<String, String> pedido = new Hashtable<>();
-        pedido.put(OID, dados);
+        pedido.put(OID, pedidoJson);
         if(!pedidos.containsKey(CID)) {
             List<Hashtable<String, String>> pedidos = new ArrayList<>();
             pedidos.add(pedido);
@@ -20,17 +30,20 @@ public class PedidoRepository {
         return listarPedido(CID, OID);
     }
 
-    public String modificarPedido(String CID, String OID, String dados) {
+    public String modificarPedido(Pedido pedidoNovo) {
+        String CID = pedidoNovo.getCID();
+        String OID = pedidoNovo.getOID();
+        Gson gson = new Gson();
+        String pedidoJson = gson.toJson(pedidoNovo);
         if (pedidos.containsKey(CID) && pedidos.get(CID).size() > 0) {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
-                    pedido.remove(OID);
-                    pedido.put(OID, dados);
+                    pedido.put(OID, pedidoJson);
                     return listarPedido(CID, OID);
                 }
             }
         }
-        return " Pedido não encontrado";
+        return null;
     }
 
     public String listarPedido(String CID, String OID) {
@@ -39,7 +52,7 @@ public class PedidoRepository {
                 return pedido.get(OID);
             }
         }
-        return " Pedido não encontrado";
+        return null;
     }
 
     public List<Hashtable<String, String>> listarPedidos(String CID) {
@@ -58,6 +71,6 @@ public class PedidoRepository {
                 }
             }
         }
-        return " Pedido não encontrado";
+        return null;
     }
 }

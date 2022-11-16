@@ -10,8 +10,8 @@ package server.client;
 service PedidoService {
   rpc criarPedido(CriarPedidoRequest) returns (CriarPedidoResponse);
   rpc modificarPedido(ModificarPedidoRequest) returns (ModificarPedidoResponse);
-  rpc listarPedido(ListarPedidoRequest) returns (ListarPedidoResponse);
-  rpc listarPedidos(ListarPedidosRequest) returns (ListarPedidosResponse);
+  rpc buscarPedido(BuscarPedidoRequest) returns (BuscarPedidoResponse);
+  rpc buscarPedidos(BuscarPedidosRequest) returns (BuscarPedidosResponse);
   rpc apagarPedido(ApagarPedidoRequest) returns (ApagarPedidoResponse);
 }
 
@@ -19,10 +19,10 @@ message CriarPedidoRequest { string CID = 1; string dados = 2; }
 message CriarPedidoResponse { string message = 1; }
 message ModificarPedidoRequest { string CID = 1; string OID = 2; string dados = 3; }
 message ModificarPedidoResponse { string message = 1; }
-message ListarPedidoRequest { string CID = 1; string OID = 2; }
-message ListarPedidoResponse { string message = 1; }
-message ListarPedidosRequest { string CID = 1; }
-message ListarPedidosResponse { string message = 1; }
+message BuscarPedidoRequest { string CID = 1; string OID = 2; }
+message BuscarPedidoResponse { string message = 1; }
+message BuscarPedidosRequest { string CID = 1; }
+message BuscarPedidosResponse { string message = 1; }
 message ApagarPedidoRequest { string CID = 1; string OID = 2; }
 message ApagarPedidoResponse { string message = 1; }
 

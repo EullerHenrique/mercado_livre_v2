@@ -1,6 +1,7 @@
-package euller.mercado_livre.client.admin.domain.model;
+package euller.mercado_livre.client.admin.model;
 
 public class Cliente {
+    private String CID;
     private String nome;
     private String email;
     private String telefone;
@@ -24,5 +25,13 @@ public class Cliente {
     }
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getCID() {
+        return CID;
+    }
+
+    public void setCID(String CID) {
+        this.CID = CID;
     }
 }
