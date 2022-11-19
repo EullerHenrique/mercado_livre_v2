@@ -16,7 +16,7 @@ public class ProdutoRepository {
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String criarProduto(Produto produto, boolean otherServerUpdate) {
-        logger.info("\nCriando produto: "+produto+"\n");
+        logger.info("Criando produto: "+produto+"\n");
         String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
@@ -32,7 +32,7 @@ public class ProdutoRepository {
     }
 
     public String modificarProduto(Produto produto, boolean otherServerUpdate) {
-        logger.info("\nModificando produto: "+produto+"\n");
+        logger.info("Modificando produto: "+produto+"\n");
         String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
@@ -52,7 +52,7 @@ public class ProdutoRepository {
     }
 
     public String buscarProduto(String PID){
-        logger.info("\nBuscando produto: "+PID+"\n");
+        logger.info("Buscando produto: "+PID+"\n");
         if(produtos.containsKey(PID)) {
             return produtos.get(PID);
         }
@@ -60,7 +60,7 @@ public class ProdutoRepository {
     }
 
     public String apagarProduto(String PID, boolean otherServerUpdate){
-        logger.info("\nApagando produto: "+PID+"\n");
+        logger.info("Apagando produto: "+PID+"\n");
         if (produtos.containsKey(PID)) {
             produtos.remove(PID);
             if(!otherServerUpdate) {

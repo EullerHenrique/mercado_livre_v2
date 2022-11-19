@@ -1,7 +1,6 @@
 package euller.mercado_livre.server.admin.repository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.server.admin.model.Cliente;
 import euller.mercado_livre.server.admin.service.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -16,7 +15,7 @@ public class ClienteRepository {
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String criarCliente(Cliente cliente, boolean otherServerUpdate) {
-        logger.info("\nCriando cliente: "+cliente+"\n");
+        logger.info("Criando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
@@ -32,7 +31,7 @@ public class ClienteRepository {
     }
 
     public String modificarCLiente(Cliente cliente, boolean otherServerUpdate) {
-        logger.info("\nModificando cliente: "+cliente+"\n");
+        logger.info("Modificando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
@@ -52,7 +51,7 @@ public class ClienteRepository {
     }
 
     public String buscarCliente(String CID){
-        logger.info("\nBuscando cliente: "+CID+"\n");
+        logger.info("Buscando cliente: "+CID+"\n");
         if(clientes.containsKey(CID)) {
             return clientes.get(CID);
         }
@@ -60,7 +59,7 @@ public class ClienteRepository {
     }
 
     public String isCliente(String CID){
-        logger.info("\nVerificando cliente: "+CID+"\n");
+        logger.info("Verificando cliente: "+CID+"\n");
         if(clientes.containsKey(CID)) {
             return "true";
         }
@@ -68,7 +67,7 @@ public class ClienteRepository {
     }
 
     public String apagarCliente(String CID, boolean otherServerUpdate){
-        logger.info("\nApagando cliente: "+CID+"\n");
+        logger.info("Apagando cliente: "+CID+"\n");
         if (clientes.containsKey(CID)) {
             clientes.remove(CID);
             if(!otherServerUpdate) {
@@ -82,6 +81,4 @@ public class ClienteRepository {
         }
         return null;
     }
-
-
 }

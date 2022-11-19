@@ -41,7 +41,7 @@ public class PedidoRepository {
     }
 
     public String modificarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
-        logger.info("\nModificando pedido: "+pedidoModel+"\n");
+        logger.info("Modificando pedido: "+pedidoModel+"\n");
         String CID = pedidoModel.getCID();
         String OID = pedidoModel.getOID();
         Gson gson = new Gson();
@@ -65,7 +65,7 @@ public class PedidoRepository {
     }
 
     public String buscarPedido(String CID, String OID) {
-        logger.info("\nBuscando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
+        logger.info("Buscando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
         if(pedidos.containsKey(CID)) {
             for(Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if(pedido.containsKey(OID)) {
@@ -77,7 +77,7 @@ public class PedidoRepository {
     }
 
     public List<Hashtable<String, String>> buscarPedidos(String CID) {
-        logger.info("\nBuscando pedidos:  "+"CID: "+CID+"\n");
+        logger.info("Buscando pedidos:  "+"CID: "+CID+"\n");
         if (pedidos.containsKey(CID)) {
             return pedidos.get(CID);
         }
@@ -85,7 +85,7 @@ public class PedidoRepository {
     }
 
     public String apagarPedido(String CID, String OID, boolean otherServerUpdate) {
-        logger.info("\nApagando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
+        logger.info("Apagando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
         if (pedidos.containsKey(CID)) {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {

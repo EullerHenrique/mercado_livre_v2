@@ -26,7 +26,7 @@ public class MosquittoService {
         client.connect(options);
         MqttMessage message = new MqttMessage(content.getBytes());
         message.setQos(2);
-        logger.info("\nPublishing topic: "+topic);
+        logger.info("Publishing topic: "+topic);
         logger.info("Publishing message: "+message+"\n");
         client.publish(topic, message);
         client.disconnect();
@@ -41,7 +41,7 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
-            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing topic: "+topic);
             logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Cliente cliente;
@@ -73,7 +73,7 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
-            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing topic: "+topic);
             logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Produto produto;
