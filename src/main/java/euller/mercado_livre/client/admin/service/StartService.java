@@ -7,12 +7,14 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import static euller.mercado_livre.client.admin.service.InputsService.*;
 import static euller.mercado_livre.client.admin.service.InputsService.lerIdDoProduto;
 
 public class StartService {
 
+    private final Logger logger = Logger.getLogger(StartService.class.getName());
     public int lerPortaServidor() {
         int port;
         Scanner s = new Scanner(System.in);
@@ -30,6 +32,7 @@ public class StartService {
 
     public void start() throws InterruptedException {
         int port = lerPortaServidor();
+        logger.info("Client started, listening on " + port+"\n");
         String target = "localhost:"+port;
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse

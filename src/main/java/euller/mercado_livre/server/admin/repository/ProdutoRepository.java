@@ -18,17 +18,21 @@ public class ProdutoRepository {
     public String criarProduto(Produto produto, boolean otherServerUpdate) {
         logger.info("Criando produto: "+produto+"\n");
         String PID = produto.getPID();
-        Gson gson = new Gson();
-        String produtoJson = gson.toJson(produto);
-        produtos.put(PID, produtoJson);
-        if(!otherServerUpdate) {
-            try {
-                mosquittoService.publish("server/admin/produto/criar", buscarProduto(PID));
-            } catch (MqttException e) {
-                throw new RuntimeException(e);
+        if(!produtos.containsKey(PID)) {
+            Gson gson = new Gson();
+            String produtoJson = gson.toJson(produto);
+            produtos.put(PID, produtoJson);
+            String produtoBD = buscarProduto(PID);
+            if (!otherServerUpdate) {
+                try {
+                    mosquittoService.publish("server/admin/produto/criar",produtoBD);
+                } catch (MqttException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            return produtoBD;
         }
-        return buscarProduto(PID);
+        return null;
     }
 
     public String modificarProduto(Produto produto, boolean otherServerUpdate) {
@@ -39,14 +43,15 @@ public class ProdutoRepository {
         if(produtos.containsKey(PID)){
             produtos.remove(PID);
             produtos.put(PID, produtoJson);
+            String produtoBD = buscarProduto(PID);
             if(!otherServerUpdate) {
                 try {
-                    mosquittoService.publish("server/admin/produto/modificar", buscarProduto(PID));
+                    mosquittoService.publish("server/admin/produto/modificar", produtoBD);
                 } catch (MqttException e) {
                     throw new RuntimeException(e);
                 }
             }
-            return buscarProduto(PID);
+            return produtoBD;
         }
         return null;
     }

@@ -2,7 +2,6 @@ package euller.mercado_livre.server.admin.service;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.*;
-import euller.mercado_livre.server.admin.model.Cliente;
 import euller.mercado_livre.server.admin.model.Produto;
 import euller.mercado_livre.server.admin.repository.ProdutoRepository;
 import io.grpc.stub.StreamObserver;
@@ -32,8 +31,11 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
         Gson gson = new Gson();
         Produto produto = gson.fromJson(req.getDados(), Produto.class);
         produto.setPID(UUID.randomUUID().toString());
-        String cliente = produtoRepository.criarProduto(produto, false);
-        CriarProdutoResponse reply = CriarProdutoResponse.newBuilder().setMessage(cliente).build();
+        String produtoJson = produtoRepository.criarProduto(produto, false);
+        if(produtoJson == null){
+            produtoJson = "Produto já existe";
+        }
+        CriarProdutoResponse reply = CriarProdutoResponse.newBuilder().setMessage(produtoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

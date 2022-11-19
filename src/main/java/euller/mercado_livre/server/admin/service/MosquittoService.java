@@ -44,6 +44,8 @@ public class MosquittoService {
             logger.info("Subscribing topic: "+topic);
             logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
+            String CID;
+            String clienteJson;
             Cliente cliente;
             switch (topicFrom) {
                 case "server/client/cliente/verificar":
@@ -51,14 +53,22 @@ public class MosquittoService {
                     break;
                 case "server/admin/cliente/criar":
                     cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
-                    clienteRepository.criarCliente(cliente, true);
+                    if(clienteRepository.buscarCliente(cliente.getCID())==null){
+                        clienteRepository.criarCliente(cliente, true);
+                    }
                     break;
                 case "server/admin/cliente/modificar":
-                    cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
-                    clienteRepository.modificarCLiente(cliente, true);
+                    clienteJson = new String(message.getPayload());
+                    cliente = gson.fromJson(clienteJson, Cliente.class);
+                    if(!clienteJson.equals(clienteRepository.buscarCliente(cliente.getCID()))) {
+                        clienteRepository.modificarCLiente(cliente, true);
+                    }
                     break;
                 case "server/admin/cliente/apagar":
-                    clienteRepository.apagarCliente(new String(message.getPayload()), true);
+                    CID = new String(message.getPayload());
+                    if(clienteRepository.buscarCliente(CID)!=null) {
+                        clienteRepository.apagarCliente(CID, true);
+                    }
                     break;
             }
         });
@@ -77,29 +87,36 @@ public class MosquittoService {
             logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Produto produto;
+            String produtoJson;
+            String PID;
             switch (topicFrom){
                 case "server/client/produto/buscar":
-                    String produtoJson = produtoRepository.buscarProduto(new String(message.getPayload()));
+                    produtoJson = produtoRepository.buscarProduto(new String(message.getPayload()));
                     if(produtoJson == null){
                         publish(topicTo, "false");
                     }else{
                         publish(topicTo, produtoJson);
                     }
                     break;
-                case "server/client/produto/modificar":
-                    produto = gson.fromJson(new String(message.getPayload()), Produto.class);
-                    produtoRepository.modificarProduto(produto, false);
-                    break;
                 case "server/admin/produto/criar":
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
-                    produtoRepository.criarProduto(produto, true);
+                    if(produtoRepository.buscarProduto(produto.getPID())==null){
+                        produtoRepository.criarProduto(produto, true);
+                    }
                     break;
+                case "server/client/produto/modificar":
                 case "server/admin/produto/modificar":
+                    produtoJson = new String(message.getPayload());
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
-                    produtoRepository.modificarProduto(produto, true);
+                    if(!produtoJson.equals(produtoRepository.buscarProduto(produto.getPID()))){
+                        produtoRepository.modificarProduto(produto, true);
+                    }
                     break;
                 case "server/admin/produto/apagar":
-                    produtoRepository.apagarProduto(new String(message.getPayload()), true);
+                    PID = new String(message.getPayload());
+                    if(produtoRepository.buscarProduto(PID)!=null) {
+                        produtoRepository.apagarProduto(PID, true);
+                    }
                     break;
             }
         });

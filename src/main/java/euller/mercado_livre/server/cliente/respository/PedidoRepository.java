@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class PedidoRepository {
-
     private final Logger logger = Logger.getLogger(PedidoRepository.class.getName());
     private final Hashtable<String, List<Hashtable<String, String>>> pedidos = new Hashtable<>();
     private MosquittoService mosquittoService = new MosquittoService();
@@ -30,14 +29,15 @@ public class PedidoRepository {
         }else{
             this.pedidos.get(CID).add(pedido);
         }
+        String pedidoBD = buscarPedido(CID, OID);
         if(!otherServerUpdate) {
             try {
-                mosquittoService.publish("server/cliente/pedido/criar", buscarPedido(CID, OID));
+                mosquittoService.publish("server/cliente/pedido/criar", pedidoBD);
             } catch (MqttException e) {
                 throw new RuntimeException(e);
             }
         }
-        return buscarPedido(CID, OID);
+        return pedidoBD;
     }
 
     public String modificarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
@@ -50,14 +50,15 @@ public class PedidoRepository {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
                     pedido.put(OID, pedidoJson);
+                    String pedidoBD = buscarPedido(CID, OID);
                     if(!otherServerUpdate) {
                         try {
-                            mosquittoService.publish("server/cliente/pedido/modificar", buscarPedido(CID, OID));
+                            mosquittoService.publish("server/cliente/pedido/modificar",pedidoBD);
                         } catch (MqttException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                    return buscarPedido(CID, OID);
+                    return pedidoBD;
                 }
             }
         }
@@ -97,7 +98,7 @@ public class PedidoRepository {
                             throw new RuntimeException(e);
                         }
                     }
-                    return " Pedido apagado";
+                    return "Pedido apagado";
                 }
             }
         }

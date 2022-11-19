@@ -17,17 +17,21 @@ public class ClienteRepository {
     public String criarCliente(Cliente cliente, boolean otherServerUpdate) {
         logger.info("Criando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
-        Gson gson = new Gson();
-        String clienteJson = gson.toJson(cliente);
-        clientes.put(CID, clienteJson);
-        if(!otherServerUpdate) {
-            try {
-                mosquittoService.publish("server/admin/cliente/criar", buscarCliente(CID));
-            } catch (MqttException e) {
-                throw new RuntimeException(e);
+        if(!clientes.containsKey(CID)) {
+            Gson gson = new Gson();
+            String clienteJson = gson.toJson(cliente);
+            clientes.put(CID, clienteJson);
+            String clienteBD = buscarCliente(CID);
+            if (!otherServerUpdate) {
+                try {
+                    mosquittoService.publish("server/admin/cliente/criar", clienteBD);
+                } catch (MqttException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            return clienteBD;
         }
-        return buscarCliente(CID);
+        return null;
     }
 
     public String modificarCLiente(Cliente cliente, boolean otherServerUpdate) {
@@ -38,14 +42,15 @@ public class ClienteRepository {
         if(clientes.containsKey(CID)){
             clientes.remove(CID);
             clientes.put(CID, clienteJson);
+            String clienteBD = buscarCliente(CID);
             if(!otherServerUpdate) {
                 try {
-                    mosquittoService.publish("server/admin/cliente/modificar", buscarCliente(CID));
+                    mosquittoService.publish("server/admin/cliente/modificar",clienteBD);
                 } catch (MqttException e) {
                     throw new RuntimeException(e);
                 }
             }
-            return buscarCliente(CID);
+            return clienteBD;
         }
         return null;
     }

@@ -31,6 +31,9 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
         Cliente cliente = gson.fromJson(req.getDados(), Cliente.class);
         cliente.setCID(UUID.randomUUID().toString());
         String clienteJson = clienteRepository.criarCliente(cliente, false);
+        if(clienteJson == null){
+            clienteJson = "Cliente já existe";
+        }
         CriarClienteResponse reply = CriarClienteResponse.newBuilder().setMessage(clienteJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();

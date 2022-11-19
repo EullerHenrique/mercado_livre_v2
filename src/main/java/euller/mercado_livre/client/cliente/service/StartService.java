@@ -9,8 +9,11 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class StartService {
+
+    private final Logger logger = Logger.getLogger(StartService.class.getName());
 
     public int lerPortaServidor() {
         int port;
@@ -29,6 +32,7 @@ public class StartService {
 
     public void start() throws InterruptedException {
         int port = lerPortaServidor();
+        logger.info("Client started, listening on " + port+"\n");
         // Access a service running on the local machine on port 50051
         String target = "localhost:"+port;
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
