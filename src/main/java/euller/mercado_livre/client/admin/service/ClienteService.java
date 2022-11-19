@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.admin.model.Cliente;
+import euller.mercado_livre.client.admin.dto.ClienteDTO;
 import euller.mercado_livre.server.admin.*;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
@@ -19,9 +19,9 @@ public class ClienteService {
         blockingStubCliente = ClienteServiceGrpc.newBlockingStub(channel);
     }
 
-    public void criarCliente(Cliente cliente) {
+    public void criarCliente(ClienteDTO clienteDTO) {
         Gson gson = new Gson();
-        String clienteJson = gson.toJson(cliente);
+        String clienteJson = gson.toJson(clienteDTO);
         logger.info("Request: Insira o cliente " + clienteJson);
         CriarClienteRequest request = CriarClienteRequest.newBuilder().setDados(clienteJson).build();
         CriarClienteResponse response;
@@ -34,11 +34,11 @@ public class ClienteService {
         logger.info("Response: "+response.getMessage());
     }
 
-    public void modificarCliente(Cliente cliente) {
-        String CID = cliente.getCID();
+    public void modificarCliente(ClienteDTO clienteDTO) {
+        String CID = clienteDTO.getCID();
         Gson gson = new Gson();
-        String clienteJson = gson.toJson(cliente);
-        logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + cliente);
+        String clienteJson = gson.toJson(clienteDTO);
+        logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + clienteDTO);
         ModificarClienteRequest request = ModificarClienteRequest.newBuilder().setCID(CID).setDados(clienteJson).build();
         ModificarClienteResponse response;
         try {

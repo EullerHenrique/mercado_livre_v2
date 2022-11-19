@@ -1,6 +1,6 @@
 package euller.mercado_livre.client.cliente.model;
 
-public class Pedido {
+public class PedidoDTO {
 
     private String CID;
     private String PID;

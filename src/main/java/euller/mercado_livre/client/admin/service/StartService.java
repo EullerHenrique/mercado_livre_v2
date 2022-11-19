@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
-import euller.mercado_livre.client.admin.model.Cliente;
-import euller.mercado_livre.client.admin.model.Produto;
+import euller.mercado_livre.client.admin.dto.ClienteDTO;
+import euller.mercado_livre.client.admin.dto.ProdutoDTO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -48,13 +48,13 @@ public class StartService {
                 exibeOpcoes();
                 int opcao = scanner.nextInt();
                 if(opcao == 1){
-                    Cliente cliente = lerCliente();
-                    clienteService.criarCliente(cliente);
+                    ClienteDTO clienteDTO = lerCliente();
+                    clienteService.criarCliente(clienteDTO);
                 }else if(opcao == 2){
                     String cid = lerIdDoCliente();
-                    Cliente cliente = lerCliente();
-                    cliente.setCID(cid);
-                    clienteService.modificarCliente(cliente);
+                    ClienteDTO clienteDTO = lerCliente();
+                    clienteDTO.setCID(cid);
+                    clienteService.modificarCliente(clienteDTO);
                 }else if(opcao == 3){
                     String cid = lerIdDoCliente();
                     clienteService.buscarCliente(cid);
@@ -62,13 +62,13 @@ public class StartService {
                     String cid = lerIdDoCliente();
                     clienteService.apagarCliente(cid);
                 }else if(opcao == 5) {
-                    Produto produto = lerProduto();
-                    produtoService.criarProduto(produto);
+                    ProdutoDTO produtoDTO = lerProduto();
+                    produtoService.criarProduto(produtoDTO);
                 }else if(opcao == 6) {
                     String pid = lerIdDoProduto();
-                    Produto produto = lerProduto();
-                    produto.setPID(pid);
-                    produtoService.modificarProduto(produto);
+                    ProdutoDTO produtoDTO = lerProduto();
+                    produtoDTO.setPID(pid);
+                    produtoService.modificarProduto(produtoDTO);
                 }else if(opcao == 7) {
                     String pid = lerIdDoProduto();
                     produtoService.buscarProduto(pid);

@@ -1,6 +1,6 @@
-package euller.mercado_livre.client.admin.model;
+package euller.mercado_livre.client.admin.dto;
 
-public class Cliente {
+public class ClienteDTO {
     private String CID;
     private String nome;
     private String email;

@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.cliente.service;
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.model.Pedido;
-import euller.mercado_livre.client.cliente.model.Produto;
+import euller.mercado_livre.client.cliente.model.PedidoDTO;
+import euller.mercado_livre.client.cliente.model.ProdutoDTO;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import io.grpc.ManagedChannel;
@@ -51,23 +51,23 @@ public class StartService {
                 int opcao = scanner.nextInt();
                 if(opcao == 1){
                     String cid = inputsService.lerIdDoCliente();
-                    Produto produto = inputsService.lerIdDoProduto();
-                    Pedido pedido = inputsService.lerPedido(produto);
-                    pedido.setCID(cid);
-                    pedidoService.criarPedido(produto, pedido);
+                    ProdutoDTO produtoDTO = inputsService.lerIdDoProduto();
+                    PedidoDTO pedidoDTO = inputsService.lerPedido(produtoDTO);
+                    pedidoDTO.setCID(cid);
+                    pedidoService.criarPedido(produtoDTO, pedidoDTO);
                 }else if(opcao == 2){
                     Gson gson = new Gson();
                     String cid = inputsService.lerIdDoCliente();
                     String oid = inputsService.lerIdDoPedido();
                     String pedidoAntigoJson = pedidoService.buscarPedido(cid, oid);
                     String produtoJson;
-                    Pedido pedidoAntigo;
-                    Produto produto;
+                    PedidoDTO pedidoDTOAntigo;
+                    ProdutoDTO produtoDTO;
                     if(pedidoAntigoJson != null){
-                        pedidoAntigo = gson.fromJson(pedidoAntigoJson, Pedido.class);
-                        produtoJson = produtoService.buscarProduto(pedidoAntigo.getPID());
+                        pedidoDTOAntigo = gson.fromJson(pedidoAntigoJson, PedidoDTO.class);
+                        produtoJson = produtoService.buscarProduto(pedidoDTOAntigo.getPID());
                         if(produtoJson != null){
-                            produto = gson.fromJson(produtoJson, Produto.class);
+                            produtoDTO = gson.fromJson(produtoJson, ProdutoDTO.class);
                         }else{
                             System.out.println("Produto não encontrado");
                             continue;
@@ -76,8 +76,8 @@ public class StartService {
                         System.out.println("Pedido não encontrado");
                         continue;
                     }
-                    Pedido pedidoNovo = inputsService.lerPedidoAtualizado(pedidoAntigo, produto);
-                    pedidoService.modificarPedido(pedidoAntigo, pedidoNovo, produto);
+                    PedidoDTO pedidoDTONovo = inputsService.lerPedidoAtualizado(pedidoDTOAntigo, produtoDTO);
+                    pedidoService.modificarPedido(pedidoDTOAntigo, pedidoDTONovo, produtoDTO);
                 }else if(opcao == 3){
                     String cid =  inputsService.lerIdDoCliente();
                     String oid = inputsService.lerIdDoPedido();

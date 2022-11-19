@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.admin.model.Produto;
+import euller.mercado_livre.client.admin.dto.ProdutoDTO;
 import euller.mercado_livre.server.admin.*;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
@@ -23,9 +23,9 @@ public class ProdutoService {
         blockingStubProduto = ProdutoServiceGrpc.newBlockingStub(channel);
     }
 
-    public void criarProduto(Produto produto) {
+    public void criarProduto(ProdutoDTO produtoDTO) {
         Gson gson = new Gson();
-        String produtoJson = gson.toJson(produto);
+        String produtoJson = gson.toJson(produtoDTO);
         logger.info("Request: Insira o produto " + produtoJson);
         CriarProdutoRequest request = CriarProdutoRequest.newBuilder().setDados(produtoJson).build();
         CriarProdutoResponse response;
@@ -38,10 +38,10 @@ public class ProdutoService {
         logger.info(response.getMessage());
     }
 
-    public void modificarProduto(Produto produto) {
-        String PID = produto.getPID();
+    public void modificarProduto(ProdutoDTO produtoDTO) {
+        String PID = produtoDTO.getPID();
         Gson gson = new Gson();
-        String produtoJson = gson.toJson(produto);
+        String produtoJson = gson.toJson(produtoDTO);
         logger.info("Request: Modifique o produto com o PID: " + PID +" para " + produtoJson);
         ModificarProdutoRequest request = ModificarProdutoRequest.newBuilder().setPID(PID).setDados(produtoJson).build();
         ModificarProdutoResponse response;

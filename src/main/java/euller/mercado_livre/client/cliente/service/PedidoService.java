@@ -1,8 +1,8 @@
 package euller.mercado_livre.client.cliente.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.model.Pedido;
-import euller.mercado_livre.client.cliente.model.Produto;
+import euller.mercado_livre.client.cliente.model.PedidoDTO;
+import euller.mercado_livre.client.cliente.model.ProdutoDTO;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.server.cliente.*;
 import io.grpc.Channel;
@@ -22,42 +22,42 @@ public class PedidoService {
         blockingStubPedido = PedidoServiceGrpc.newBlockingStub(channel);
     }
 
-    public void criarPedido(Produto produto, Pedido pedido) {
-        String CID = pedido.getCID();
-        logger.info("Request: Insira o pedido " + pedido + " com o CID " + CID);
+    public void criarPedido(ProdutoDTO produtoDTO, PedidoDTO pedidoDTO) {
+        String CID = pedidoDTO.getCID();
+        logger.info("Request: Insira o pedido " + pedidoDTO + " com o CID " + CID);
         Gson gson = new Gson();
-        String pedidoJson = gson.toJson(pedido);
+        String pedidoJson = gson.toJson(pedidoDTO);
         CriarPedidoRequest request = CriarPedidoRequest.newBuilder().setCID(CID).setDados(pedidoJson).build();
         CriarPedidoResponse response;
         try {
             response = blockingStubPedido.criarPedido(request);
-            int quantidadeProdutoAtualizada =  produto.getQuantidade() - pedido.getQuantidade();
-            produto.setQuantidade(quantidadeProdutoAtualizada);
-            produtoService.modificarProduto(produto);
+            int quantidadeProdutoAtualizada =  produtoDTO.getQuantidade() - pedidoDTO.getQuantidade();
+            produtoDTO.setQuantidade(quantidadeProdutoAtualizada);
+            produtoService.modificarProduto(produtoDTO);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
         logger.info("Response: "+response.getMessage());
     }
-    public void modificarPedido(Pedido pedidoAntigo, Pedido pedidoNovo, Produto produto) {
-        String CID = pedidoAntigo.getCID();
-        String OID = pedidoAntigo.getOID();
+    public void modificarPedido(PedidoDTO pedidoDTOAntigo, PedidoDTO pedidoDTONovo, ProdutoDTO produtoDTO) {
+        String CID = pedidoDTOAntigo.getCID();
+        String OID = pedidoDTOAntigo.getOID();
         Gson gson = new Gson();
-        String pedidoJson = gson.toJson(pedidoNovo);
+        String pedidoJson = gson.toJson(pedidoDTONovo);
         logger.info("Request: Modifique o pedido com o CID: " + CID + " e o OID: " + OID + " para " + pedidoJson);
         ModificarPedidoRequest request = ModificarPedidoRequest.newBuilder().setCID(CID).setOID(OID).setDados(pedidoJson).build();
         ModificarPedidoResponse response;
         try {
             response = blockingStubPedido.modificarPedido(request);
             int quantidadeProdutoAtualizada;
-            if(pedidoAntigo.getQuantidade() > pedidoNovo.getQuantidade()) {
-                quantidadeProdutoAtualizada = produto.getQuantidade() + (pedidoAntigo.getQuantidade() - pedidoNovo.getQuantidade());
+            if(pedidoDTOAntigo.getQuantidade() > pedidoDTONovo.getQuantidade()) {
+                quantidadeProdutoAtualizada = produtoDTO.getQuantidade() + (pedidoDTOAntigo.getQuantidade() - pedidoDTONovo.getQuantidade());
             } else {
-                quantidadeProdutoAtualizada = produto.getQuantidade() - (pedidoNovo.getQuantidade() - pedidoAntigo.getQuantidade());
+                quantidadeProdutoAtualizada = produtoDTO.getQuantidade() - (pedidoDTONovo.getQuantidade() - pedidoDTOAntigo.getQuantidade());
             }
-            produto.setQuantidade(quantidadeProdutoAtualizada);
-            produtoService.modificarProduto(produto);
+            produtoDTO.setQuantidade(quantidadeProdutoAtualizada);
+            produtoService.modificarProduto(produtoDTO);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             System.out.println(e.getMessage());

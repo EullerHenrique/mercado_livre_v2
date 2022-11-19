@@ -1,8 +1,8 @@
 package euller.mercado_livre.client.cliente.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.model.Pedido;
-import euller.mercado_livre.client.cliente.model.Produto;
+import euller.mercado_livre.client.cliente.model.PedidoDTO;
+import euller.mercado_livre.client.cliente.model.ProdutoDTO;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 
@@ -53,10 +53,10 @@ public class InputsService {
         return oid;
     }
 
-    public Produto lerIdDoProduto() {
+    public ProdutoDTO lerIdDoProduto() {
         Scanner s = new Scanner(System.in);
         String pid;
-        Produto produto;
+        ProdutoDTO produtoDTO;
         while(true) {
             System.out.println("\nDigite o id do produto:             ");
             if (s.hasNextLine()) {
@@ -65,71 +65,71 @@ public class InputsService {
                     String produtoJson = produtoService.buscarProduto(pid);
                     if (!Objects.equals(produtoJson, "false")) {
                         Gson gson = new Gson();
-                        produto = gson.fromJson(produtoJson, Produto.class);
+                        produtoDTO = gson.fromJson(produtoJson, ProdutoDTO.class);
                         break;
                     }
                 }
             }
         }
-        produto.setPID(pid);
-        return produto;
+        produtoDTO.setPID(pid);
+        return produtoDTO;
     }
 
-    public Pedido lerPedido(Produto produto){
-        Pedido pedido = new Pedido();
-        String nomeProduto = produto.getProduto();
-        int precoProduto =  produto.getPreco();
-        int quantidadeProduto = produto.getQuantidade();
+    public PedidoDTO lerPedido(ProdutoDTO produtoDTO){
+        PedidoDTO pedidoDTO = new PedidoDTO();
+        String nomeProduto = produtoDTO.getProduto();
+        int precoProduto =  produtoDTO.getPreco();
+        int quantidadeProduto = produtoDTO.getQuantidade();
         Scanner s = new Scanner(System.in);
         System.out.println("---------------Produto-----------------");
         System.out.println("\nNome: " + nomeProduto);
         System.out.println("\nQuantidade Disponível " + quantidadeProduto);
-        System.out.println("\nPreço: " + produto.getPreco());
+        System.out.println("\nPreço: " + produtoDTO.getPreco());
         System.out.println("---------------------------------------");
-        pedido.setPID(produto.getPID());
-        pedido.setProduto(nomeProduto);
+        pedidoDTO.setPID(produtoDTO.getPID());
+        pedidoDTO.setProduto(nomeProduto);
         int quantidadeProdutoPedido;
         while(true) {
             System.out.println("\nDigite a quantidade:                    ");
             if (s.hasNextInt()) {
                 quantidadeProdutoPedido = s.nextInt();
                 if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto) {
-                    pedido.setQuantidade(quantidadeProdutoPedido);
+                    pedidoDTO.setQuantidade(quantidadeProdutoPedido);
                     break;
                 }
             }
         }
         int preco = precoProduto * quantidadeProdutoPedido;
-        pedido.setPreco(preco);
-        return pedido;
+        pedidoDTO.setPreco(preco);
+        return pedidoDTO;
     }
 
-    public Pedido lerPedidoAtualizado(Pedido pedidoAntigo, Produto produto){
+    public PedidoDTO lerPedidoAtualizado(PedidoDTO pedidoDTOAntigo, ProdutoDTO produtoDTO){
         Gson gson = new Gson();
-        Pedido pedidoNovo = gson.fromJson(gson.toJson(pedidoAntigo), Pedido.class);
-        String nomeProduto = produto.getProduto();
-        int precoProduto =  produto.getPreco();
-        int quantidadeProduto = produto.getQuantidade();
+        PedidoDTO pedidoDTONovo = gson.fromJson(gson.toJson(pedidoDTOAntigo), PedidoDTO.class);
+        String nomeProduto = produtoDTO.getProduto();
+        int precoProduto =  produtoDTO.getPreco();
+        int quantidadeProduto = produtoDTO.getQuantidade();
         Scanner s = new Scanner(System.in);
         System.out.println("---------------Produto-----------------");
         System.out.println("\nNome: " + nomeProduto);
         System.out.println("\nQuantidade Disponível " + quantidadeProduto);
-        System.out.println("\nQuantidade Presente No Pedido: " + pedidoAntigo.getQuantidade());
-        System.out.println("\nPreço: " + produto.getPreco());
+        System.out.println("\nQuantidade Presente No Pedido: " + pedidoDTOAntigo.getQuantidade());
+        System.out.println("\nPreço: " + produtoDTO.getPreco());
         System.out.println("---------------------------------------");
         int quantidadeProdutoPedido;
         while(true) {
             System.out.println("\nDigite a nova quantidade:                    ");
             if (s.hasNextInt()) {
                 quantidadeProdutoPedido = s.nextInt();
-                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+pedidoAntigo.getQuantidade()) {
-                        pedidoNovo.setQuantidade(quantidadeProdutoPedido);
+                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+ pedidoDTOAntigo.getQuantidade()) {
+                        pedidoDTONovo.setQuantidade(quantidadeProdutoPedido);
                     break;
                 }
             }
         }
-        pedidoNovo.setPreco(precoProduto * quantidadeProdutoPedido);
-        return pedidoNovo;
+        pedidoDTONovo.setPreco(precoProduto * quantidadeProdutoPedido);
+        return pedidoDTONovo;
     }
 
 

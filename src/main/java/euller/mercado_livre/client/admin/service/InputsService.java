@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
-import euller.mercado_livre.client.admin.model.Cliente;
-import euller.mercado_livre.client.admin.model.Produto;
+import euller.mercado_livre.client.admin.dto.ClienteDTO;
+import euller.mercado_livre.client.admin.dto.ProdutoDTO;
 
 import java.util.Scanner;
 
@@ -46,8 +46,8 @@ public class InputsService {
         return cid;
     }
 
-    public static Cliente lerCliente() {
-        Cliente cliente =  new Cliente();
+    public static ClienteDTO lerCliente() {
+        ClienteDTO clienteDTO =  new ClienteDTO();
         String nome;
         Scanner s = new Scanner(System.in);
         while(true) {
@@ -55,7 +55,7 @@ public class InputsService {
             if (s.hasNextLine()) {
                 nome = s.nextLine();
                 if (nome != null && !nome.isEmpty()) {
-                    cliente.setNome(nome);
+                    clienteDTO.setNome(nome);
                     break;
                 }
             }
@@ -67,7 +67,7 @@ public class InputsService {
             if (s.hasNextLine()) {
                 email = s.nextLine();
                 if (email != null && !email.isEmpty()) {
-                    cliente.setEmail(email);
+                    clienteDTO.setEmail(email);
                     break;
                 }
             }
@@ -80,13 +80,13 @@ public class InputsService {
             if (s.hasNextLine()) {
                 telefone = s.nextLine();
                 if (telefone != null && !telefone.isEmpty()) {
-                    cliente.setTelefone(telefone);
+                    clienteDTO.setTelefone(telefone);
                     break;
                 }
             }
             s.next();
         }
-        return cliente;
+        return clienteDTO;
     }
 
     public static String lerIdDoProduto() {
@@ -105,8 +105,8 @@ public class InputsService {
         return pid;
     }
 
-    public static Produto lerProduto() {
-        Produto produto = new Produto();
+    public static ProdutoDTO lerProduto() {
+        ProdutoDTO produtoDTO = new ProdutoDTO();
         String nomeProduto;
         Scanner s = new Scanner(System.in);
         while(true) {
@@ -114,7 +114,7 @@ public class InputsService {
             if (s.hasNextLine()) {
                 nomeProduto = s.nextLine();
                 if (nomeProduto != null && !nomeProduto.isEmpty()) {
-                    produto.setProduto(nomeProduto);
+                    produtoDTO.setProduto(nomeProduto);
                     break;
                 }
             }
@@ -126,7 +126,7 @@ public class InputsService {
             if (s.hasNextInt()) {
                 quantidadeProduto = s.nextInt();
                 if (quantidadeProduto > 0) {
-                    produto.setQuantidade(quantidadeProduto);
+                    produtoDTO.setQuantidade(quantidadeProduto);
                     break;
                 }
             }
@@ -139,13 +139,13 @@ public class InputsService {
             if (s.hasNextInt()) {
                 precoProduto = s.nextInt();
                 if (precoProduto > 0) {
-                    produto.setPreco(precoProduto);
+                    produtoDTO.setPreco(precoProduto);
                     break;
                 }
             }
             s.next();
         }
-        return produto;
+        return produtoDTO;
     }
 
 
