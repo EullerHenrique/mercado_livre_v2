@@ -7,13 +7,16 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class PedidoRepository {
-    private final Hashtable<String, List<Hashtable<String, String>>> pedidos = new Hashtable<>();
 
+    private final Logger logger = Logger.getLogger(PedidoRepository.class.getName());
+    private final Hashtable<String, List<Hashtable<String, String>>> pedidos = new Hashtable<>();
     private MosquittoService mosquittoService = new MosquittoService();
 
     public String criarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
+        logger.info("\nCriando pedido: "+pedidoModel+"\n");
         String CID = pedidoModel.getCID();
         String OID = pedidoModel.getOID();
         Gson gson = new Gson();
@@ -37,11 +40,12 @@ public class PedidoRepository {
         return buscarPedido(CID, OID);
     }
 
-    public String modificarPedido(Pedido pedidoNovo, boolean otherServerUpdate) {
-        String CID = pedidoNovo.getCID();
-        String OID = pedidoNovo.getOID();
+    public String modificarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
+        logger.info("\nModificando pedido: "+pedidoModel+"\n");
+        String CID = pedidoModel.getCID();
+        String OID = pedidoModel.getOID();
         Gson gson = new Gson();
-        String pedidoJson = gson.toJson(pedidoNovo);
+        String pedidoJson = gson.toJson(pedidoModel);
         if (pedidos.containsKey(CID) && pedidos.get(CID).size() > 0) {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
@@ -61,6 +65,7 @@ public class PedidoRepository {
     }
 
     public String buscarPedido(String CID, String OID) {
+        logger.info("\nBuscando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
         if(pedidos.containsKey(CID)) {
             for(Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if(pedido.containsKey(OID)) {
@@ -72,6 +77,7 @@ public class PedidoRepository {
     }
 
     public List<Hashtable<String, String>> buscarPedidos(String CID) {
+        logger.info("\nBuscando pedidos:  "+"CID: "+CID+"\n");
         if (pedidos.containsKey(CID)) {
             return pedidos.get(CID);
         }
@@ -79,6 +85,7 @@ public class PedidoRepository {
     }
 
     public String apagarPedido(String CID, String OID, boolean otherServerUpdate) {
+        logger.info("\nApagando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
         if (pedidos.containsKey(CID)) {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {

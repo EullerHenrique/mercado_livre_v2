@@ -16,7 +16,7 @@ public class ClienteRepository {
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String criarCliente(Cliente cliente, boolean otherServerUpdate) {
-        logger.info("Criando cliente: "+cliente);
+        logger.info("\nCriando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
@@ -32,7 +32,7 @@ public class ClienteRepository {
     }
 
     public String modificarCLiente(Cliente cliente, boolean otherServerUpdate) {
-        logger.info("Modificando cliente: "+cliente);
+        logger.info("\nModificando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
@@ -52,7 +52,7 @@ public class ClienteRepository {
     }
 
     public String buscarCliente(String CID){
-        logger.info("Buscando cliente: "+CID);
+        logger.info("\nBuscando cliente: "+CID+"\n");
         if(clientes.containsKey(CID)) {
             return clientes.get(CID);
         }
@@ -60,7 +60,7 @@ public class ClienteRepository {
     }
 
     public String isCliente(String CID){
-        logger.info("Verificando cliente: "+CID);
+        logger.info("\nVerificando cliente: "+CID+"\n");
         if(clientes.containsKey(CID)) {
             return "true";
         }
@@ -68,7 +68,7 @@ public class ClienteRepository {
     }
 
     public String apagarCliente(String CID, boolean otherServerUpdate){
-        logger.info("Apagando cliente: "+CID);
+        logger.info("\nApagando cliente: "+CID+"\n");
         if (clientes.containsKey(CID)) {
             clientes.remove(CID);
             if(!otherServerUpdate) {

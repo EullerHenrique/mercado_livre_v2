@@ -1,8 +1,6 @@
 package euller.mercado_livre.server.admin.repository;
 
-
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.server.admin.model.Produto;
 import euller.mercado_livre.server.admin.service.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -12,13 +10,13 @@ import java.util.logging.Logger;
 
 public class ProdutoRepository {
 
-    private final Logger logger = Logger.getLogger(ProdutoService.class.getName());
+    private final Logger logger = Logger.getLogger(ProdutoRepository.class.getName());
     private Hashtable<String, String> produtos = new Hashtable<>();
 
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String criarProduto(Produto produto, boolean otherServerUpdate) {
-        logger.info("Criando produto: "+produto);
+        logger.info("\nCriando produto: "+produto+"\n");
         String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
@@ -34,7 +32,7 @@ public class ProdutoRepository {
     }
 
     public String modificarProduto(Produto produto, boolean otherServerUpdate) {
-        logger.info("Modificando produto: "+produto);
+        logger.info("\nModificando produto: "+produto+"\n");
         String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
@@ -54,7 +52,7 @@ public class ProdutoRepository {
     }
 
     public String buscarProduto(String PID){
-        logger.info("Buscando produto: "+PID);
+        logger.info("\nBuscando produto: "+PID+"\n");
         if(produtos.containsKey(PID)) {
             return produtos.get(PID);
         }
@@ -62,7 +60,7 @@ public class ProdutoRepository {
     }
 
     public String apagarProduto(String PID, boolean otherServerUpdate){
-        logger.info("Apagando produto: "+PID);
+        logger.info("\nApagando produto: "+PID+"\n");
         if (produtos.containsKey(PID)) {
             produtos.remove(PID);
             if(!otherServerUpdate) {
