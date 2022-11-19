@@ -26,7 +26,7 @@ public class ProdutoService {
     public void criarProduto(ProdutoDTO produtoDTO) {
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produtoDTO);
-        logger.info("Request: Insira o produto " + produtoJson);
+        logger.info("Request: Insira o produto " + produtoJson+"\n");
         CriarProdutoRequest request = CriarProdutoRequest.newBuilder().setDados(produtoJson).build();
         CriarProdutoResponse response;
         try {
@@ -35,14 +35,14 @@ public class ProdutoService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
     public void modificarProduto(ProdutoDTO produtoDTO) {
         String PID = produtoDTO.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produtoDTO);
-        logger.info("Request: Modifique o produto com o PID: " + PID +" para " + produtoJson);
+        logger.info("Request: Modifique o produto com o PID: " + PID +" para " + produtoJson+"\n");
         ModificarProdutoRequest request = ModificarProdutoRequest.newBuilder().setPID(PID).setDados(produtoJson).build();
         ModificarProdutoResponse response;
         try {
@@ -52,11 +52,11 @@ public class ProdutoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
     public void buscarProduto(String PID) {
-        logger.info("Request: Busque o produto com o PID: " + PID);
+        logger.info("Request: Busque o produto com o PID: " + PID+"\n");
         BuscarProdutoRequest request = BuscarProdutoRequest.newBuilder().setPID(PID).build();
         BuscarProdutoResponse response;
         try {
@@ -66,11 +66,11 @@ public class ProdutoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
     public void apagarProduto(String PID) {
-        logger.info("Request: Exclua o cliente com o PID: " + PID);
+        logger.info("Request: Exclua o cliente com o PID: " + PID+"\n");
         ApagarProdutoRequest request = ApagarProdutoRequest.newBuilder().setPID(PID).build();
         ApagarProdutoResponse response;
         try {
@@ -80,7 +80,7 @@ public class ProdutoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
 }

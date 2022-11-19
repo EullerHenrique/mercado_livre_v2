@@ -24,7 +24,7 @@ public class PedidoService {
 
     public void criarPedido(ProdutoDTO produtoDTO, PedidoDTO pedidoDTO) {
         String CID = pedidoDTO.getCID();
-        logger.info("Request: Insira o pedido " + pedidoDTO + " com o CID " + CID);
+        logger.info("Request: Insira o pedido " + pedidoDTO + " com o CID " + CID+"\n");
         Gson gson = new Gson();
         String pedidoJson = gson.toJson(pedidoDTO);
         CriarPedidoRequest request = CriarPedidoRequest.newBuilder().setCID(CID).setDados(pedidoJson).build();
@@ -38,14 +38,14 @@ public class PedidoService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
     public void modificarPedido(PedidoDTO pedidoDTOAntigo, PedidoDTO pedidoDTONovo, ProdutoDTO produtoDTO) {
         String CID = pedidoDTOAntigo.getCID();
         String OID = pedidoDTOAntigo.getOID();
         Gson gson = new Gson();
         String pedidoJson = gson.toJson(pedidoDTONovo);
-        logger.info("Request: Modifique o pedido com o CID: " + CID + " e o OID: " + OID + " para " + pedidoJson);
+        logger.info("Request: Modifique o pedido com o CID: " + CID + " e o OID: " + OID + " para " + pedidoJson+"\n");
         ModificarPedidoRequest request = ModificarPedidoRequest.newBuilder().setCID(CID).setOID(OID).setDados(pedidoJson).build();
         ModificarPedidoResponse response;
         try {
@@ -63,10 +63,10 @@ public class PedidoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
     public String buscarPedido(String CID, String OID) {
-        logger.info("Request: Busque o pedido com o CID: " + CID+ " e o OID: " + OID);
+        logger.info("Request: Busque o pedido com o CID: " + CID+ " e o OID: " + OID+"\n");
         BuscarPedidoRequest request = BuscarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();
         BuscarPedidoResponse response;
         try {
@@ -75,12 +75,12 @@ public class PedidoService {
             return response.getMessage();
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()+"\n");
         }
         return null;
     }
     public void buscarPedidos(String CID) {
-        logger.info("Request: Busque os pedido com o CID: " + CID);
+        logger.info("Request: Busque os pedido com o CID: " + CID+"\n");
         BuscarPedidosRequest request = BuscarPedidosRequest.newBuilder().setCID(CID).build();
         BuscarPedidosResponse response;
         try {
@@ -90,10 +90,10 @@ public class PedidoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
     public void excluirPedido(String CID, String OID) {
-        logger.info("Request: Exclua o pedido com o CID: " + CID+ " e o OID: " + OID);
+        logger.info("Request: Exclua o pedido com o CID: " + CID+ " e o OID: " + OID+"\n");
         ApagarPedidoRequest request = ApagarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();
         ApagarPedidoResponse response;
         try {
@@ -103,6 +103,6 @@ public class PedidoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 }

@@ -22,7 +22,7 @@ public class ClienteService {
     public void criarCliente(ClienteDTO clienteDTO) {
         Gson gson = new Gson();
         String clienteJson = gson.toJson(clienteDTO);
-        logger.info("Request: Insira o cliente " + clienteJson);
+        logger.info("Request: Insira o cliente " + clienteJson+"\n");
         CriarClienteRequest request = CriarClienteRequest.newBuilder().setDados(clienteJson).build();
         CriarClienteResponse response;
         try {
@@ -31,52 +31,49 @@ public class ClienteService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
     public void modificarCliente(ClienteDTO clienteDTO) {
         String CID = clienteDTO.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(clienteDTO);
-        logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + clienteDTO);
+        logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + clienteDTO+"\n");
         ModificarClienteRequest request = ModificarClienteRequest.newBuilder().setCID(CID).setDados(clienteJson).build();
         ModificarClienteResponse response;
         try {
             response = blockingStubCliente.modificarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-            System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
     public void buscarCliente(String CID) {
-        logger.info("Request: Busque o cliente com o CID: " + CID);
+        logger.info("Request: Busque o cliente com o CID: " + CID+"\n");
         BuscarClienteRequest request = BuscarClienteRequest.newBuilder().setCID(CID).build();
         BuscarClienteResponse response;
         try {
             response = blockingStubCliente.buscarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-            System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
     public void apagarCliente(String CID) {
-        logger.info("Request: Exclua o cliente com o CID: " + CID);
+        logger.info("Request: Exclua o cliente com o CID: " + CID+"\n");
         ApagarClienteRequest request = ApagarClienteRequest.newBuilder().setCID(CID).build();
         ApagarClienteResponse response;
         try {
             response = blockingStubCliente.apagarCliente(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-            System.out.println(e.getMessage());
             return;
         }
-        logger.info("Response: "+response.getMessage());
+        logger.info("Response: "+response.getMessage()+"\n");
     }
 
 
