@@ -11,8 +11,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class MosquittoService {
+    private final Logger logger = Logger.getLogger(MosquittoService.class.getName());
 
     public void publish(String topic, String content) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
@@ -24,8 +26,8 @@ public class MosquittoService {
         client.connect(options);
         MqttMessage message = new MqttMessage(content.getBytes());
         message.setQos(2);
-        System.out.println("Publishing topic: " + topic);
-        System.out.println("Publishing message: " + content);
+        logger.info("\nPublishing topic: "+topic);
+        logger.info("Publishing message: "+message+"\n");
         client.publish(topic, message);
         client.disconnect();
     }
@@ -39,6 +41,8 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
+            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Cliente cliente;
             switch (topicFrom) {
@@ -69,6 +73,8 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
+            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Produto produto;
             switch (topicFrom){

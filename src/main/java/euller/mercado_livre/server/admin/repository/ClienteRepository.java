@@ -1,21 +1,25 @@
 package euller.mercado_livre.server.admin.repository;
 
 import com.google.gson.Gson;
+import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.server.admin.model.Cliente;
 import euller.mercado_livre.server.admin.service.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.Hashtable;
+import java.util.logging.Logger;
 
 public class ClienteRepository {
+
+    private final Logger logger = Logger.getLogger(ClienteRepository.class.getName());
+
     private final Hashtable<String, String> clientes = new Hashtable<>();
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String criarCliente(Cliente cliente, boolean otherServerUpdate) {
+        logger.info("Criando cliente: "+cliente);
         String CID = cliente.getCID();
-        System.out.println("Criando cliente: " + CID);
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
-        System.out.println("Dados: " + clienteJson);
         clientes.put(CID, clienteJson);
         if(!otherServerUpdate) {
             try {
@@ -28,6 +32,7 @@ public class ClienteRepository {
     }
 
     public String modificarCLiente(Cliente cliente, boolean otherServerUpdate) {
+        logger.info("Modificando cliente: "+cliente);
         String CID = cliente.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(cliente);
@@ -47,6 +52,7 @@ public class ClienteRepository {
     }
 
     public String buscarCliente(String CID){
+        logger.info("Buscando cliente: "+CID);
         if(clientes.containsKey(CID)) {
             return clientes.get(CID);
         }
@@ -54,6 +60,7 @@ public class ClienteRepository {
     }
 
     public String isCliente(String CID){
+        logger.info("Verificando cliente: "+CID);
         if(clientes.containsKey(CID)) {
             return "true";
         }
@@ -61,6 +68,7 @@ public class ClienteRepository {
     }
 
     public String apagarCliente(String CID, boolean otherServerUpdate){
+        logger.info("Apagando cliente: "+CID);
         if (clientes.containsKey(CID)) {
             clientes.remove(CID);
             if(!otherServerUpdate) {

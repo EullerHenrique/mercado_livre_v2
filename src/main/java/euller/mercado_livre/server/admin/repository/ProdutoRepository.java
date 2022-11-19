@@ -2,33 +2,39 @@ package euller.mercado_livre.server.admin.repository;
 
 
 import com.google.gson.Gson;
+import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.server.admin.model.Produto;
 import euller.mercado_livre.server.admin.service.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.Hashtable;
+import java.util.logging.Logger;
 
 public class ProdutoRepository {
+
+    private final Logger logger = Logger.getLogger(ProdutoService.class.getName());
     private Hashtable<String, String> produtos = new Hashtable<>();
 
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String criarProduto(Produto produto, boolean otherServerUpdate) {
+        logger.info("Criando produto: "+produto);
         String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
         produtos.put(PID, produtoJson);
         if(!otherServerUpdate) {
             try {
-                mosquittoService.publish("server/admin/produto/criar", PID + " , " + buscarProduto(PID));
+                mosquittoService.publish("server/admin/produto/criar", buscarProduto(PID));
             } catch (MqttException e) {
                 throw new RuntimeException(e);
             }
         }
-        return "PID: " + PID + " Produto: "+ buscarProduto(PID);
+        return buscarProduto(PID);
     }
 
     public String modificarProduto(Produto produto, boolean otherServerUpdate) {
+        logger.info("Modificando produto: "+produto);
         String PID = produto.getPID();
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
@@ -48,6 +54,7 @@ public class ProdutoRepository {
     }
 
     public String buscarProduto(String PID){
+        logger.info("Buscando produto: "+PID);
         if(produtos.containsKey(PID)) {
             return produtos.get(PID);
         }
@@ -55,6 +62,7 @@ public class ProdutoRepository {
     }
 
     public String apagarProduto(String PID, boolean otherServerUpdate){
+        logger.info("Apagando produto: "+PID);
         if (produtos.containsKey(PID)) {
             produtos.remove(PID);
             if(!otherServerUpdate) {

@@ -1,14 +1,15 @@
 package euller.mercado_livre.server.cliente.service;
 import com.google.gson.Gson;
-import euller.mercado_livre.server.admin.repository.ProdutoRepository;
 import euller.mercado_livre.server.cliente.model.Pedido;
 import euller.mercado_livre.server.cliente.model.Produto;
 import euller.mercado_livre.server.cliente.respository.PedidoRepository;
 import org.eclipse.paho.client.mqttv3.*;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 public class MosquittoService {
+    private final Logger logger = Logger.getLogger(euller.mercado_livre.server.admin.service.MosquittoService.class.getName());
 
     public void publish(String topic, String content) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
@@ -20,10 +21,12 @@ public class MosquittoService {
         client.connect(options);
         MqttMessage message = new MqttMessage(content.getBytes());
         message.setQos(2);
+        logger.info("\nPublishing topic: "+topic);
+        logger.info("Publishing message: "+message+"\n");
         client.publish(topic, message);
         client.disconnect();
     }
-    public String subscribe(String topic) throws MqttException {
+    public String subscribe(String topicFrom) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
         MqttClient client = new MqttClient("tcp://localhost:1883", publisherId);
         MqttConnectOptions options = new MqttConnectOptions();
@@ -32,7 +35,9 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         AtomicReference<String> response = new AtomicReference<>();
-        client.subscribe(topic, (topic1, message) -> {
+        client.subscribe(topicFrom, (topic, message) -> {
+            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing message: "+message+"\n");
             response.set(new String(message.getPayload()));
         });
         while(response.get() == null){}
@@ -48,6 +53,8 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
+            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Pedido pedido;
             switch (topicFrom){
