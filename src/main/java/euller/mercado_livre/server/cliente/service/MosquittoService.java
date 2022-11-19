@@ -48,8 +48,6 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
-            System.out.println("TOPIC: "+topic);
-            System.out.println("MSG: "+ new String(message.getPayload()));
             Gson gson = new Gson();
             Pedido pedido;
             switch (topicFrom){
@@ -69,21 +67,18 @@ public class MosquittoService {
         });
     }
 
-
-
-
     public String verificarSeClienteExiste(String cid) throws MqttException {
-        publish("portal/client/CID", cid);
-        return subscribe("portal/admin/CID");
+        publish("server/client/cliente/verificar", cid);
+        return subscribe("server/admin/cliente/verificar");
     }
     public String buscarProduto(String content) throws MqttException {
-        publish("portal/client/PID/1", content);
-        return subscribe("portal/admin/PID/1");
+        publish("server/client/produto/buscar", content);
+        return subscribe("server/admin/produto/buscar");
     }
     public void modificarProduto(Produto produto) throws MqttException {
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
-        publish("portal/client/PID/2", produtoJson);
+        publish("portal/client/produto/modificar", produtoJson);
     }
 
 }

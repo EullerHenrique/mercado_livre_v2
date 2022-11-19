@@ -17,10 +17,10 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     public ProdutoServiceImpl() {
         try {
             MosquittoService mosquittoService = new MosquittoService();
-            mosquittoService.subscribeProduto("portal/client/PID/1", "portal/admin/PID/1", produtoRepository);
-            mosquittoService.subscribeProduto("portal/client/PID/2", "", produtoRepository);
+            mosquittoService.subscribeProduto("server/client/produto/buscar", "server/admin/produto/buscar", produtoRepository);
             mosquittoService.subscribeProduto("server/admin/produto/criar", "", produtoRepository);
             mosquittoService.subscribeProduto("server/admin/produto/modificar", "", produtoRepository);
+            mosquittoService.subscribeProduto("server/client/produto/modificar", "", produtoRepository);
             mosquittoService.subscribeProduto("server/admin/produto/apagar", "", produtoRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);

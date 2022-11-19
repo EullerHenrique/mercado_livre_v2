@@ -39,24 +39,21 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
-            System.out.println("TOPIC: " + topic);
-            System.out.println("MSG: " + new String(message.getPayload()));
-            System.out.println("STATUS: " + clienteRepository.isCliente(new String(message.getPayload())));
             Gson gson = new Gson();
             Cliente cliente;
             switch (topicFrom) {
-                case "portal/client/CID":
+                case "server/client/cliente/verificar":
                     publish(topicTo, clienteRepository.isCliente(new String(message.getPayload())));
                     break;
-                case "portal/admin/cliente/criar":
+                case "server/admin/cliente/criar":
                     cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
                     clienteRepository.criarCliente(cliente, true);
                     break;
-                case "portal/admin/cliente/modificar":
+                case "server/admin/cliente/modificar":
                     cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
                     clienteRepository.modificarCLiente(cliente, true);
                     break;
-                case "portal/admin/cliente/apagar":
+                case "server/admin/cliente/apagar":
                     clienteRepository.apagarCliente(new String(message.getPayload()), true);
                     break;
             }
@@ -72,13 +69,10 @@ public class MosquittoService {
         options.setConnectionTimeout(10);
         client.connect(options);
         client.subscribe(topicFrom, (topic, message) -> {
-            System.out.println("TOPIC: "+topic);
-            System.out.println("MSG: "+ new String(message.getPayload()));
-            System.out.println("PRODUTO: "+produtoRepository.buscarProduto(new String(message.getPayload())));
             Gson gson = new Gson();
             Produto produto;
             switch (topicFrom){
-                case "portal/client/PID/1":
+                case "server/client/produto/buscar":
                     String produtoJson = produtoRepository.buscarProduto(new String(message.getPayload()));
                     if(produtoJson == null){
                         publish(topicTo, "false");
@@ -86,19 +80,19 @@ public class MosquittoService {
                         publish(topicTo, produtoJson);
                     }
                     break;
-                case "portal/client/PID/2":
+                case "server/client/produto/modificar":
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
                     produtoRepository.modificarProduto(produto, false);
                     break;
-                case "portal/admin/produto/criar":
+                case "server/admin/produto/criar":
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
                     produtoRepository.criarProduto(produto, true);
                     break;
-                case "portal/admin/produto/modificar":
+                case "server/admin/produto/modificar":
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
                     produtoRepository.modificarProduto(produto, true);
                     break;
-                case "portal/admin/produto/apagar":
+                case "server/admin/produto/apagar":
                     produtoRepository.apagarProduto(new String(message.getPayload()), true);
                     break;
             }
