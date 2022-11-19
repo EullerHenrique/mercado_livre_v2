@@ -1,11 +1,9 @@
 package euller.mercado_livre.server.cliente.respository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.server.admin.model.Produto;
-import euller.mercado_livre.server.admin.repository.ProdutoRepository;
 import euller.mercado_livre.server.cliente.model.Pedido;
-
-import java.sql.SQLOutput;
+import euller.mercado_livre.server.cliente.service.MosquittoService;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -13,7 +11,9 @@ import java.util.List;
 public class PedidoRepository {
     private final Hashtable<String, List<Hashtable<String, String>>> pedidos = new Hashtable<>();
 
-    public String criarPedido(Pedido pedidoModel) {
+    private MosquittoService mosquittoService = new MosquittoService();
+
+    public String criarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
         String CID = pedidoModel.getCID();
         String OID = pedidoModel.getOID();
         Gson gson = new Gson();
@@ -27,10 +27,17 @@ public class PedidoRepository {
         }else{
             this.pedidos.get(CID).add(pedido);
         }
-        return listarPedido(CID, OID);
+        if(!otherServerUpdate) {
+            try {
+                mosquittoService.publish("server/cliente/pedido/criar", buscarPedido(CID, OID));
+            } catch (MqttException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return buscarPedido(CID, OID);
     }
 
-    public String modificarPedido(Pedido pedidoNovo) {
+    public String modificarPedido(Pedido pedidoNovo, boolean otherServerUpdate) {
         String CID = pedidoNovo.getCID();
         String OID = pedidoNovo.getOID();
         Gson gson = new Gson();
@@ -39,34 +46,50 @@ public class PedidoRepository {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
                     pedido.put(OID, pedidoJson);
-                    return listarPedido(CID, OID);
+                    if(!otherServerUpdate) {
+                        try {
+                            mosquittoService.publish("server/cliente/pedido/modificar", buscarPedido(CID, OID));
+                        } catch (MqttException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return buscarPedido(CID, OID);
                 }
             }
         }
         return null;
     }
 
-    public String listarPedido(String CID, String OID) {
-        for (Hashtable<String, String> pedido : pedidos.get(CID)) {
-            if (pedido.containsKey(OID)) {
-                return pedido.get(OID);
+    public String buscarPedido(String CID, String OID) {
+        if(pedidos.containsKey(CID)) {
+            for(Hashtable<String, String> pedido : pedidos.get(CID)) {
+                if(pedido.containsKey(OID)) {
+                    return pedido.get(OID);
+                }
             }
         }
         return null;
     }
 
-    public List<Hashtable<String, String>> listarPedidos(String CID) {
+    public List<Hashtable<String, String>> buscarPedidos(String CID) {
         if (pedidos.containsKey(CID)) {
             return pedidos.get(CID);
         }
         return null;
     }
 
-    public String apagarPedido(String CID, String OID) {
+    public String apagarPedido(String CID, String OID, boolean otherServerUpdate) {
         if (pedidos.containsKey(CID)) {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
                     pedido.remove(OID);
+                    if(!otherServerUpdate) {
+                        try {
+                            mosquittoService.publish("server/cliente/pedido/apagar", buscarPedido(CID, OID));
+                        } catch (MqttException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                     return " Pedido apagado";
                 }
             }

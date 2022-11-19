@@ -19,9 +19,9 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
             MosquittoService mosquittoService = new MosquittoService();
             mosquittoService.subscribeProduto("portal/client/PID/1", "portal/admin/PID/1", produtoRepository);
             mosquittoService.subscribeProduto("portal/client/PID/2", "", produtoRepository);
-            mosquittoService.subscribeProduto("portal/admin/produto/criar", "", produtoRepository);
-            mosquittoService.subscribeProduto("portal/admin/produto/modificar", "", produtoRepository);
-            mosquittoService.subscribeProduto("portal/admin/produto/apagar", "", produtoRepository);
+            mosquittoService.subscribeProduto("server/admin/produto/criar", "", produtoRepository);
+            mosquittoService.subscribeProduto("server/admin/produto/modificar", "", produtoRepository);
+            mosquittoService.subscribeProduto("server/admin/produto/apagar", "", produtoRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
@@ -42,21 +42,30 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
         Gson gson = new Gson();
         Produto produto = gson.fromJson(req.getDados(), Produto.class);
         String produtoJson = produtoRepository.modificarProduto(produto, false);
-        ModificarProdutoResponse reply = ModificarProdutoResponse.newBuilder().setMessage("PID: " + req.getPID() + " Produto: "+produtoJson).build();
+        if(produtoJson == null) {
+         produtoJson = "Produto não encontrado";
+        }
+        ModificarProdutoResponse reply = ModificarProdutoResponse.newBuilder().setMessage(produtoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void buscarProduto(BuscarProdutoRequest req, StreamObserver<BuscarProdutoResponse> responseObserver) {
-        String dados = produtoRepository.buscarProduto(req.getPID());
-        BuscarProdutoResponse reply =   BuscarProdutoResponse.newBuilder().setMessage("PID: " + req.getPID() + " Produto: "+dados).build();
+        String produtoJson = produtoRepository.buscarProduto(req.getPID());
+        if(produtoJson == null) {
+            produtoJson = "Produto não encontrado";
+        }
+        BuscarProdutoResponse reply =   BuscarProdutoResponse.newBuilder().setMessage(produtoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void apagarProduto(ApagarProdutoRequest req, StreamObserver<ApagarProdutoResponse> responseObserver) {
         String msg = produtoRepository.apagarProduto(req.getPID(), false);
-        ApagarProdutoResponse reply = ApagarProdutoResponse.newBuilder().setMessage("PID: " + req.getPID() + " MSG:: "+msg).build();
+        if(msg == null) {
+            msg = "Produto não encontrado";
+        }
+        ApagarProdutoResponse reply = ApagarProdutoResponse.newBuilder().setMessage(msg).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

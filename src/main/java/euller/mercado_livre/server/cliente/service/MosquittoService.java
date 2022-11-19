@@ -1,6 +1,9 @@
 package euller.mercado_livre.server.cliente.service;
 import com.google.gson.Gson;
+import euller.mercado_livre.server.admin.repository.ProdutoRepository;
+import euller.mercado_livre.server.cliente.model.Pedido;
 import euller.mercado_livre.server.cliente.model.Produto;
+import euller.mercado_livre.server.cliente.respository.PedidoRepository;
 import org.eclipse.paho.client.mqttv3.*;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,6 +37,36 @@ public class MosquittoService {
         });
         while(response.get() == null){}
         return response.get();
+    }
+
+    public void subscribePedido(String topicFrom, PedidoRepository pedidoRepository) throws MqttException {
+        String publisherId = UUID.randomUUID().toString();
+        MqttClient client = new MqttClient("tcp://localhost:1883", publisherId);
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setAutomaticReconnect(true);
+        options.setCleanSession(true);
+        options.setConnectionTimeout(10);
+        client.connect(options);
+        client.subscribe(topicFrom, (topic, message) -> {
+            System.out.println("TOPIC: "+topic);
+            System.out.println("MSG: "+ new String(message.getPayload()));
+            Gson gson = new Gson();
+            Pedido pedido;
+            switch (topicFrom){
+                case "portal/cliente/pedido/criar":
+                    pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
+                    pedidoRepository.criarPedido(pedido, true);
+                    break;
+                case "portal/cliente/pedido/modificar":
+                    pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
+                    pedidoRepository.modificarPedido(pedido, true);
+                    break;
+                case "portal/cliente/pedido/apagar":
+                    pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
+                    pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID(), true);
+                    break;
+            }
+        });
     }
 
 

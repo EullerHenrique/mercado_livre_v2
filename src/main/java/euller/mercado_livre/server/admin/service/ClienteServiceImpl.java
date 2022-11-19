@@ -17,9 +17,9 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
         try {
             MosquittoService mosquittoService = new MosquittoService();
             mosquittoService.subscribeCliente("portal/client/CID", "portal/admin/CID", clienteRepository);
-            mosquittoService.subscribeCliente("portal/admin/cliente/criar", "", clienteRepository);
-            mosquittoService.subscribeCliente("portal/admin/cliente/modificar", "", clienteRepository);
-            mosquittoService.subscribeCliente("portal/admin/cliente/apagar", "", clienteRepository);
+            mosquittoService.subscribeCliente("server/admin/cliente/criar", "", clienteRepository);
+            mosquittoService.subscribeCliente("server/admin/cliente/modificar", "", clienteRepository);
+            mosquittoService.subscribeCliente("server/admin/cliente/apagar", "", clienteRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
@@ -40,21 +40,30 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
         Gson gson = new Gson();
         Cliente cliente = gson.fromJson(req.getDados(), Cliente.class);
         String clienteJson = clienteRepository.modificarCLiente(cliente, false);
-        ModificarClienteResponse reply = ModificarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " Cliente: "+clienteJson).build();
+        if(clienteJson == null){
+            clienteJson = "Cliente não encontrado";
+        }
+        ModificarClienteResponse reply = ModificarClienteResponse.newBuilder().setMessage(clienteJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void buscarCliente(BuscarClienteRequest req, StreamObserver<  BuscarClienteResponse> responseObserver) {
-        String dados = clienteRepository.buscarCliente(req.getCID());
-        BuscarClienteResponse reply =   BuscarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " Cliente: "+dados).build();
+        String clienteJson = clienteRepository.buscarCliente(req.getCID());
+        if(clienteJson == null){
+            clienteJson = "Cliente não encontrado";
+        }
+        BuscarClienteResponse reply =   BuscarClienteResponse.newBuilder().setMessage(clienteJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void apagarCliente(ApagarClienteRequest req, StreamObserver<ApagarClienteResponse> responseObserver) {
         String msg = clienteRepository.apagarCliente(req.getCID(), false);
-        ApagarClienteResponse reply = ApagarClienteResponse.newBuilder().setMessage("CID: " + req.getCID() + " MSG:: "+msg).build();
+        if(msg == null){
+            msg = "Cliente não encontrado";
+        }
+        ApagarClienteResponse reply = ApagarClienteResponse.newBuilder().setMessage(msg).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

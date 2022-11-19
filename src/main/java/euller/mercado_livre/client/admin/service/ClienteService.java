@@ -31,7 +31,7 @@ public class ClienteService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
     public void modificarCliente(Cliente cliente) {
@@ -48,7 +48,7 @@ public class ClienteService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
     public void buscarCliente(String CID) {
@@ -62,7 +62,7 @@ public class ClienteService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
     public void apagarCliente(String CID) {
@@ -76,7 +76,7 @@ public class ClienteService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
 

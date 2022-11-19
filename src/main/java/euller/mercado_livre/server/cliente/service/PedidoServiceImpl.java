@@ -5,6 +5,7 @@ import euller.mercado_livre.server.cliente.model.Pedido;
 import euller.mercado_livre.server.cliente.*;
 import euller.mercado_livre.server.cliente.respository.PedidoRepository;
 import io.grpc.stub.StreamObserver;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -14,6 +15,17 @@ import java.util.UUID;
 public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
     PedidoRepository pedidoRepository = new PedidoRepository();
 
+    public PedidoServiceImpl() {
+        try {
+            MosquittoService mosquittoService = new MosquittoService();
+            mosquittoService.subscribePedido("server/cliente/pedido/criar", pedidoRepository);
+            mosquittoService.subscribePedido("server/cliente/pedido/modificar", pedidoRepository);
+            mosquittoService.subscribePedido("server/cliente/pedido/apagar", pedidoRepository);
+        }catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void criarPedido(CriarPedidoRequest req, StreamObserver<CriarPedidoResponse> responseObserver) {
         String CID = req.getCID();
@@ -22,48 +34,58 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         Pedido pedido = gson.fromJson(req.getDados(), Pedido.class);
         pedido.setCID(CID);
         pedido.setOID(OID);
-        String pedidoJson = pedidoRepository.criarPedido(pedido);
+        String pedidoJson = pedidoRepository.criarPedido(pedido, false);
         CriarPedidoResponse reply = CriarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void modificarPedido(ModificarPedidoRequest req, StreamObserver<ModificarPedidoResponse> responseObserver) {
-
         String CID = req.getCID();
         String OID = req.getOID();
         Gson gson = new Gson();
         Pedido pedido = gson.fromJson(req.getDados(), Pedido.class);
         pedido.setCID(CID);
         pedido.setOID(OID);
-
-        String pedidoJson = pedidoRepository.modificarPedido(pedido);
+        String pedidoJson = pedidoRepository.modificarPedido(pedido, false);
+        if(pedidoJson == null){
+            pedidoJson = "Pedido não encontrado";
+        }
         ModificarPedidoResponse reply = ModificarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void buscarPedido(BuscarPedidoRequest req, StreamObserver<BuscarPedidoResponse> responseObserver) {
-        String pedido = pedidoRepository.listarPedido(req.getCID() , req.getOID());
-        BuscarPedidoResponse reply = BuscarPedidoResponse.newBuilder().setMessage(pedido).build();
+        String pedidoJson = pedidoRepository.buscarPedido(req.getCID(),req.getOID());
+        if(pedidoJson == null){
+            pedidoJson = "Pedido não encontrado";
+        }
+        BuscarPedidoResponse reply = BuscarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void buscarPedidos(BuscarPedidosRequest req, StreamObserver<BuscarPedidosResponse> responseObserver) {
-        List<Hashtable<String, String>> pedidos = pedidoRepository.listarPedidos(req.getCID());
-        BuscarPedidosResponse reply = BuscarPedidosResponse.newBuilder().setMessage("Response: CID: " + req.getCID() + pedidos).build();
+        List<Hashtable<String, String>> pedidos = pedidoRepository.buscarPedidos(req.getCID());
+        BuscarPedidosResponse reply;
+        if(pedidos == null){
+            reply = BuscarPedidosResponse.newBuilder().setMessage("O cliente"+req.getCID()+" não possui pedidos").build();
+        }else{
+            reply = BuscarPedidosResponse.newBuilder().setMessage(req.getCID()+":"+pedidos).build();
+        }
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
     @Override
     public void apagarPedido(ApagarPedidoRequest req, StreamObserver<ApagarPedidoResponse> responseObserver) {
-        String pedido = pedidoRepository.apagarPedido(req.getCID(), req.getOID());
-        ApagarPedidoResponse reply = ApagarPedidoResponse.newBuilder().setMessage(pedido).build();
+        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID(), false);
+        if(pedidoJson == null){
+            pedidoJson = "Pedido não encontrado";
+        }
+        ApagarPedidoResponse reply = ApagarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
-
-
 
 }

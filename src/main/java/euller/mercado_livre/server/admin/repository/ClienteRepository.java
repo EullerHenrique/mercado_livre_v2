@@ -19,12 +19,12 @@ public class ClienteRepository {
         clientes.put(CID, clienteJson);
         if(!otherServerUpdate) {
             try {
-                mosquittoService.publish("portal/admin/cliente/criar", buscarCliente(CID));
+                mosquittoService.publish("server/admin/cliente/criar", buscarCliente(CID));
             } catch (MqttException e) {
                 throw new RuntimeException(e);
             }
         }
-        return "CID: " + CID + " Cliente: "+ buscarCliente(CID);
+        return buscarCliente(CID);
     }
 
     public String modificarCLiente(Cliente cliente, boolean otherServerUpdate) {
@@ -36,7 +36,7 @@ public class ClienteRepository {
             clientes.put(CID, clienteJson);
             if(!otherServerUpdate) {
                 try {
-                    mosquittoService.publish("portal/admin/cliente/modificar", buscarCliente(CID));
+                    mosquittoService.publish("server/admin/cliente/modificar", buscarCliente(CID));
                 } catch (MqttException e) {
                     throw new RuntimeException(e);
                 }
@@ -65,12 +65,12 @@ public class ClienteRepository {
             clientes.remove(CID);
             if(!otherServerUpdate) {
                 try {
-                    mosquittoService.publish("portal/admin/cliente/apagar", CID);
+                    mosquittoService.publish("server/admin/cliente/apagar", CID);
                 } catch (MqttException e) {
                     throw new RuntimeException(e);
                 }
             }
-            return " Cliente apagado";
+            return "Cliente apagado";
         }
         return null;
     }

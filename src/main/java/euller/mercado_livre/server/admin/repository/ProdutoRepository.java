@@ -20,7 +20,7 @@ public class ProdutoRepository {
         produtos.put(PID, produtoJson);
         if(!otherServerUpdate) {
             try {
-                mosquittoService.publish("portal/admin/produto/criar", PID + " , " + buscarProduto(PID));
+                mosquittoService.publish("server/admin/produto/criar", PID + " , " + buscarProduto(PID));
             } catch (MqttException e) {
                 throw new RuntimeException(e);
             }
@@ -37,7 +37,7 @@ public class ProdutoRepository {
             produtos.put(PID, produtoJson);
             if(!otherServerUpdate) {
                 try {
-                    mosquittoService.publish("portal/admin/produto/modificar", buscarProduto(PID));
+                    mosquittoService.publish("server/admin/produto/modificar", buscarProduto(PID));
                 } catch (MqttException e) {
                     throw new RuntimeException(e);
                 }
@@ -59,7 +59,7 @@ public class ProdutoRepository {
             produtos.remove(PID);
             if(!otherServerUpdate) {
                 try {
-                    mosquittoService.publish("portal/admin/produto/apagar", PID);
+                    mosquittoService.publish("server/admin/produto/apagar", PID);
                 } catch (MqttException e) {
                     throw new RuntimeException(e);
                 }

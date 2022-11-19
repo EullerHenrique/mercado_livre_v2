@@ -14,10 +14,8 @@ import java.util.logging.Logger;
 public class PedidoService {
 
     private final Logger logger = Logger.getLogger(ProdutoService.class.getName());
-
     private PedidoServiceGrpc.PedidoServiceBlockingStub blockingStubPedido;
     private ProdutoService produtoService;
-
 
     public PedidoService(ProdutoService produtoService, Channel channel) {
         this.produtoService = produtoService;
@@ -40,9 +38,8 @@ public class PedidoService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
-
     public void modificarPedido(Pedido pedidoAntigo, Pedido pedidoNovo, Produto produto) {
         String CID = pedidoAntigo.getCID();
         String OID = pedidoAntigo.getOID();
@@ -66,16 +63,15 @@ public class PedidoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
-
     public String buscarPedido(String CID, String OID) {
         logger.info("Request: Busque o pedido com o CID: " + CID+ " e o OID: " + OID);
         BuscarPedidoRequest request = BuscarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();
         BuscarPedidoResponse response;
         try {
             response = blockingStubPedido.buscarPedido(request);
-            logger.info(response.getMessage());
+            logger.info("Response: "+response.getMessage());
             return response.getMessage();
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
@@ -83,7 +79,6 @@ public class PedidoService {
         }
         return null;
     }
-
     public void buscarPedidos(String CID) {
         logger.info("Request: Busque os pedido com o CID: " + CID);
         BuscarPedidosRequest request = BuscarPedidosRequest.newBuilder().setCID(CID).build();
@@ -95,9 +90,8 @@ public class PedidoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
-
     public void excluirPedido(String CID, String OID) {
         logger.info("Request: Exclua o pedido com o CID: " + CID+ " e o OID: " + OID);
         ApagarPedidoRequest request = ApagarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();
@@ -109,7 +103,6 @@ public class PedidoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
-
 }
