@@ -1,5 +1,6 @@
-package euller.mercado_livre.server.cliente.service;
+package euller.mercado_livre.server.cliente.service.start;
 
+import euller.mercado_livre.server.cliente.service.PedidoServiceImpl;
 import euller.mercado_livre.server.cliente.service.external.ClienteServiceImpl;
 import euller.mercado_livre.server.cliente.service.external.ProdutoServiceImpl;
 import io.grpc.Server;

@@ -1,4 +1,4 @@
-package euller.mercado_livre.client.admin.service;
+package euller.mercado_livre.client.admin.service.start;
 
 import euller.mercado_livre.client.admin.dto.ClienteDTO;
 import euller.mercado_livre.client.admin.dto.ProdutoDTO;

@@ -1,6 +1,6 @@
 package euller.mercado_livre.server.cliente.respository.external;
 
-import euller.mercado_livre.server.cliente.service.MosquittoService;
+import euller.mercado_livre.server.cliente.service.mosquitto.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class ClienteRepository {

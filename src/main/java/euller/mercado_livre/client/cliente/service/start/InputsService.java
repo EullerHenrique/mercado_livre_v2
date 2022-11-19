@@ -1,4 +1,4 @@
-package euller.mercado_livre.client.cliente.service;
+package euller.mercado_livre.client.cliente.service.start;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.client.cliente.model.PedidoDTO;

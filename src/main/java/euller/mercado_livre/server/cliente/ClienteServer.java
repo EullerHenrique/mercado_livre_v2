@@ -1,6 +1,6 @@
 package euller.mercado_livre.server.cliente;
 
-import euller.mercado_livre.server.cliente.service.StartService;
+import euller.mercado_livre.server.cliente.service.start.StartService;
 import java.io.IOException;
 
 public class ClienteServer {

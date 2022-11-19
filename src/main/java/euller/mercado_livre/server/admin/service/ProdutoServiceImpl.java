@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.*;
 import euller.mercado_livre.server.admin.model.Produto;
 import euller.mercado_livre.server.admin.repository.ProdutoRepository;
+import euller.mercado_livre.server.admin.service.mosquitto.MosquittoService;
 import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -16,10 +17,10 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     public ProdutoServiceImpl() {
         try {
             MosquittoService mosquittoService = new MosquittoService();
-            mosquittoService.subscribeProduto("server/client/produto/buscar", "server/admin/produto/buscar", produtoRepository);
+            mosquittoService.subscribeProduto("server/cliente/produto/buscar", "server/admin/produto/buscar", produtoRepository);
             mosquittoService.subscribeProduto("server/admin/produto/criar", "", produtoRepository);
             mosquittoService.subscribeProduto("server/admin/produto/modificar", "", produtoRepository);
-            mosquittoService.subscribeProduto("server/client/produto/modificar", "", produtoRepository);
+            mosquittoService.subscribeProduto("server/cliente/produto/modificar", "", produtoRepository);
             mosquittoService.subscribeProduto("server/admin/produto/apagar", "", produtoRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);

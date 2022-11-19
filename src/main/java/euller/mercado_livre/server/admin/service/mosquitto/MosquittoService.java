@@ -1,4 +1,4 @@
-package euller.mercado_livre.server.admin.service;
+package euller.mercado_livre.server.admin.service.mosquitto;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.model.Cliente;
@@ -48,7 +48,7 @@ public class MosquittoService {
             String clienteJson;
             Cliente cliente;
             switch (topicFrom) {
-                case "server/client/cliente/verificar":
+                case "server/cliente/cliente/verificar":
                     publish(topicTo, clienteRepository.isCliente(new String(message.getPayload())));
                     break;
                 case "server/admin/cliente/criar":
@@ -90,7 +90,7 @@ public class MosquittoService {
             String produtoJson;
             String PID;
             switch (topicFrom){
-                case "server/client/produto/buscar":
+                case "server/cliente/produto/buscar":
                     produtoJson = produtoRepository.buscarProduto(new String(message.getPayload()));
                     if(produtoJson == null){
                         publish(topicTo, "false");
@@ -104,7 +104,7 @@ public class MosquittoService {
                         produtoRepository.criarProduto(produto, true);
                     }
                     break;
-                case "server/client/produto/modificar":
+                case "server/cliente/produto/modificar":
                 case "server/admin/produto/modificar":
                     produtoJson = new String(message.getPayload());
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);

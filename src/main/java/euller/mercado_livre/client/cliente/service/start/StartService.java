@@ -1,7 +1,8 @@
-package euller.mercado_livre.client.cliente.service;
+package euller.mercado_livre.client.cliente.service.start;
 import com.google.gson.Gson;
 import euller.mercado_livre.client.cliente.model.PedidoDTO;
 import euller.mercado_livre.client.cliente.model.ProdutoDTO;
+import euller.mercado_livre.client.cliente.service.PedidoService;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import io.grpc.ManagedChannel;

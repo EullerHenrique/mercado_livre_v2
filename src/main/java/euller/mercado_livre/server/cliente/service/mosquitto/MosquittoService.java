@@ -1,4 +1,4 @@
-package euller.mercado_livre.server.cliente.service;
+package euller.mercado_livre.server.cliente.service.mosquitto;
 import com.google.gson.Gson;
 import euller.mercado_livre.server.cliente.model.Pedido;
 import euller.mercado_livre.server.cliente.model.Produto;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 public class MosquittoService {
-    private final Logger logger = Logger.getLogger(euller.mercado_livre.server.admin.service.MosquittoService.class.getName());
+    private final Logger logger = Logger.getLogger(euller.mercado_livre.server.admin.service.mosquitto.MosquittoService.class.getName());
 
     public void publish(String topic, String content) throws MqttException {
         String publisherId = UUID.randomUUID().toString();
@@ -36,7 +36,7 @@ public class MosquittoService {
         client.connect(options);
         AtomicReference<String> response = new AtomicReference<>();
         client.subscribe(topicFrom, (topic, message) -> {
-            logger.info("\nSubscribing topic: "+topic);
+            logger.info("Subscribing topic: "+topic);
             logger.info("Subscribing message: "+message+"\n");
             response.set(new String(message.getPayload()));
         });
@@ -57,35 +57,43 @@ public class MosquittoService {
             logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Pedido pedido;
+            String pedidoJson;
             switch (topicFrom){
-                case "portal/cliente/pedido/criar":
+                case "server/cliente/pedido/criar":
                     pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    pedidoRepository.criarPedido(pedido, true);
+                    if(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID())==null) {
+                        pedidoRepository.criarPedido(pedido, true);
+                    }
                     break;
-                case "portal/cliente/pedido/modificar":
+                case "server/cliente/pedido/modificar":
+                    pedidoJson = new String(message.getPayload());
                     pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    pedidoRepository.modificarPedido(pedido, true);
+                    if(!pedidoJson.equals(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID()))) {
+                        pedidoRepository.modificarPedido(pedido, true);
+                    }
                     break;
-                case "portal/cliente/pedido/apagar":
+                case "server/cliente/pedido/apagar":
                     pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID(), true);
+                    if(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID())==null) {
+                        pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID(), true);
+                    }
                     break;
             }
         });
     }
 
     public String verificarSeClienteExiste(String cid) throws MqttException {
-        publish("server/client/cliente/verificar", cid);
+        publish("server/cliente/cliente/verificar", cid);
         return subscribe("server/admin/cliente/verificar");
     }
     public String buscarProduto(String content) throws MqttException {
-        publish("server/client/produto/buscar", content);
+        publish("server/cliente/produto/buscar", content);
         return subscribe("server/admin/produto/buscar");
     }
     public void modificarProduto(Produto produto) throws MqttException {
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
-        publish("portal/client/produto/modificar", produtoJson);
+        publish("portal/cliente/produto/modificar", produtoJson);
     }
 
 }

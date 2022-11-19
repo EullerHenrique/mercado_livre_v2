@@ -1,6 +1,6 @@
 package euller.mercado_livre.server.admin;
 
-import euller.mercado_livre.server.admin.service.StartService;
+import euller.mercado_livre.server.admin.service.start.StartService;
 import java.io.IOException;
 
 public class AdminServer {

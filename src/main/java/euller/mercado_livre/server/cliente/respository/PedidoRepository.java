@@ -2,7 +2,7 @@ package euller.mercado_livre.server.cliente.respository;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.server.cliente.model.Pedido;
-import euller.mercado_livre.server.cliente.service.MosquittoService;
+import euller.mercado_livre.server.cliente.service.mosquitto.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.ArrayList;
 import java.util.Hashtable;
