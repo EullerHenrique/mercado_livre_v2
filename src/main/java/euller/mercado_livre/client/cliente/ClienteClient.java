@@ -1,8 +1,8 @@
 package euller.mercado_livre.client.cliente;
-import euller.mercado_livre.client.cliente.service.start.StartService;
+import euller.mercado_livre.client.cliente.config.Start;
 
 public class ClienteClient {
-  private static final StartService initService = new StartService();
+  private static final Start initService = new Start();
 
   public static void main(String[] args) throws InterruptedException {
     initService.start();

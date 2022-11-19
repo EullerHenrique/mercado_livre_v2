@@ -1,4 +1,4 @@
-package euller.mercado_livre.server.admin.service.start;
+package euller.mercado_livre.server.admin.config;
 
 import euller.mercado_livre.server.admin.service.ClienteServiceImpl;
 import euller.mercado_livre.server.admin.service.ProdutoServiceImpl;
@@ -10,9 +10,9 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-public class StartService {
+public class Start {
 
-    private final Logger logger = Logger.getLogger(StartService.class.getName());
+    private final Logger logger = Logger.getLogger(Start.class.getName());
     private Server server;
 
     public int lerPortaServidor() {

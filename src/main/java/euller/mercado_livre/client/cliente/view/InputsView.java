@@ -1,8 +1,8 @@
-package euller.mercado_livre.client.cliente.service.start;
+package euller.mercado_livre.client.cliente.view;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.cliente.model.PedidoDTO;
-import euller.mercado_livre.client.cliente.model.ProdutoDTO;
+import euller.mercado_livre.client.cliente.domain.dto.PedidoDTO;
+import euller.mercado_livre.client.cliente.domain.dto.ProdutoDTO;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 
@@ -10,11 +10,11 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-public class InputsService {
+public class InputsView {
 
     private ClienteService clienteService;
     private ProdutoService produtoService;
-    public InputsService(ClienteService clienteService, ProdutoService produtoService) {
+    public InputsView(ClienteService clienteService, ProdutoService produtoService) {
         this.clienteService = clienteService;
         this.produtoService = produtoService;
     }
@@ -114,8 +114,9 @@ public class InputsService {
         System.out.println("---------------Produto-----------------");
         System.out.println("\nNome: " + nomeProduto);
         System.out.println("\nQuantidade Disponível " + quantidadeProduto);
-        System.out.println("\nQuantidade Presente No Pedido: " + pedidoDTOAntigo.getQuantidade());
         System.out.println("\nPreço: " + produtoDTO.getPreco());
+        System.out.println("\nQuantidade Presente No Pedido: " + pedidoDTOAntigo.getQuantidade());
+        System.out.println("\nPreço Total Presente No Pedido: " + pedidoDTOAntigo.getPreco());
         System.out.println("---------------------------------------");
         int quantidadeProdutoPedido;
         while(true) {

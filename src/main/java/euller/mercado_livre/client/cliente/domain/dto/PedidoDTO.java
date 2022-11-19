@@ -1,4 +1,4 @@
-package euller.mercado_livre.client.cliente.model;
+package euller.mercado_livre.client.cliente.domain.dto;
 
 public class PedidoDTO {
 

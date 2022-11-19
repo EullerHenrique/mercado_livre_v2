@@ -74,7 +74,7 @@ public class MosquittoService {
                     break;
                 case "server/cliente/pedido/apagar":
                     pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    if(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID())==null) {
+                    if(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID())!=null) {
                         pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID(), true);
                     }
                     break;
@@ -93,7 +93,7 @@ public class MosquittoService {
     public void modificarProduto(Produto produto) throws MqttException {
         Gson gson = new Gson();
         String produtoJson = gson.toJson(produto);
-        publish("portal/cliente/produto/modificar", produtoJson);
+        publish("server/cliente/produto/modificar", produtoJson);
     }
 
 }

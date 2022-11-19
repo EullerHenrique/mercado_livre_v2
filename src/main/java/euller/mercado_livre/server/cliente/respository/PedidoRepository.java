@@ -90,7 +90,6 @@ public class PedidoRepository {
         if (pedidos.containsKey(CID)) {
             for (Hashtable<String, String> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
-                    pedido.remove(OID);
                     if(!otherServerUpdate) {
                         try {
                             mosquittoService.publish("server/cliente/pedido/apagar", buscarPedido(CID, OID));
@@ -98,6 +97,7 @@ public class PedidoRepository {
                             throw new RuntimeException(e);
                         }
                     }
+                    pedido.remove(OID);
                     return "Pedido apagado";
                 }
             }

@@ -1,8 +1,8 @@
-package euller.mercado_livre.client.admin.dto;
+package euller.mercado_livre.client.cliente.domain.dto;
 
 public class ProdutoDTO {
-
     private String PID;
+
     private String produto;
     private int quantidade;
     private int preco;
@@ -10,22 +10,25 @@ public class ProdutoDTO {
     public String getProduto() {
         return produto;
     }
+
     public void setProduto(String produto) {
         this.produto = produto;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
     }
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
-    public int getQuantidade() {
-        return quantidade;
+
+    public int getPreco() {
+        return preco;
     }
 
     public void setPreco(int preco) {
         this.preco = preco;
-    }
-    public int getPreco() {
-        return preco;
     }
 
     public String getPID() {

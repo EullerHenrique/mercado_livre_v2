@@ -1,7 +1,7 @@
 package euller.mercado_livre.client.admin.service;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.client.admin.dto.ClienteDTO;
+import euller.mercado_livre.client.admin.domain.dto.ClienteDTO;
 import euller.mercado_livre.server.admin.*;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;

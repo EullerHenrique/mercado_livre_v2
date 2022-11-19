@@ -1,11 +1,11 @@
-package euller.mercado_livre.client.admin.service.start;
+package euller.mercado_livre.client.admin.view;
 
-import euller.mercado_livre.client.admin.dto.ClienteDTO;
-import euller.mercado_livre.client.admin.dto.ProdutoDTO;
+import euller.mercado_livre.client.admin.domain.dto.ClienteDTO;
+import euller.mercado_livre.client.admin.domain.dto.ProdutoDTO;
 
 import java.util.Scanner;
 
-public class InputsService {
+public class InputsView {
 
     public static void exibePortal() {
         System.out.println("----------------------------------------");

@@ -1,7 +1,7 @@
-package euller.mercado_livre.client.admin.service.start;
+package euller.mercado_livre.client.admin.config;
 
-import euller.mercado_livre.client.admin.dto.ClienteDTO;
-import euller.mercado_livre.client.admin.dto.ProdutoDTO;
+import euller.mercado_livre.client.admin.domain.dto.ClienteDTO;
+import euller.mercado_livre.client.admin.domain.dto.ProdutoDTO;
 import euller.mercado_livre.client.admin.service.ClienteService;
 import euller.mercado_livre.client.admin.service.ProdutoService;
 import io.grpc.ManagedChannel;
@@ -11,12 +11,12 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static euller.mercado_livre.client.admin.service.start.InputsService.*;
-import static euller.mercado_livre.client.admin.service.start.InputsService.lerIdDoProduto;
+import static euller.mercado_livre.client.admin.view.InputsView.*;
+import static euller.mercado_livre.client.admin.view.InputsView.lerIdDoProduto;
 
-public class StartService {
+public class Start {
 
-    private final Logger logger = Logger.getLogger(StartService.class.getName());
+    private final Logger logger = Logger.getLogger(Start.class.getName());
     public int lerPortaServidor() {
         int port;
         Scanner s = new Scanner(System.in);
