@@ -29,7 +29,7 @@ public class ProdutoService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return null;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
         return response.getMessage();
     }
 
@@ -45,6 +45,6 @@ public class ProdutoService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 }

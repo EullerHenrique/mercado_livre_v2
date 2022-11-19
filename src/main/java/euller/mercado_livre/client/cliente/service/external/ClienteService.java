@@ -37,7 +37,7 @@ public class ClienteService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return false;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
         return Boolean.parseBoolean(response.getMessage());
     }
 

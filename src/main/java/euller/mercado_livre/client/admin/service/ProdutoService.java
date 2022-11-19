@@ -35,7 +35,7 @@ public class ProdutoService {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
     public void modificarProduto(ProdutoDTO produtoDTO) {
@@ -52,7 +52,7 @@ public class ProdutoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
     public void buscarProduto(String PID) {
@@ -66,7 +66,7 @@ public class ProdutoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
     public void apagarProduto(String PID) {
@@ -80,7 +80,7 @@ public class ProdutoService {
             System.out.println(e.getMessage());
             return;
         }
-        logger.info(response.getMessage());
+        logger.info("Response: "+response.getMessage());
     }
 
 }
