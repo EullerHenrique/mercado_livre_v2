@@ -3,11 +3,14 @@
 ## Sumário
 
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Configuração](#configuracao)
+- [Configuração](#configuração)
 - - [Mosquitto](#mosquitto)
 - - [Java](#java)
-- [Execução](#execucao)
-
+- [Execução](#execução)
+  - [Server](#server)   
+  - [Client](#client)
+  - [Funcionalidades](#funcionalidades)
+  
 ## Tecnologias Utilizadas
 
 - Java
@@ -53,7 +56,7 @@
 
 ## Execução
 
-1. Server
+###  Server
   1.Admin
     1. Navegue até mercado_libre/server/admin/AdminServer
     2. Aperte o botão play localizado ao lado de "public class AdminServer"
@@ -63,7 +66,7 @@
     2. Aperte o botão play localizado ao lado de "public class ClienteServer"
     3. Digite a porta desejada (Ex: 5052)
     
-2. Client
+### Client
   1.Admin
     1. Navegue até mercado_libre/client/admin/AdminClient
     2. Aperte o botão play localizado ao lado de "public class AdminClient"
@@ -74,6 +77,9 @@
     2. Aperte o botão play localizado ao lado de "public class ClientCliente"
     3. Digite a porta escolhida ao criar o ClienteServer (Ex: 5052)
 
+### Funcionalidades
+### Admin
+### Cliente
 
 
 
