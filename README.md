@@ -3,6 +3,7 @@
 ## Sumário
 
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Conceito](#conceito)
 
 ## Tecnologias Utilizadas
 
@@ -13,7 +14,12 @@
 
 ## Configuração
 
+### Mosquitto
+
+### Java
+
 ## Execução
+
 
 
 
