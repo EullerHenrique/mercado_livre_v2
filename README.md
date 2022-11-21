@@ -85,15 +85,16 @@
     1. Criar Cliente
         1. ClientCliente: Digite o nome do cliente
         2. ClientCliente: Digite o email do cliente
-        3. ClientClienteL: Digite o telefone do cliente
-        4. ServerCliente: Salva o cliente em uma tabela hash do servidor x
-        4. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/criar  
-        5. ServerClient->Mosquitto: Publica o cliente criado no tópico server/admin/cliente/criar 
-        6. ServerClient: A subcrição realizada recebe o cliente que foi publicado 
-        7. ServerClient: Se o cliente existir na tabela hash do servidor x, nada é feito
-        8. ServerClient: Se o cliente não existir na tabela hash do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
-        4. ClientCliente: O cliente criado é exibido
-        
+        3. ClientCliente: Digite o telefone do cliente
+        4. ClienteCliente->Grpc: CriarCliente -> Realiza uma requisição por meio do protocolo rpc
+        5. ServerCliente->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
+        6. ServerCliente: Salva o cliente em uma tabela hash do servidor x
+        7. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/criar  
+        8. ServerClient->Mosquitto: Publica o cliente criado no tópico server/admin/cliente/criar 
+        9. ServerClient: A subcrição realizada recebe o cliente que foi publicado 
+        10. ServerClient: Se o cliente existir na tabela hash do servidor x, nada é feito
+        11. ServerClient: Se o cliente não existir na tabela hash do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
+        12. ClientCliente: O cliente criado é exibido
     2. Modificar Cliente
         1. Digite o nome do cliente
         2. Digite o email do cliente
