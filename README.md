@@ -83,14 +83,45 @@
 
 1. Admin
     1. Criar Cliente
+        1. ClientCliente: Digite o nome do cliente
+        2. ClientCliente: Digite o email do cliente
+        3. ClientClienteL: Digite o telefone do cliente
+        4. ServerCliente: Salva o cliente em uma tabela hash do servidor x
+        4. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/criar  
+        5. ServerClient->Mosquitto: Publica o cliente criado no tópico server/admin/cliente/criar 
+        6. ServerClient: A subcrição realizada recebe o cliente que foi publicado 
+        7. ServerClient: Se o cliente existir na tabela hash do servidor x, nada é feito
+        8. ServerClient: Se o cliente não existir na tabela hash do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
+        4. ClientCliente: O cliente criado é exibido
+        
     2. Modificar Cliente
+        1. Digite o nome do cliente
+        2. Digite o email do cliente
+        3. Digite o telefone do cliente
     3. Buscar Cliente
+        1. Digite o CID do cliente
     4. Apagar Cliente
+        1. Digite o CID do cliente
     5. Criar Produto
+        1. Digite o nome do produto
+        2. Digite a quantidade do produto
+        3. Digite o preço do produto
+        4. O produto criado é exibido
     6. Modificar Produto
+        1. Digite o PID do produto
+        2. Digite a quantidade do produto
+        3. Digite o preço do produto
+        4. O produto atualizado é exibido se ele existir
+        5. A mensagem "Produto não encontrado" é exibida se ele não existir
     7. Buscar Produto
+        1. Digite o PID do produto
+        2. O produto buscado é exibido se ele existir
+        3. A mensagem "Produto não encontrado" é exibida se ele não existir
     8. Apagar Produto
-    
+        1. Digite o PID do produto 
+        2. A mensagem "Produto apagado" é exibida se ele não existir
+        3. A mensagem "Produto não encontrado" é exibida se ele não existir
+   
 2. Cliente
     1. Criar Pedido
     2. Modificar Pedido
