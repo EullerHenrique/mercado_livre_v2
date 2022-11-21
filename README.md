@@ -150,7 +150,7 @@
         4. ClientCliente: Digite o preço do produto
         5. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         6. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. ServerCliente: Se o produto estiver presente na tabela hash (Produto) do servidor x -> g-m
+        7. ServerCliente: Se o produto estiver presente na tabela hash (Produto) do servidor x -> g-n
         8. ServerCliente: Salva a modificação do produto na tabela hash (Produto) do servidor x 
         9. ServerClient->Mosquitto: Se subscreve no tópico server/admin/produto/modificar  
         10. ServerClient->Mosquitto: Publica o produto modificado no tópico server/admin/produto/modificar 
