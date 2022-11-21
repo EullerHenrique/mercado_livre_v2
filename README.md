@@ -88,21 +88,48 @@
         3. ClientCliente: Digite o telefone do cliente
         4. ClienteCliente->Grpc: CriarCliente -> Realiza uma requisição por meio do protocolo rpc
         5. ServerCliente->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente: Salva o cliente em uma tabela hash do servidor x
+        6. ServerCliente: Salva o cliente na tabela hash (Cliente) do servidor x
         7. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/criar  
         8. ServerClient->Mosquitto: Publica o cliente criado no tópico server/admin/cliente/criar 
         9. ServerClient: A subcrição realizada recebe o cliente que foi publicado 
         10. ServerClient: Se o cliente existir na tabela hash do servidor x, nada é feito
-        11. ServerClient: Se o cliente não existir na tabela hash do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
+        11. ServerClient: Se o cliente não existir na tabela hash (Cliente) do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
         12. ClientCliente: O cliente criado é exibido
     2. Modificar Cliente
-        1. Digite o nome do cliente
-        2. Digite o email do cliente
-        3. Digite o telefone do cliente
+        1. ClientCliente: Digite o nome do cliente
+        2. ClientCliente: Digite o email do cliente
+        3. ClientCliente: Digite o telefone do cliente
+        4. ClienteCliente->Grpc: ModificarCliente -> Realiza uma requisição por meio do protocolo rpc
+        5. ServerCliente->Grpc: ModificarCliente -> Recebe uma requisição por meio do protocolo rpc
+        6. ServerCliente: Se o cliente estiver presente na tabela hash (Cliente) do servidor x -> g-m
+        7. ServerCliente: Salva a modificação do cliente na tabela hash (Cliente) do servidor x 
+        8. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/modificar  
+        9. ServerClient->Mosquitto: Publica o cliente modificado no tópico server/admin/cliente/modificar 
+        10. ServerClient: A subcrição realizada recebe o cliente que foi publicado 
+        11. ServerClient: Se o cliente existir na tabela hash (Cliente) do servidor x, nada é feito
+        12. ServerClient: Se o cliente não existir na tabela hash do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
+        13. ClientCliente: O cliente atualizado é exibido se ele existir
+        14. ClientCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
     3. Buscar Cliente
-        1. Digite o CID do cliente
+        1. ClienteCliente: Digite o CID do cliente
+        2. ClienteCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
+        3. ServerCliente->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
+        4. ServerCliente: Realiza a busca do produto na tabela hash
+        5. ClienteCliente: O cliente buscado é exibido se ele existir
+        6. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
     4. Apagar Cliente
-        1. Digite o CID do cliente
+        1. ClienteCliente: Digite o CID do cliente
+        2. ClienteCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
+        3. ServerCliente->Grpc: ApagarCliente -> Recebe uma requisição por meio do protocolo rpc
+        4. ServerCliente: Se o cliente estiver presente na tabela hash (Cliente) do servidor x -> e-k
+        5. ServerCliente: Apaga o cliente presente na tabela hash (Cliente) o servidor x 
+        6. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/modificar  
+        7. ServerClient->Mosquitto: Publica o CID no tópico server/admin/cliente/modificar 
+        8. ServerClient: A subcrição realizada recebe o CID que foi publicado 
+        9. ServerClient: Se o cliente existir na tabela hash do servidor x, nada é feito
+        10. ServerClient: Se o cliente não existir na tabela hash (Cliente) do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
+        11. ClienteCliente: A mensagem "Cliente apagado" é exibida se ele não existir
+        12. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir    
     5. Criar Produto
         1. Digite o nome do produto
         2. Digite a quantidade do produto
