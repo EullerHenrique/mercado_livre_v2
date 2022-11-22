@@ -118,12 +118,8 @@ public class Start {
 
                         ProdutoDTO produtoDTO = inputsView.lerIdDoProduto();
                         PedidoDTO pedidoDTOAntigo;
-                        System.out.println("\nPedido Antigo: ");
-                        System.out.println(pedidoAntigoJson);
                         pedidoDTOAntigo = gson.fromJson(pedidoAntigoJson, PedidoDTO.class);
                         PedidoDTO pedidoDTONovo = inputsView.lerPedidoAtualizado(pedidoDTOAntigo, produtoDTO);
-                        System.out.println("\nPedido Atualizado: ");
-                        System.out.println(gson.toJson(pedidoDTONovo));
                         pedidoService.modificarPedido(pedidoDTOAntigo, pedidoDTONovo, produtoDTO);
 
                     } else if (opcao == 3) {
