@@ -92,7 +92,8 @@ public class Start {
                                             opcaoAdicionarProduto = scanner.nextInt();
                                             if(opcaoAdicionarProduto == 1 || opcaoAdicionarProduto == 2) {
                                                 break;
-                                            }                                        }
+                                            }
+                                        }
                                     }
                                 }
                             } else if (opcaoAdicionarProduto == 2) {

@@ -132,7 +132,7 @@ public class InputsView {
             System.out.println("\nDigite a nova quantidade:                    ");
             if (s.hasNextInt()) {
                 quantidadeProdutoPedido = s.nextInt();
-                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+produtoDTOPedidoAntigo.getQuantidade()) {
+                if (quantidadeProdutoPedido <= quantidadeProduto+produtoDTOPedidoAntigo.getQuantidade()) {
                     produtoDTOPedidoNovo.setQuantidade(quantidadeProdutoPedido);
                     break;
                 }

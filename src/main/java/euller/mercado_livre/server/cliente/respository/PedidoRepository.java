@@ -59,7 +59,9 @@ public class PedidoRepository {
                     for (Produto produto : pedidoModel.getProdutos()) {
                         Gson gson = new Gson();
                         String produtoJson = gson.toJson(produto);
-                        produtos.add(produtoJson);
+                        if(produto.getQuantidade() > 0){
+                            produtos.add(produtoJson);
+                        }
                     }
                     pedido.put(OID, produtos);
                     pedidos.get(CID).remove(pedido);
