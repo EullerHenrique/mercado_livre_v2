@@ -40,6 +40,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
+
     @Override
     public void modificarPedido(ModificarPedidoRequest req, StreamObserver<ModificarPedidoResponse> responseObserver) {
         String CID = req.getCID();
@@ -56,6 +57,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
+
     @Override
     public void buscarPedido(BuscarPedidoRequest req, StreamObserver<BuscarPedidoResponse> responseObserver) {
         String pedidoJson = pedidoRepository.buscarPedido(req.getCID(),req.getOID());
@@ -66,9 +68,10 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
+
     @Override
     public void buscarPedidos(BuscarPedidosRequest req, StreamObserver<BuscarPedidosResponse> responseObserver) {
-        List<Hashtable<String, String>> pedidos = pedidoRepository.buscarPedidos(req.getCID());
+        List<Hashtable<String, Integer>> pedidos = pedidoRepository.buscarPedidos(req.getCID());
         BuscarPedidosResponse reply;
         if(pedidos == null){
             reply = BuscarPedidosResponse.newBuilder().setMessage("O cliente"+req.getCID()+" não possui pedidos").build();
@@ -78,6 +81,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
+
     @Override
     public void apagarPedido(ApagarPedidoRequest req, StreamObserver<ApagarPedidoResponse> responseObserver) {
         String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID(), false);
@@ -88,5 +92,6 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
+
 
 }

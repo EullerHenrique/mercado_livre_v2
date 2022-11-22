@@ -8,6 +8,7 @@ import euller.mercado_livre.server.cliente.*;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,12 +18,13 @@ public class PedidoService {
     private PedidoServiceGrpc.PedidoServiceBlockingStub blockingStubPedido;
     private ProdutoService produtoService;
 
+
     public PedidoService(ProdutoService produtoService, Channel channel) {
         this.produtoService = produtoService;
         blockingStubPedido = PedidoServiceGrpc.newBlockingStub(channel);
     }
 
-    public void criarPedido(ProdutoDTO produtoDTO, PedidoDTO pedidoDTO) {
+    public void criarPedido(List<ProdutoDTO> produtosDTO, PedidoDTO pedidoDTO) {
         String CID = pedidoDTO.getCID();
         logger.info("Request: Insira o pedido " + pedidoDTO + " com o CID " + CID+"\n");
         Gson gson = new Gson();
@@ -31,15 +33,19 @@ public class PedidoService {
         CriarPedidoResponse response;
         try {
             response = blockingStubPedido.criarPedido(request);
-            int quantidadeProdutoAtualizada =  produtoDTO.getQuantidade() - pedidoDTO.getQuantidade();
-            produtoDTO.setQuantidade(quantidadeProdutoAtualizada);
-            produtoService.modificarProduto(produtoDTO);
+            List<ProdutoDTO> produtosPedidoDTO = pedidoDTO.getProdutos();
+            for(int i=0; i < produtosPedidoDTO.size(); i++){
+                int quantidadeProdutoAtualizada = produtosDTO.get(i).getQuantidade() - produtosPedidoDTO.get(i).getQuantidade();
+                produtosDTO.get(i).setQuantidade(quantidadeProdutoAtualizada);
+                produtoService.modificarProduto(produtosDTO.get(i));
+            }
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
         logger.info("Response: "+response.getMessage()+"\n");
     }
+
     public void modificarPedido(PedidoDTO pedidoDTOAntigo, PedidoDTO pedidoDTONovo, ProdutoDTO produtoDTO) {
         String CID = pedidoDTOAntigo.getCID();
         String OID = pedidoDTOAntigo.getOID();
@@ -50,11 +56,14 @@ public class PedidoService {
         ModificarPedidoResponse response;
         try {
             response = blockingStubPedido.modificarPedido(request);
+            ProdutoDTO produtoDTOPedidoAntigo = pedidoDTOAntigo.getProdutos().stream().filter(p -> p.getPID().equals(produtoDTO.getPID())).findFirst().get();
+            ProdutoDTO produtoDTOPedidoNovo = pedidoDTONovo.getProdutos().stream().filter(p -> p.getPID().equals(produtoDTO.getPID())).findFirst().get();
+
             int quantidadeProdutoAtualizada;
-            if(pedidoDTOAntigo.getQuantidade() > pedidoDTONovo.getQuantidade()) {
-                quantidadeProdutoAtualizada = produtoDTO.getQuantidade() + (pedidoDTOAntigo.getQuantidade() - pedidoDTONovo.getQuantidade());
+            if(produtoDTOPedidoAntigo.getQuantidade() > produtoDTOPedidoNovo.getQuantidade()) {
+                quantidadeProdutoAtualizada = produtoDTO.getQuantidade() + (produtoDTOPedidoAntigo.getQuantidade() - produtoDTOPedidoNovo.getQuantidade());
             } else {
-                quantidadeProdutoAtualizada = produtoDTO.getQuantidade() - (pedidoDTONovo.getQuantidade() - pedidoDTOAntigo.getQuantidade());
+                quantidadeProdutoAtualizada = produtoDTO.getQuantidade() - (produtoDTOPedidoNovo.getQuantidade() - produtoDTOPedidoAntigo.getQuantidade());
             }
             produtoDTO.setQuantidade(quantidadeProdutoAtualizada);
             produtoService.modificarProduto(produtoDTO);
@@ -65,6 +74,7 @@ public class PedidoService {
         }
         logger.info("Response: "+response.getMessage()+"\n");
     }
+
     public String buscarPedido(String CID, String OID) {
         logger.info("Request: Busque o pedido com o CID: " + CID+ " e o OID: " + OID+"\n");
         BuscarPedidoRequest request = BuscarPedidoRequest.newBuilder().setCID(CID).setOID(OID).build();

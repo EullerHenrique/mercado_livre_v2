@@ -1,6 +1,10 @@
 package euller.mercado_livre.client.cliente.domain.dto;
 
 public class ProdutoDTO {
+
+    private String CID;
+
+    private String OID;
     private String PID;
 
     private String produto;

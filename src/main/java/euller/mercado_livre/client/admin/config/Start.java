@@ -48,38 +48,40 @@ public class Start {
             exibePortal();
             ClienteService clienteService = new ClienteService(channel);
             ProdutoService produtoService = new ProdutoService(channel);
-            Scanner scanner = new Scanner(System.in);
             while(true) {
+                Scanner scanner = new Scanner(System.in);
                 exibeOpcoes();
-                int opcao = scanner.nextInt();
-                if(opcao == 1){
-                    ClienteDTO clienteDTO = lerCliente();
-                    clienteService.criarCliente(clienteDTO);
-                }else if(opcao == 2){
-                    String cid = lerIdDoCliente();
-                    ClienteDTO clienteDTO = lerCliente();
-                    clienteDTO.setCID(cid);
-                    clienteService.modificarCliente(clienteDTO);
-                }else if(opcao == 3){
-                    String cid = lerIdDoCliente();
-                    clienteService.buscarCliente(cid);
-                }else if(opcao == 4) {
-                    String cid = lerIdDoCliente();
-                    clienteService.apagarCliente(cid);
-                }else if(opcao == 5) {
-                    ProdutoDTO produtoDTO = lerProduto();
-                    produtoService.criarProduto(produtoDTO);
-                }else if(opcao == 6) {
-                    String pid = lerIdDoProduto();
-                    ProdutoDTO produtoDTO = lerProduto();
-                    produtoDTO.setPID(pid);
-                    produtoService.modificarProduto(produtoDTO);
-                }else if(opcao == 7) {
-                    String pid = lerIdDoProduto();
-                    produtoService.buscarProduto(pid);
-                }else if(opcao == 8) {
-                    String pid = lerIdDoProduto();
-                    produtoService.apagarProduto(pid);
+                if (scanner.hasNextInt()) {
+                    int opcao = scanner.nextInt();
+                    if (opcao == 1) {
+                        ClienteDTO clienteDTO = lerCliente();
+                        clienteService.criarCliente(clienteDTO);
+                    } else if (opcao == 2) {
+                        String cid = lerIdDoCliente();
+                        ClienteDTO clienteDTO = lerCliente();
+                        clienteDTO.setCID(cid);
+                        clienteService.modificarCliente(clienteDTO);
+                    } else if (opcao == 3) {
+                        String cid = lerIdDoCliente();
+                        clienteService.buscarCliente(cid);
+                    } else if (opcao == 4) {
+                        String cid = lerIdDoCliente();
+                        clienteService.apagarCliente(cid);
+                    } else if (opcao == 5) {
+                        ProdutoDTO produtoDTO = lerProduto();
+                        produtoService.criarProduto(produtoDTO);
+                    } else if (opcao == 6) {
+                        String pid = lerIdDoProduto();
+                        ProdutoDTO produtoDTO = lerProduto();
+                        produtoDTO.setPID(pid);
+                        produtoService.modificarProduto(produtoDTO);
+                    } else if (opcao == 7) {
+                        String pid = lerIdDoProduto();
+                        produtoService.buscarProduto(pid);
+                    } else if (opcao == 8) {
+                        String pid = lerIdDoProduto();
+                        produtoService.apagarProduto(pid);
+                    }
                 }
             }
         } finally {

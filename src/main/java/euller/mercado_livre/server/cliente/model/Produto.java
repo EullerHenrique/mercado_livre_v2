@@ -2,6 +2,8 @@ package euller.mercado_livre.server.cliente.model;
 
 public class Produto {
 
+    private String CID;
+    private String OID;
     private String PID;
     private String produto;
     private int quantidade;
@@ -36,4 +38,19 @@ public class Produto {
         this.PID = PID;
     }
 
+    public String getCID() {
+        return CID;
+    }
+
+    public void setCID(String CID) {
+        this.CID = CID;
+    }
+
+    public String getOID() {
+        return OID;
+    }
+
+    public void setOID(String OID) {
+        this.OID = OID;
+    }
 }

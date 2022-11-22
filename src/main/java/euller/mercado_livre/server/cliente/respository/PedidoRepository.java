@@ -2,6 +2,7 @@ package euller.mercado_livre.server.cliente.respository;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.server.cliente.model.Pedido;
+import euller.mercado_livre.server.cliente.model.Produto;
 import euller.mercado_livre.server.cliente.service.mosquitto.MosquittoService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.logging.Logger;
 
 public class PedidoRepository {
     private final Logger logger = Logger.getLogger(PedidoRepository.class.getName());
-    private final Hashtable<String, List<Hashtable<String, String>>> pedidos = new Hashtable<>();
+    private final Hashtable<String, List<Hashtable<String, List<String>>>> pedidos = new Hashtable<>();
     private MosquittoService mosquittoService = new MosquittoService();
 
     public String criarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
@@ -19,11 +20,17 @@ public class PedidoRepository {
         String CID = pedidoModel.getCID();
         String OID = pedidoModel.getOID();
         Gson gson = new Gson();
-        String pedidoJson = gson.toJson(pedidoModel);
-        Hashtable<String, String> pedido = new Hashtable<>();
-        pedido.put(OID, pedidoJson);
+        Hashtable<String, List<String>> pedido = new Hashtable<>();
+        List<String> produtos = new ArrayList<>();
+        for (Produto produto : pedidoModel.getProdutos()) {
+            produto.setCID(CID);
+            produto.setOID(OID);
+            String produtoJson = gson.toJson(produto);
+            produtos.add(produtoJson);
+        }
+        pedido.put(OID, produtos);
         if(!pedidos.containsKey(CID)) {
-            List<Hashtable<String, String>> pedidos = new ArrayList<>();
+            List<Hashtable<String, List<String>>> pedidos = new ArrayList<>();
             pedidos.add(pedido);
             this.pedidos.put(CID, pedidos);
         }else{
@@ -40,16 +47,23 @@ public class PedidoRepository {
         return pedidoBD;
     }
 
+
     public String modificarPedido(Pedido pedidoModel, boolean otherServerUpdate) {
         logger.info("Modificando pedido: "+pedidoModel+"\n");
         String CID = pedidoModel.getCID();
         String OID = pedidoModel.getOID();
-        Gson gson = new Gson();
-        String pedidoJson = gson.toJson(pedidoModel);
         if (pedidos.containsKey(CID) && pedidos.get(CID).size() > 0) {
-            for (Hashtable<String, String> pedido : pedidos.get(CID)) {
+            for (Hashtable<String, List<String>> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
-                    pedido.put(OID, pedidoJson);
+                    List<String> produtos = new ArrayList<>();
+                    for (Produto produto : pedidoModel.getProdutos()) {
+                        Gson gson = new Gson();
+                        String produtoJson = gson.toJson(produto);
+                        produtos.add(produtoJson);
+                    }
+                    pedido.put(OID, produtos);
+                    pedidos.get(CID).remove(pedido);
+                    pedidos.get(CID).add(pedido);
                     String pedidoBD = buscarPedido(CID, OID);
                     if(!otherServerUpdate) {
                         try {
@@ -68,19 +82,46 @@ public class PedidoRepository {
     public String buscarPedido(String CID, String OID) {
         logger.info("Buscando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
         if(pedidos.containsKey(CID)) {
-            for(Hashtable<String, String> pedido : pedidos.get(CID)) {
+            for(Hashtable<String, List<String>> pedido : pedidos.get(CID)) {
                 if(pedido.containsKey(OID)) {
-                    return pedido.get(OID);
+                    List<String> produtosJson = pedido.get(OID);
+                    List<Produto> produtos =  new ArrayList<>();
+                    for (String produtoJson : produtosJson) {
+                        Produto produto = new Gson().fromJson(produtoJson, Produto.class);
+                        produtos.add(produto);
+                    }
+                    Pedido pedidoModel = new Pedido();
+                    pedidoModel.setCID(CID);
+                    pedidoModel.setOID(OID);
+                    pedidoModel.setProdutos(produtos);
+                    Gson gson = new Gson();
+                    return gson.toJson(pedidoModel);
                 }
             }
         }
         return null;
     }
 
-    public List<Hashtable<String, String>> buscarPedidos(String CID) {
+    public List<Hashtable<String,Integer>> buscarPedidos(String CID) {
         logger.info("Buscando pedidos:  "+"CID: "+CID+"\n");
         if (pedidos.containsKey(CID)) {
-            return pedidos.get(CID);
+            List<Hashtable<String, List<String>>> pedidos = this.pedidos.get(CID);
+            List<Hashtable<String,Integer>> precosTotaisPedidos = new ArrayList<>();
+            for (Hashtable<String, List<String>> pedido : pedidos) {
+                for (String OID : pedido.keySet()) {
+                    List<String> produtos = pedido.get(OID);
+                    int precoTotalProduto = 0;
+                    for (String produto : produtos) {
+                        Gson gson = new Gson();
+                        Produto produtoModel = gson.fromJson(produto, Produto.class);
+                        precoTotalProduto += produtoModel.getPreco();
+                    }
+                    Hashtable<String,Integer>precoTotalPedido = new Hashtable<>();
+                    precoTotalPedido.put(OID,precoTotalProduto);
+                    precosTotaisPedidos.add(precoTotalPedido);
+                }
+            }
+            return precosTotaisPedidos;
         }
         return null;
     }
@@ -88,7 +129,7 @@ public class PedidoRepository {
     public String apagarPedido(String CID, String OID, boolean otherServerUpdate) {
         logger.info("Apagando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
         if (pedidos.containsKey(CID)) {
-            for (Hashtable<String, String> pedido : pedidos.get(CID)) {
+            for (Hashtable<String, List<String>> pedido : pedidos.get(CID)) {
                 if (pedido.containsKey(OID)) {
                     if(!otherServerUpdate) {
                         try {
@@ -104,4 +145,6 @@ public class PedidoRepository {
         }
         return null;
     }
+
+
 }

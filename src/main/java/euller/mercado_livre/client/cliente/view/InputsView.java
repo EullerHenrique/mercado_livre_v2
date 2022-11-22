@@ -5,9 +5,12 @@ import euller.mercado_livre.client.cliente.domain.dto.PedidoDTO;
 import euller.mercado_livre.client.cliente.domain.dto.ProdutoDTO;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
+import euller.mercado_livre.server.cliente.model.Pedido;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class InputsView {
@@ -18,6 +21,8 @@ public class InputsView {
         this.clienteService = clienteService;
         this.produtoService = produtoService;
     }
+
+
 
     public void exibePortal() {
         System.out.println("----------------------------------------");
@@ -75,8 +80,7 @@ public class InputsView {
         return produtoDTO;
     }
 
-    public PedidoDTO lerPedido(ProdutoDTO produtoDTO){
-        PedidoDTO pedidoDTO = new PedidoDTO();
+    public PedidoDTO lerPedido(PedidoDTO pedidoDTO, ProdutoDTO produtoDTO){
         String nomeProduto = produtoDTO.getProduto();
         int precoProduto =  produtoDTO.getPreco();
         int quantidadeProduto = produtoDTO.getQuantidade();
@@ -86,50 +90,63 @@ public class InputsView {
         System.out.println("\nQuantidade Disponível " + quantidadeProduto);
         System.out.println("\nPreço: " + produtoDTO.getPreco());
         System.out.println("---------------------------------------");
-        pedidoDTO.setPID(produtoDTO.getPID());
-        pedidoDTO.setProduto(nomeProduto);
+        ProdutoDTO produtoDTOPedido = new ProdutoDTO();
+        produtoDTOPedido.setPID(produtoDTO.getPID());
+        produtoDTOPedido.setProduto(nomeProduto);
         int quantidadeProdutoPedido;
         while(true) {
             System.out.println("\nDigite a quantidade:                    ");
             if (s.hasNextInt()) {
                 quantidadeProdutoPedido = s.nextInt();
                 if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto) {
-                    pedidoDTO.setQuantidade(quantidadeProdutoPedido);
+                    produtoDTOPedido.setQuantidade(quantidadeProdutoPedido);
                     break;
                 }
             }
         }
         int preco = precoProduto * quantidadeProdutoPedido;
-        pedidoDTO.setPreco(preco);
+        produtoDTOPedido.setPreco(preco);
+        pedidoDTO.getProdutos().add(produtoDTOPedido);
         return pedidoDTO;
     }
 
     public PedidoDTO lerPedidoAtualizado(PedidoDTO pedidoDTOAntigo, ProdutoDTO produtoDTO){
-        Gson gson = new Gson();
-        PedidoDTO pedidoDTONovo = gson.fromJson(gson.toJson(pedidoDTOAntigo), PedidoDTO.class);
+        PedidoDTO pedidoDTONovo = new PedidoDTO();
+        ProdutoDTO produtoDTOPedidoAntigo = pedidoDTOAntigo.getProdutos().stream().filter(p -> p.getPID().equals(produtoDTO.getPID())).findFirst().get();
+        ProdutoDTO produtoDTOPedidoNovo = new ProdutoDTO();
+
         String nomeProduto = produtoDTO.getProduto();
         int precoProduto =  produtoDTO.getPreco();
         int quantidadeProduto = produtoDTO.getQuantidade();
+
         Scanner s = new Scanner(System.in);
         System.out.println("---------------Produto-----------------");
         System.out.println("\nNome: " + nomeProduto);
         System.out.println("\nQuantidade Disponível " + quantidadeProduto);
         System.out.println("\nPreço: " + produtoDTO.getPreco());
-        System.out.println("\nQuantidade Presente No Pedido: " + pedidoDTOAntigo.getQuantidade());
-        System.out.println("\nPreço Total Presente No Pedido: " + pedidoDTOAntigo.getPreco());
+        System.out.println("\nQuantidade Presente No Pedido: " + produtoDTOPedidoAntigo.getQuantidade());
+        System.out.println("\nPreço Total Presente No Pedido: " + produtoDTOPedidoAntigo.getPreco());
         System.out.println("---------------------------------------");
         int quantidadeProdutoPedido;
         while(true) {
             System.out.println("\nDigite a nova quantidade:                    ");
             if (s.hasNextInt()) {
                 quantidadeProdutoPedido = s.nextInt();
-                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+ pedidoDTOAntigo.getQuantidade()) {
-                        pedidoDTONovo.setQuantidade(quantidadeProdutoPedido);
+                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+produtoDTOPedidoAntigo.getQuantidade()) {
+                    produtoDTOPedidoNovo.setQuantidade(quantidadeProdutoPedido);
                     break;
                 }
             }
         }
-        pedidoDTONovo.setPreco(precoProduto * quantidadeProdutoPedido);
+
+        produtoDTOPedidoNovo.setPID(produtoDTOPedidoAntigo.getPID());
+        produtoDTOPedidoNovo.setProduto(nomeProduto);
+        produtoDTOPedidoNovo.setPreco(precoProduto * quantidadeProdutoPedido);
+
+        pedidoDTONovo.setCID(pedidoDTOAntigo.getCID());
+        pedidoDTONovo.setOID(pedidoDTOAntigo.getOID());
+        pedidoDTONovo.setProdutos(pedidoDTOAntigo.getProdutos().stream().filter(p -> !p.getPID().equals(produtoDTO.getPID())).collect(Collectors.toList()));
+        pedidoDTONovo.getProdutos().add(produtoDTOPedidoNovo);
         return pedidoDTONovo;
     }
 

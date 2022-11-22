@@ -1,22 +1,11 @@
 package euller.mercado_livre.client.cliente.domain.dto;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PedidoDTO {
-
     private String CID;
-    private String PID;
-
     private String OID;
-    private String produto;
-    private int quantidade;
-    private int preco;
-
-    public String getPID() {
-        return PID;
-    }
-
-    public void setPID(String PID) {
-        this.PID = PID;
-    }
+    private List<ProdutoDTO> produtos = new ArrayList<>();
 
     public String getCID() {
         return CID;
@@ -34,28 +23,11 @@ public class PedidoDTO {
         this.OID = OID;
     }
 
-    public String getProduto() {
-        return produto;
+    public List<ProdutoDTO> getProdutos() {
+        return produtos;
     }
 
-    public void setProduto(String produto) {
-        this.produto = produto;
+    public void setProdutos(List<ProdutoDTO> produtos) {
+        this.produtos = produtos;
     }
-
-    public int getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public int getPreco() {
-        return preco;
-    }
-
-    public void setPreco(int preco) {
-        this.preco = preco;
-    }
-
 }
