@@ -73,17 +73,26 @@ public class Start {
                                 produtosDTO.add(produtoDTO);
                                 if (produtoDTO.getQuantidade() > 0) {
                                     pedidoDTO = inputsView.lerPedido(pedidoDTO, produtoDTO);
-                                    System.out.println("\nVocê deseja adicionar mais um produto? (1 - Sim, 2 - Não): ");
-                                    scanner = new Scanner(System.in);
-                                    if (scanner.hasNextInt()) {
-                                        opcaoAdicionarProduto = scanner.nextInt();
+                                    while(true) {
+                                        System.out.println("\nVocê deseja adicionar mais um produto? (1 - Sim, 2 - Não): ");
+                                        scanner = new Scanner(System.in);
+                                        if (scanner.hasNextInt()) {
+                                            opcaoAdicionarProduto = scanner.nextInt();
+                                            if(opcaoAdicionarProduto == 1 || opcaoAdicionarProduto == 2) {
+                                                break;
+                                            }
+                                        }
                                     }
                                 } else {
                                     System.out.println("\nProduto indisponível no momento. Tente novamente mais tarde.");
-                                    System.out.println("\nVocê deseja tentar adicionar outro produto? (1 - Sim, 2 - Não): ");
-                                    scanner = new Scanner(System.in);
-                                    if (scanner.hasNextInt()) {
-                                        opcaoAdicionarProduto = scanner.nextInt();
+                                    while(true) {
+                                        System.out.println("\nVocê deseja tentar adicionar outro produto? (1 - Sim, 2 - Não): ");
+                                        scanner = new Scanner(System.in);
+                                        if (scanner.hasNextInt()) {
+                                            opcaoAdicionarProduto = scanner.nextInt();
+                                            if(opcaoAdicionarProduto == 1 || opcaoAdicionarProduto == 2) {
+                                                break;
+                                            }                                        }
                                     }
                                 }
                             } else if (opcaoAdicionarProduto == 2) {
