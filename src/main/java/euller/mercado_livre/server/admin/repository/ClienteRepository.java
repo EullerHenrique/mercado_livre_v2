@@ -1,89 +1,81 @@
 package euller.mercado_livre.server.admin.repository;
 
 import com.google.gson.Gson;
+import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
-import euller.mercado_livre.server.admin.service.mosquitto.MosquittoService;
-import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 public class ClienteRepository {
 
     private final Logger logger = Logger.getLogger(ClienteRepository.class.getName());
 
-    private final Hashtable<String, String> clientes = new Hashtable<>();
-    private final MosquittoService mosquittoService = new MosquittoService();
+    private final ClienteRatis clienteRatis = new ClienteRatis();
 
-    public String criarCliente(Cliente cliente, boolean otherServerUpdate) {
+    public String criarCliente(Cliente cliente) {
         logger.info("Criando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
-        if(!clientes.containsKey(CID)) {
-            Gson gson = new Gson();
-            String clienteJson = gson.toJson(cliente);
-            clientes.put(CID, clienteJson);
-            String clienteBD = buscarCliente(CID);
-            if (!otherServerUpdate) {
-                try {
-                    mosquittoService.publish("server/admin/cliente/criar", clienteBD);
-                } catch (MqttException e) {
-                    throw new RuntimeException(e);
-                }
+        try {
+            if (buscarCliente(CID) == null) {
+                Gson gson = new Gson();
+                String clienteJson = gson.toJson(cliente);
+                clienteRatis.clienteRatis("add", CID, clienteJson);
+                return clienteJson;
             }
-            return clienteBD;
+            return null;
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
-    public String modificarCLiente(Cliente cliente, boolean otherServerUpdate) {
+    public String modificarCLiente(Cliente cliente) {
         logger.info("Modificando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
-        Gson gson = new Gson();
-        String clienteJson = gson.toJson(cliente);
-        if(clientes.containsKey(CID)){
-            clientes.remove(CID);
-            clientes.put(CID, clienteJson);
-            String clienteBD = buscarCliente(CID);
-            if(!otherServerUpdate) {
-                try {
-                    mosquittoService.publish("server/admin/cliente/modificar",clienteBD);
-                } catch (MqttException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            return clienteBD;
+        if(buscarCliente(CID) !=null){
+            if(apagarCliente(CID) != null){
+                String clienteJson = criarCliente(cliente);
+                if(clienteJson != null){
+                    return clienteJson;
+                };
+            };
         }
         return null;
     }
 
     public String buscarCliente(String CID){
         logger.info("Buscando cliente: "+CID+"\n");
-        if(clientes.containsKey(CID)) {
-            return clientes.get(CID);
+        try {
+            String clienteJson = clienteRatis.clienteRatis("get", CID, null);
+            if (clienteJson != null) {
+                return clienteJson;
+            }
+            return null;
+        }catch (IOException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public String isCliente(String CID){
         logger.info("Verificando cliente: "+CID+"\n");
-        if(clientes.containsKey(CID)) {
+        if(buscarCliente(CID) != null){
             return "true";
         }
         return "false";
     }
 
-    public String apagarCliente(String CID, boolean otherServerUpdate){
-        logger.info("Apagando cliente: "+CID+"\n");
-        if (clientes.containsKey(CID)) {
-            clientes.remove(CID);
-            if(!otherServerUpdate) {
-                try {
-                    mosquittoService.publish("server/admin/cliente/apagar", CID);
-                } catch (MqttException e) {
-                    throw new RuntimeException(e);
-                }
+    public String apagarCliente(String CID) {
+        logger.info("Apagando cliente: " + CID + "\n");
+        try {
+            if (buscarCliente(CID) != null) {
+                clienteRatis.clienteRatis("del", CID, null);
+                return "Cliente apagado";
             }
-            return "Cliente apagado";
+            return null;
+        }catch (IOException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

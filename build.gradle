@@ -45,6 +45,15 @@ dependencies {
     testImplementation "io.grpc:grpc-testing:${grpcVersion}"
     testImplementation "junit:junit:4.12"
     testImplementation "org.mockito:mockito-core:3.4.0"
+
+    implementation group: 'org.apache.ratis', name: 'ratis-server', version: '2.2.0'
+    implementation group: 'org.apache.ratis', name: 'ratis-netty', version: '2.2.0'
+    implementation group: 'org.apache.ratis', name: 'ratis-grpc', version: '2.2.0'
+    implementation group: 'com.beust', name: 'jcommander', version: '1.82'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
 }
 
 protobuf {
@@ -65,99 +74,4 @@ sourceSets {
             srcDirs 'build/generated/source/proto/main/java'
         }
     }
-}
-
-startScripts.enabled = false
-
-task routeGuideServer(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.routeguide.RouteGuideServer'
-    applicationName = 'route-guide-server'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task routeGuideClient(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.routeguide.RouteGuideClient'
-    applicationName = 'route-guide-cliente'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task helloWorldServer(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.helloworld.HelloWorldServer'
-    applicationName = 'hello-world-server'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task helloWorldClient(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.helloworld.HelloWorldClient'
-    applicationName = 'hello-world-cliente'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task retryingHelloWorldServer(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.retrying.RetryingHelloWorldServer'
-    applicationName = 'retrying-hello-world-server'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task retryingHelloWorldClient(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.retrying.RetryingHelloWorldClient'
-    applicationName = 'retrying-hello-world-cliente'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task hedgingHelloWorldServer(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.hedging.HedgingHelloWorldServer'
-    applicationName = 'hedging-hello-world-server'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task hedgingHelloWorldClient(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.hedging.HedgingHelloWorldClient'
-    applicationName = 'hedging-hello-world-cliente'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task compressingHelloWorldClient(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.experimental.CompressingHelloWorldClient'
-    applicationName = 'compressing-hello-world-cliente'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task manualFlowControlClient(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.manualflowcontrol.ManualFlowControlClient'
-    applicationName = 'manual-flow-control-cliente'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-task manualFlowControlServer(type: CreateStartScripts) {
-    mainClass = 'io.grpc.examples.manualflowcontrol.ManualFlowControlServer'
-    applicationName = 'manual-flow-control-server'
-    outputDir = new File(project.buildDir, 'tmp/scripts/' + name)
-    classpath = startScripts.classpath
-}
-
-
-applicationDistribution.into('bin') {
-    from(routeGuideServer)
-    from(routeGuideClient)
-    from(helloWorldServer)
-    from(helloWorldClient)
-    from(hedgingHelloWorldClient)
-    from(hedgingHelloWorldServer)
-    from(retryingHelloWorldClient)
-    from(retryingHelloWorldServer)
-    from(compressingHelloWorldClient)
-    from(manualFlowControlClient)
-    from(manualFlowControlServer)
-    fileMode = 0755
 }

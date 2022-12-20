@@ -2,6 +2,7 @@ package euller.mercado_livre.server.admin.service;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.*;
+import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
 import euller.mercado_livre.server.admin.repository.ClienteRepository;
 import euller.mercado_livre.server.admin.service.mosquitto.MosquittoService;
@@ -31,7 +32,7 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
         Gson gson = new Gson();
         Cliente cliente = gson.fromJson(req.getDados(), Cliente.class);
         cliente.setCID(UUID.randomUUID().toString());
-        String clienteJson = clienteRepository.criarCliente(cliente, false);
+        String clienteJson = clienteRepository.criarCliente(cliente);
         if(clienteJson == null){
             clienteJson = "Cliente já existe";
         }
@@ -43,7 +44,7 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     public void modificarCliente(ModificarClienteRequest req, StreamObserver<ModificarClienteResponse> responseObserver) {
         Gson gson = new Gson();
         Cliente cliente = gson.fromJson(req.getDados(), Cliente.class);
-        String clienteJson = clienteRepository.modificarCLiente(cliente, false);
+        String clienteJson = clienteRepository.modificarCLiente(cliente);
         if(clienteJson == null){
             clienteJson = "Cliente não encontrado";
         }
@@ -63,7 +64,7 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     }
     @Override
     public void apagarCliente(ApagarClienteRequest req, StreamObserver<ApagarClienteResponse> responseObserver) {
-        String msg = clienteRepository.apagarCliente(req.getCID(), false);
+        String msg = clienteRepository.apagarCliente(req.getCID());
         if(msg == null){
             msg = "Cliente não encontrado";
         }

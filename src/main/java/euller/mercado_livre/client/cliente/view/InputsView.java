@@ -5,9 +5,7 @@ import euller.mercado_livre.client.cliente.domain.dto.PedidoDTO;
 import euller.mercado_livre.client.cliente.domain.dto.ProdutoDTO;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
-import euller.mercado_livre.server.cliente.model.Pedido;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;

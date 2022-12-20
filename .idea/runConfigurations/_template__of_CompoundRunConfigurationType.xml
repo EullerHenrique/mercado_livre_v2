@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="true" type="CompoundRunConfigurationType">
+    <toRun name="AdminClient (1)" type="Application" />
+    <toRun name="AdminClient (2)" type="Application" />
+    <toRun name="AdminClient (3)" type="Application" />
+    <toRun name="AdminClient (4)" type="Application" />
+    <toRun name="AdminServer (1)" type="Application" />
+    <toRun name="AdminServer (2)" type="Application" />
+    <toRun name="AdminServer (3)" type="Application" />
+    <toRun name="AdminServer (4)" type="Application" />
+    <toRun name="ClienteClient (1)" type="Application" />
+    <toRun name="ClienteClient (2)" type="Application" />
+    <toRun name="ClienteClient (3)" type="Application" />
+    <toRun name="ClienteClient (4)" type="Application" />
+    <toRun name="ClienteServer (1)" type="Application" />
+    <toRun name="ClienteServer (2)" type="Application" />
+    <toRun name="ClienteServer (3)" type="Application" />
+    <toRun name="ClienteServer (4)" type="Application" />
+    <method v="2" />
+  </configuration>
+</component>

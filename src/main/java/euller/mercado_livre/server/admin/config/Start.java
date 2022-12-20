@@ -7,6 +7,7 @@ import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -30,7 +31,9 @@ public class Start {
         return port;
     }
 
-    public void start() throws IOException {
+
+    public void start() throws IOException, InterruptedException, ExecutionException {
+
         int port = lerPortaServidor();
         server = ServerBuilder.forPort(port)
                 .addService(new ClienteServiceImpl())
