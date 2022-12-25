@@ -52,31 +52,30 @@ public class ClienteRatis {
     switch (function) {
       case "add":
         value = value.replace(":", ".");
-        Message message = Message.valueOf("add:" + key + ":" + value);
         getValue = client.io().send(Message.valueOf("add:" + key + ":" +value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println(response);
+        //ystem.out.println(response);
         break;
       case "get":
         getValue = client.io().sendReadOnly(Message.valueOf("get:" + key));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println(response);
+        //System.out.println(response);
         break;
       case "del":
         getValue = client.io().send(Message.valueOf("del:" + key));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println(response);
+        //System.out.println(response);
         break;
       case "clear":
         getValue = client.io().send(Message.valueOf("clear"));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println(response);
+        //System.out.println(response);
         break;
       case "add_async":
         compGetValue = client.async().send(Message.valueOf("add:" + key + ":" +value));
         getValue = compGetValue.get();
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println(response);
+        //System.out.println(response);
         break;
       case "get_stale":
         getValue =

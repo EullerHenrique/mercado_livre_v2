@@ -54,6 +54,8 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
+    implementation group: 'org.iq80.leveldb', name: 'leveldb-api', version: '0.12'
+    implementation group: 'org.iq80.leveldb', name: 'leveldb', version: '0.12'
 }
 
 protobuf {

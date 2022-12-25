@@ -101,7 +101,7 @@ public class MosquittoService {
                 case "server/admin/produto/criar":
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
                     if(produtoRepository.buscarProduto(produto.getPID())==null){
-                        produtoRepository.criarProduto(produto, true);
+                        produtoRepository.criarProduto(produto);
                     }
                     break;
                 case "server/cliente/produto/modificar":
@@ -109,13 +109,13 @@ public class MosquittoService {
                     produtoJson = new String(message.getPayload());
                     produto = gson.fromJson(new String(message.getPayload()), Produto.class);
                     if(!produtoJson.equals(produtoRepository.buscarProduto(produto.getPID()))){
-                        produtoRepository.modificarProduto(produto, true);
+                        produtoRepository.modificarProduto(produto);
                     }
                     break;
                 case "server/admin/produto/apagar":
                     PID = new String(message.getPayload());
                     if(produtoRepository.buscarProduto(PID)!=null) {
-                        produtoRepository.apagarProduto(PID, true);
+                        produtoRepository.apagarProduto(PID);
                     }
                     break;
             }

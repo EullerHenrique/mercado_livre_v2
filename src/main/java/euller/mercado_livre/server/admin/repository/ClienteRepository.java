@@ -5,7 +5,6 @@ import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
 
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -48,11 +47,7 @@ public class ClienteRepository {
     public String buscarCliente(String CID){
         logger.info("Buscando cliente: "+CID+"\n");
         try {
-            String clienteJson = clienteRatis.clienteRatis("get", CID, null);
-            if (clienteJson != null) {
-                return clienteJson;
-            }
-            return null;
+            return clienteRatis.clienteRatis("get", CID, null);
         }catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }

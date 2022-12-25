@@ -32,7 +32,7 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
         Gson gson = new Gson();
         Produto produto = gson.fromJson(req.getDados(), Produto.class);
         produto.setPID(UUID.randomUUID().toString());
-        String produtoJson = produtoRepository.criarProduto(produto, false);
+        String produtoJson = produtoRepository.criarProduto(produto);
         if(produtoJson == null){
             produtoJson = "Produto já existe";
         }
@@ -44,7 +44,7 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     public void modificarProduto(ModificarProdutoRequest req, StreamObserver<ModificarProdutoResponse> responseObserver) {
         Gson gson = new Gson();
         Produto produto = gson.fromJson(req.getDados(), Produto.class);
-        String produtoJson = produtoRepository.modificarProduto(produto, false);
+        String produtoJson = produtoRepository.modificarProduto(produto);
         if(produtoJson == null) {
          produtoJson = "Produto não encontrado";
         }
@@ -64,7 +64,7 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     }
     @Override
     public void apagarProduto(ApagarProdutoRequest req, StreamObserver<ApagarProdutoResponse> responseObserver) {
-        String msg = produtoRepository.apagarProduto(req.getPID(), false);
+        String msg = produtoRepository.apagarProduto(req.getPID());
         if(msg == null) {
             msg = "Produto não encontrado";
         }
