@@ -3,5 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/../01_Sistemas_Distribuidos/05-ratis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../01_Sistemas_Distribuidos/05-ratis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/admin/p1/000011.sst" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/admin/p1/000277.sst" charset="windows-1252" />
   </component>
 </project>

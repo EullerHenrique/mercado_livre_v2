@@ -9,7 +9,6 @@ import org.apache.ratis.protocol.RaftPeerId;
 import org.apache.ratis.server.RaftServer;
 import org.apache.ratis.server.RaftServerConfigKeys;
 import org.apache.ratis.thirdparty.com.google.protobuf.ByteString;
-import org.apache.ratis.util.LifeCycle;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Servidor {
@@ -29,9 +27,9 @@ public class Servidor {
 
     // Setup for node all nodes.
     Map<String, InetSocketAddress> id2addr = new HashMap<>();
-    id2addr.put("p1", new InetSocketAddress("127.0.0.1", 3000));
-    id2addr.put("p2", new InetSocketAddress("127.0.0.1", 3500));
-    id2addr.put("p3", new InetSocketAddress("127.0.0.1", 4000));
+    id2addr.put("p1", new InetSocketAddress("127.0.0.1", 3001));
+    id2addr.put("p2", new InetSocketAddress("127.0.0.1", 3501));
+    id2addr.put("p3", new InetSocketAddress("127.0.0.1", 4001));
 
     List<RaftPeer> addresses =
         id2addr.entrySet().stream()
@@ -51,7 +49,7 @@ public class Servidor {
     properties.setInt(GrpcConfigKeys.OutputStream.RETRY_TIMES_KEY, Integer.MAX_VALUE);
     GrpcConfigKeys.Server.setPort(properties, port);
     RaftServerConfigKeys.setStorageDir(
-        properties, Collections.singletonList(new File("/tmp/" + myId)));
+        properties, Collections.singletonList(new File("/tmp/cliente/" + myId)));
 
     // Join the group of processes.
     final RaftGroup raftGroup =
@@ -64,8 +62,6 @@ public class Servidor {
             .setGroup(raftGroup)
             .build();
     raftServer.start();
-    while (raftServer.getLifeCycleState() != LifeCycle.State.CLOSED) {
-      TimeUnit.SECONDS.sleep(1);
-    }
+    System.out.println("Servidor Ratis com id " + id + " inciado  em" + id2addr.get(id));
   }
 }

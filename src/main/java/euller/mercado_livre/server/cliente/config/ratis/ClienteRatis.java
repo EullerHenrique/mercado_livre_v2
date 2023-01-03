@@ -1,4 +1,4 @@
-package euller.mercado_livre.server.admin.config.ratis;
+package euller.mercado_livre.server.cliente.config.ratis;
 
 import org.apache.ratis.client.RaftClient;
 import org.apache.ratis.conf.Parameters;
@@ -19,14 +19,14 @@ import java.util.stream.Collectors;
 
 public class ClienteRatis {
 
-  public String admin(String function, String key, String value)
+  public String cliente(String function, String key, String value)
       throws IOException, InterruptedException, ExecutionException {
     String raftGroupId = "raft_group____um"; // 16 caracteres.
 
     Map<String, InetSocketAddress> id2addr = new HashMap<>();
-    id2addr.put("p1", new InetSocketAddress("127.0.0.1", 3000));
-    id2addr.put("p2", new InetSocketAddress("127.0.0.1", 3500));
-    id2addr.put("p3", new InetSocketAddress("127.0.0.1", 4000));
+    id2addr.put("p1", new InetSocketAddress("127.0.0.1", 3001));
+    id2addr.put("p2", new InetSocketAddress("127.0.0.1", 3501));
+    id2addr.put("p3", new InetSocketAddress("127.0.0.1", 4001));
 
     List<RaftPeer> addresses =
         id2addr.entrySet().stream()
@@ -50,38 +50,37 @@ public class ClienteRatis {
     CompletableFuture<RaftClientReply> compGetValue;
     String response = null;
     switch (function) {
-      case "add":
-        value = value.replace(":", ".");
-        getValue = client.io().send(Message.valueOf("add:" + key + ":" +value));
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        break;
-      case "get":
-        getValue = client.io().sendReadOnly(Message.valueOf("get:" + key));
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        break;
-      case "del":
-        getValue = client.io().send(Message.valueOf("del:" + key));
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        break;
-      case "clear":
-        getValue = client.io().send(Message.valueOf("clear"));
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        break;
-      case "add_async":
-        compGetValue = client.async().send(Message.valueOf("add:" + key + ":" +value));
-        getValue = compGetValue.get();
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        break;
-      case "get_stale":
-        getValue =
+        case "add":
+          value = value.replace(":", ".");
+          getValue = client.io().send(Message.valueOf("add:" + key + ":" +value));
+          response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+          break;
+        case "get":
+          getValue = client.io().sendReadOnly(Message.valueOf("get:" + key + ":" + value));
+          response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+          break;
+        case "del":
+          getValue = client.io().send(Message.valueOf("del:" + key + ":" + value));
+          response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+          break;
+        case "clear":
+          getValue = client.io().send(Message.valueOf("clear"));
+          response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+          break;
+        case "add_async":
+          compGetValue = client.async().send(Message.valueOf("add:" + key + ":" +value));
+          getValue = compGetValue.get();
+          response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+          break;
+        case "get_stale":
+          getValue =
             client
                 .io()
                 .sendStaleRead(Message.valueOf("get:" + key), 0, RaftPeerId.valueOf(value));
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println("Resposta: " + response);
-        break;
-      default:
-        System.out.println("comando inválido");
+          response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+          break;
+        default:
+          System.out.println("comando inválido");
     }
     client.close();
 

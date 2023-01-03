@@ -3,8 +3,6 @@ package euller.mercado_livre.server.admin.repository;
 import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Produto;
-import euller.mercado_livre.server.admin.service.mosquitto.MosquittoService;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -23,7 +21,7 @@ public class ProdutoRepository {
             if (buscarProduto(PID) == null) {
                 Gson gson = new Gson();
                 String produtoJson = gson.toJson(produto);
-                clienteRatis.clienteRatis("add", PID, produtoJson);
+                clienteRatis.admin("add", PID, produtoJson);
                 return produtoJson;
             }
             return null;
@@ -49,7 +47,7 @@ public class ProdutoRepository {
     public String buscarProduto(String PID){
         logger.info("Buscando produto: "+PID+"\n");
         try {
-            return clienteRatis.clienteRatis("get", PID, null);
+            return clienteRatis.admin("get", PID, null);
         }catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -59,7 +57,7 @@ public class ProdutoRepository {
         logger.info("Apagando produto: "+PID+"\n");
         try {
             if (buscarProduto(PID) != null) {
-                clienteRatis.clienteRatis("del", PID, null);
+                clienteRatis.admin("del", PID, null);
                 return "Produto apagado";
             }
             return null;

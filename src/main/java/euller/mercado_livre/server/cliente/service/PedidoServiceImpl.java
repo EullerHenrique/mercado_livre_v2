@@ -35,7 +35,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         Pedido pedido = gson.fromJson(req.getDados(), Pedido.class);
         pedido.setCID(CID);
         pedido.setOID(OID);
-        String pedidoJson = pedidoRepository.criarPedido(pedido, false);
+        String pedidoJson = pedidoRepository.criarPedido(pedido);
         CriarPedidoResponse reply = CriarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -49,7 +49,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         Pedido pedido = gson.fromJson(req.getDados(), Pedido.class);
         pedido.setCID(CID);
         pedido.setOID(OID);
-        String pedidoJson = pedidoRepository.modificarPedido(pedido, false);
+        String pedidoJson = pedidoRepository.modificarPedido(pedido);
         if(pedidoJson == null){
             pedidoJson = "Pedido não encontrado";
         }
@@ -84,7 +84,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
 
     @Override
     public void apagarPedido(ApagarPedidoRequest req, StreamObserver<ApagarPedidoResponse> responseObserver) {
-        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID(), false);
+        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID());
         if(pedidoJson == null){
             pedidoJson = "Pedido não encontrado";
         }

@@ -24,7 +24,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
   public CompletableFuture<Message> query(Message request) {
     DB levelDB;
     try {
-      levelDB = factory.open(new File("src/main/resources/db/"+this.getLifeCycle().toString().split(":")[1]), options);
+      levelDB = factory.open(new File("src/main/resources/db/admin/"+this.getLifeCycle().toString().split(":")[1]), options);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -34,7 +34,9 @@ public class MaquinaDeEstados extends BaseStateMachine {
     if(value == null){
       result = opKey[0] + ":" + null;
     }else{
-      result = opKey[0] + ":" + new String(value, StandardCharsets.UTF_8);;
+      String valueString = new String(value, StandardCharsets.UTF_8);
+      valueString = valueString.replace(":", ".");
+      result = opKey[0] + ":" + valueString;;
     }
     LOG.debug("{}: {} = {}", opKey[0], opKey[1], result);
     try {
@@ -49,7 +51,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
   public CompletableFuture<Message> applyTransaction(TransactionContext trx) {
     DB levelDB;
     try {
-      levelDB = factory.open(new File("src/main/resources/db/"+this.getLifeCycle().toString().split(":")[1]), options);
+      levelDB = factory.open(new File("src/main/resources/db/admin/"+this.getLifeCycle().toString().split(":")[1]), options);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -66,10 +68,10 @@ public class MaquinaDeEstados extends BaseStateMachine {
     switch (op) {
       case "add":
         result += null;
+        value = value.replace(".", ":");
         levelDB.put(bytes(key), bytes(value));
         break;
       case "del":
-        //result += key2values.remove(key);
         result += null;
         levelDB.delete(key.getBytes());
         break;

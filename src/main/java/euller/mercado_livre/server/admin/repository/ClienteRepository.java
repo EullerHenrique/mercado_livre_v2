@@ -21,7 +21,7 @@ public class ClienteRepository {
             if (buscarCliente(CID) == null) {
                 Gson gson = new Gson();
                 String clienteJson = gson.toJson(cliente);
-                clienteRatis.clienteRatis("add", CID, clienteJson);
+                clienteRatis.admin("add", CID, clienteJson);
                 return clienteJson;
             }
             return null;
@@ -47,7 +47,7 @@ public class ClienteRepository {
     public String buscarCliente(String CID){
         logger.info("Buscando cliente: "+CID+"\n");
         try {
-            return clienteRatis.clienteRatis("get", CID, null);
+            return clienteRatis.admin("get", CID, null);
         }catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +65,7 @@ public class ClienteRepository {
         logger.info("Apagando cliente: " + CID + "\n");
         try {
             if (buscarCliente(CID) != null) {
-                clienteRatis.clienteRatis("del", CID, null);
+                clienteRatis.admin("del", CID, null);
                 return "Cliente apagado";
             }
             return null;

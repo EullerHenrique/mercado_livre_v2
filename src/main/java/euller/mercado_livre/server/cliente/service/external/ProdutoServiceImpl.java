@@ -1,11 +1,14 @@
 package euller.mercado_livre.server.cliente.service.external;
 
 import com.google.gson.Gson;
+import euller.mercado_livre.server.cliente.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.cliente.model.Produto;
 import euller.mercado_livre.server.cliente.*;
 import euller.mercado_livre.server.cliente.respository.external.ProdutoRepository;
 import io.grpc.stub.StreamObserver;
 import org.eclipse.paho.client.mqttv3.MqttException;
+
+
 
 public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBase{
 
