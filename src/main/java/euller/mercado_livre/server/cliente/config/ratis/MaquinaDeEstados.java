@@ -20,13 +20,7 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
 
 public class MaquinaDeEstados extends BaseStateMachine {
   private final Options options = new Options();
-  public String buscarPedido(String[] opKey, int type) {
-    DB levelDB;
-    try {
-      levelDB = factory.open(new File("src/main/resources/db/cliente/" + this.getLifeCycle().toString().split(":")[1]), options);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  public String buscarPedido(DB levelDB, String[] opKey, int type) {
     StringBuilder result = new StringBuilder("");
     levelDB.iterator().forEachRemaining(entry -> {
       byte[] key = entry.getKey();
@@ -37,11 +31,6 @@ public class MaquinaDeEstados extends BaseStateMachine {
       result.append(valueString).append(";");
     });
 
-    try {
-      levelDB.close();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
     System.out.println("RESULT: " + result);
 
     if (result.toString().equals("") || opKey[1] == null || opKey[2] == null) {
@@ -64,7 +53,18 @@ public class MaquinaDeEstados extends BaseStateMachine {
 
   @Override
   public CompletableFuture<Message> query(Message request) {
-    String result = buscarPedido(request.getContent().toString(Charset.defaultCharset()).split(":"), 1);
+    DB levelDB;
+    try {
+      levelDB = factory.open(new File("src/main/resources/db/cliente/" + this.getLifeCycle().toString().split(":")[1]), options);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    String result = buscarPedido(levelDB, request.getContent().toString(Charset.defaultCharset()).split(":"), 1);
+    try {
+      levelDB.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     return CompletableFuture.completedFuture(Message.valueOf("get:"+result));
   }
 
@@ -94,7 +94,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
         break;
       case "del":
         result += null;
-        String keyString = buscarPedido(opKeyValue, 2);
+        String keyString = buscarPedido(levelDB, opKeyValue, 2);
         levelDB.delete(keyString.getBytes());
         break;
       case "clear":
