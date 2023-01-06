@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -51,6 +53,34 @@ public class MaquinaDeEstados extends BaseStateMachine {
     return null;
   }
 
+  public String buscarPedidosPeloCliente(DB levelDB, String[] opKey) {
+    StringBuilder result = new StringBuilder("");
+    levelDB.iterator().forEachRemaining(entry -> {
+      byte[] key = entry.getKey();
+      byte[] value = entry.getValue();
+      String keyString = new String(key, StandardCharsets.UTF_8);
+      String valueString = new String(value, StandardCharsets.UTF_8);
+      valueString = keyString + "--" + valueString.replace(":", ".");
+      result.append(valueString).append(";");
+    });
+
+    System.out.println("RESULT: " + result);
+    if (result.toString().equals("") || opKey[1] == null) {
+      return null;
+    } else {
+      String[] results = result.toString().split(";");
+      boolean flag = false;
+      StringBuilder resultFinal = new StringBuilder("");
+      for (String r : results) {
+        //if r.contains(CID)
+        if (r.contains(opKey[1])) {
+          resultFinal.append(r.split("--")[1]).append(";");
+        }
+      }
+      return resultFinal.toString();
+    }
+  }
+
   @Override
   public CompletableFuture<Message> query(Message request) {
     DB levelDB;
@@ -59,7 +89,18 @@ public class MaquinaDeEstados extends BaseStateMachine {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    String result = buscarPedido(levelDB, request.getContent().toString(Charset.defaultCharset()).split(":"), 1);
+    String result;
+    String[] opKey = request.getContent().toString(Charset.defaultCharset()).split(":");
+    if(Objects.equals(opKey[2], "cliente")){
+        String pedidos = buscarPedidosPeloCliente(levelDB, opKey);
+        if(pedidos != null){
+          result = pedidos;
+        }else{
+          result = "false";
+        }
+    }else {
+      result = buscarPedido(levelDB, opKey, 1);
+    }
     try {
       levelDB.close();
     } catch (IOException e) {
@@ -88,18 +129,18 @@ public class MaquinaDeEstados extends BaseStateMachine {
     String value = opKeyValue.length < 3 ? "" : opKeyValue[2];
     switch (op) {
       case "add":
-        result += null;
         value = value.replace(".", ":");
         levelDB.put(bytes(key), bytes(value));
+        result += null;
         break;
       case "del":
-        result += null;
         String keyString = buscarPedido(levelDB, opKeyValue, 2);
-        levelDB.delete(keyString.getBytes());
-        break;
-      case "clear":
-        //key2values.clear();
-        result += ":ok";
+        if(keyString != null) {
+          levelDB.delete(bytes(keyString));
+          result += "Pedido apagado";
+        }else {
+          result += null;
+        }
         break;
       default:
         result += "invalid-op";

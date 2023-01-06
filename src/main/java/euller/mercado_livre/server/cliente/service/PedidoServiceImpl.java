@@ -61,7 +61,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
     @Override
     public void buscarPedido(BuscarPedidoRequest req, StreamObserver<BuscarPedidoResponse> responseObserver) {
         String pedidoJson = pedidoRepository.buscarPedido(req.getCID(),req.getOID());
-        if(pedidoJson == null){
+        if(pedidoJson.equals("null")){
             pedidoJson = "Pedido não encontrado";
         }
         BuscarPedidoResponse reply = BuscarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
@@ -85,7 +85,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
     @Override
     public void apagarPedido(ApagarPedidoRequest req, StreamObserver<ApagarPedidoResponse> responseObserver) {
         String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID());
-        if(pedidoJson == null){
+        if(pedidoJson.equals("null")){
             pedidoJson = "Pedido não encontrado";
         }
         ApagarPedidoResponse reply = ApagarPedidoResponse.newBuilder().setMessage(pedidoJson).build();
