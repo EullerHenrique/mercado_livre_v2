@@ -62,11 +62,13 @@
 1. Ratis
     1. Navegue até mercado_livre/server/config/ratis/ReplicationAdminServer
     2. Aperte o botão play localizado ao lado de "public class ReplicationAdminServer"
+    3. Três servidores Ratis Admin são criados
     
 2. Admin
     1. Navegue até mercado_livre/server/admin/AdminServer
     2. Aperte o botão play localizado ao lado de "public class AdminServer"
     3. Digite a porta desejada (Ex: 5051)
+    
 3. Cliente
     1. Navegue até mercado_livre/server/cliente/ClienteServer
     2. Aperte o botão play localizado ao lado de "public class ClienteServer"
@@ -77,6 +79,7 @@
 1. Ratis
      1. Navegue até mercado_livre/server/config/ratis/ReplicationClienteServer
      2. Aperte o botão play localizado ao lado de "public class ReplicationClienteServer"
+     3. Três servidores Ratis Client são criados 
      
 2. Admin
      1. Navegue até mercado_libre/client/admin/AdminClient
