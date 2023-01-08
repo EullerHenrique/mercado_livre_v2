@@ -97,13 +97,8 @@
         3. ClientCliente: Digite o telefone do cliente
         4. ClienteCliente->Grpc: CriarCliente -> Realiza uma requisição por meio do protocolo rpc
         5. ServerCliente->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente: Salva o cliente na tabela hash (Cliente) do servidor x
-        7. ServerClient->Mosquitto: Se subscreve no tópico server/admin/cliente/criar  
-        8. ServerClient->Mosquitto: Publica o cliente criado no tópico server/admin/cliente/criar 
-        9. ServerClient: A subcrição realizada recebe o cliente que foi publicado 
-        10. ServerClient: Se o cliente existir na tabela hash do servidor x, nada é feito
-        11. ServerClient: Se o cliente não existir na tabela hash (Cliente) do servidor y, z, w, n ..., o cliente é salvo  no servidor y, z, w, n ... 
-        12. ClientCliente: O cliente criado é exibido
+        6. ServerCliente->Ratis->LevelDB: Salva o cliente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) 
+        7. ClientCliente: O cliente criado é exibido
     2. Modificar Cliente
         1. ClientCliente: Digite o nome do cliente
         2. ClientCliente: Digite o email do cliente
