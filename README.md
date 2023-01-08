@@ -16,7 +16,8 @@
 - Java
 - Grpc
 - Mosquitto
-- ...
+- Ratis
+- LevelBD
 
 ## Configuração
 
@@ -51,30 +52,38 @@
     9. Clique em download
     10. Clique em Apply
     11. Clique em OK
-4. Aperte com o botão direito do mouse na pasta mercado_libre/src/main
+4. Aperte com o botão direito do mouse na pasta mercado_livre/src/main
 5. Clique em Build Module 'mercado_livre.main'
 
 ## Execução
 
 ###  Server
 
-1. Admin
-    1. Navegue até mercado_libre/server/admin/AdminServer
+1. Ratis
+    1. Navegue até mercado_livre/server/config/ratis/ReplicationAdminServer
+    2. Aperte o botão play localizado ao lado de "public class ReplicationAdminServer"
+    
+2. Admin
+    1. Navegue até mercado_livre/server/admin/AdminServer
     2. Aperte o botão play localizado ao lado de "public class AdminServer"
     3. Digite a porta desejada (Ex: 5051)
-2. Cliente
-    1. Navegue até mercado_libre/server/cliente/ClienteServer
+3. Cliente
+    1. Navegue até mercado_livre/server/cliente/ClienteServer
     2. Aperte o botão play localizado ao lado de "public class ClienteServer"
     3. Digite a porta desejada (Ex: 5052)
     
 ### Client
 
-1. Admin
+1. Ratis
+     1. Navegue até mercado_livre/server/config/ratis/ReplicationClienteServer
+     2. Aperte o botão play localizado ao lado de "public class ReplicationClienteServer"
+     
+2. Admin
      1. Navegue até mercado_libre/client/admin/AdminClient
      2. Aperte o botão play localizado ao lado de "public class AdminClient"
      3. Digite a porta escolhida ao criar o AdminServer (Ex: 5052)
 
-2. Cliente
+3. Cliente
     1. Navegue até mercado_libre/client/cliente/ClientCliente
     2. Aperte o botão play localizado ao lado de "public class ClientCliente"
     3. Digite a porta escolhida ao criar o ClienteServer (Ex: 5052)
