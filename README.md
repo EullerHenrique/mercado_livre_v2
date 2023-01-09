@@ -94,6 +94,7 @@
 ### Funcionalidades
 
 1. Admin
+
     1. Criar Cliente
         1. ClientCliente: Digite o nome do cliente
         2. ClientCliente: Digite o email do cliente
@@ -102,6 +103,7 @@
         5. ServerCliente->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
         6. ServerCliente->Ratis->LevelDB: Salva o cliente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) 
         7. ClientCliente: O cliente criado é exibido
+        
     2. Modificar Cliente
         1. ClientCliente: Digite o nome do cliente
         2. ClientCliente: Digite o email do cliente
@@ -112,6 +114,7 @@
         7. ServerCliente: Salva a modificação do cliente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
         8. ClientCliente: O cliente atualizado é exibido se ele existir
         9. ClientCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
+        
     3. Buscar Cliente
         1. ClienteCliente: Digite o CID do cliente
         2. ClienteCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
@@ -119,6 +122,7 @@
         4. ServerCliente: Realiza a busca do produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
         5. ClienteCliente: O cliente buscado é exibido se ele existir
         6. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
+        
     4. Apagar Cliente
         1. ClienteCliente: Digite o CID do cliente
         2. ClienteCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
@@ -126,20 +130,17 @@
         4. ServerCliente: Se o cliente estiver presente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) -> 5
         5. ServerCliente: Apaga o cliente presente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
         6. ClienteCliente: A mensagem "Cliente apagado" é exibida se ele existir
-        7. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir    
+        7. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir 
+        
     5. Criar Produto  
         1. ClientCliente: Digite o nome do produto
         2. ClientCliente: Digite a quantidade do produto
         3. ClientCliente: Digite o preço do produto
         4. ClienteCliente->Grpc: CriarProduto -> Realiza uma requisição por meio do protocolo rpc
         5. ServerCliente->Grpc: CriarProduto -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente: Salva o produto na tabela hash (Produto) do servidor x
-        7. ServerClient->Mosquitto: Se subscreve no tópico server/admin/produto/criar  
-        8. ServerClient->Mosquitto: Publica o cliente criado no tópico server/admin/produto/criar 
-        9. ServerClient: A subcrição realizada recebe o produto que foi publicado 
-        10. ServerClient: Se o produto existir na tabela hash (Produto) do servidor x, nada é feito
-        11. ServerClient: Se o produto não existir na tabela hash (Produto) do servidor y, z, w, n ..., o produto é salvo  no servidor y, z, w, n ... 
+        6. ServerCliente->Ratis->LevelDB: Salva o produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
         12. ClientCliente: O produto criado é exibido
+        
     6. Modificar Produto
         1. ClientCliente: Digite o PID do produto
         2. ClientCliente: Digite o nome do produto
@@ -147,15 +148,11 @@
         4. ClientCliente: Digite o preço do produto
         5. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         6. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. ServerCliente: Se o produto estiver presente na tabela hash (Produto) do servidor x -> g-n
-        8. ServerCliente: Salva a modificação do produto na tabela hash (Produto) do servidor x 
-        9. ServerClient->Mosquitto: Se subscreve no tópico server/admin/produto/modificar  
-        10. ServerClient->Mosquitto: Publica o produto modificado no tópico server/admin/produto/modificar 
-        11. ServerClient: A subcrição realizada recebe o produto que foi publicado 
-        12. ServerClient: Se o produto existir na tabela hash (Produto) do servidor x, nada é feito
-        13. ServerClient: Se o produto não existir na tabela hash (Produto) do servidor y, z, w, n ..., o produto é salvo  no servidor y, z, w, n ... 
+        7. ServerCliente: Se o produto estiver presente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) -> 8
+        8. ServerCliente: Salva a modificação do produto produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
         14. ClientCliente: O produto atualizado é exibido se ele existir
         15. ClientCliente: A mensagem "Produto não encontrado" é exibida se ele não existir
+        
     7. Buscar Produto
         1. ClienteCliente: Digite o PID do produto
         2. ClienteCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
@@ -163,6 +160,7 @@
         4. ServerCliente: Realiza a busca do produto na tabela hash (Produto)
         5. ClienteCliente: O produto buscado é exibido se ele existir
         6. ClienteCliente:A mensagem "Produto não encontrado" é exibida se ele não existir
+        
     8. Apagar Produto
         1. ClienteCliente: Digite o PID do cliente
         2. ClienteCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
