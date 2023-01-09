@@ -24,7 +24,7 @@
 1. Abra o CMD
 2. Crie uma pasta
 3. Navegue até a pasta criada
-4. Digite no CMD: git clone https://github.com/EullerHenrique/mercado_livre
+4. Digite no CMD: git clone https://github.com/EullerHenrique/mercado_livre_v2
 
 ### Mosquitto
 
