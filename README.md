@@ -91,6 +91,18 @@
     2. Aperte o botão play localizado ao lado de "public class ClientCliente"
     3. Digite a porta escolhida ao criar o ClienteServer (Ex: 5052)
 
+## Tabelas Hash
+
+1. Cliente
+     1. Hashtable<String, String> 
+     2. <CID, ClienteJson>
+2. Produto
+     1. Hashtable<String, String>
+     2. <PID, ProdutoJson>
+3. Pedido 
+     1. Hashtable<String, List<Hashtable<String, List< String >>>> 
+     2. <CID<List<OID, List< ProdutoJson >>>>
+
 ### Funcionalidades
 
 1. Admin
