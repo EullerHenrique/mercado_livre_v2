@@ -157,7 +157,7 @@
         1. ClienteCliente: Digite o PID do produto
         2. ClienteCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: BuscarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Realiza a busca do produto na tabela hash (Produto)
+        4. ServerCliente: Realiza a busca do produto produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
         5. ClienteCliente: O produto buscado é exibido se ele existir
         6. ClienteCliente:A mensagem "Produto não encontrado" é exibida se ele não existir
         
@@ -165,15 +165,10 @@
         1. ClienteCliente: Digite o PID do cliente
         2. ClienteCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Se o produto estiver presente na tabela hash (Produto) do servidor x -> e-k
-        5. ServerCliente: Apaga o produto presente na tabela hash (Produto) do servidor x 
-        6. ServerClient->Mosquitto: Se subscreve no tópico server/admin/produto/apagar  
-        7. ServerClient->Mosquitto: Publica o PID no tópico server/admin/produto/apagar 
-        8. ServerClient: A subcrição realizada recebe o PID que foi publicado 
-        9. ServerClient: Se o produto existir na tabela hash (Produto) do servidor x, nada é feito
-        10. ServerClient: Se o produto não existir na tabela hash (Produto) do servidor y, z, w, n ..., o produto é salvo  no servidor y, z, w, n ... 
-        11. ClienteCliente: A mensagem "Produto apagado" é exibida se ele não existir
-        12. ClienteCliente: A mensagem "Produto não encontrado" é exibida se ele não existir    
+        4. ServerCliente: Se o produto estiver presente produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) -> 5
+        5. ServerCliente: Apaga o produto presente na produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        6. ClienteCliente: A mensagem "Produto apagado" é exibida se ele não existir
+        7. ClienteCliente: A mensagem "Produto não encontrado" é exibida se ele não existir    
         
 2. Cliente
     1. Criar Pedido
