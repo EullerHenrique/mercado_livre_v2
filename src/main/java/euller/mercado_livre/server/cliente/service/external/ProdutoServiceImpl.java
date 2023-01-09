@@ -1,7 +1,6 @@
 package euller.mercado_livre.server.cliente.service.external;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.server.cliente.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.cliente.model.Produto;
 import euller.mercado_livre.server.cliente.*;
 import euller.mercado_livre.server.cliente.respository.external.ProdutoRepository;

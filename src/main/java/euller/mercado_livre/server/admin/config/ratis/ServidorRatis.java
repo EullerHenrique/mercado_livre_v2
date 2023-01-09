@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Servidor {
+public class ServidorRatis {
 
   // Parametros: myId
-  public Servidor(String id) throws IOException, InterruptedException {
+  public ServidorRatis(String id) throws IOException, InterruptedException {
     String raftGroupId = "raft_group____um"; // 16 caracteres.
 
     // Setup for node all nodes.

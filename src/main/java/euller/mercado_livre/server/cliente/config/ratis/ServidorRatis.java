@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Servidor {
+public class ServidorRatis {
 
   // Parametros: myId
-  public Servidor(String id) throws IOException, InterruptedException {
+  public ServidorRatis(String id) throws IOException, InterruptedException {
     String raftGroupId = "raft_group____um"; // 16 caracteres.
 
     // Setup for node all nodes.
@@ -49,7 +49,7 @@ public class Servidor {
     properties.setInt(GrpcConfigKeys.OutputStream.RETRY_TIMES_KEY, Integer.MAX_VALUE);
     GrpcConfigKeys.Server.setPort(properties, port);
     RaftServerConfigKeys.setStorageDir(
-        properties, Collections.singletonList(new File("/tmp/cliente/" + myId)));
+        properties, Collections.singletonList(new File("/tmp/client/" + myId)));
 
     // Join the group of processes.
     final RaftGroup raftGroup =
