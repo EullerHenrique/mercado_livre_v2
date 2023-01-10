@@ -1,4 +1,4 @@
-package euller.mercado_livre.server.admin.config.ratis;
+package euller.mercado_livre.ratis;
 
 import org.apache.ratis.client.RaftClient;
 import org.apache.ratis.conf.Parameters;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class ClienteRatis {
 
-  public String admin(String function, String key, String value)
+  public String exec(String function, String key, String value)
       throws IOException, InterruptedException, ExecutionException {
     String raftGroupId = "raft_group____um"; // 16 caracteres.
 
@@ -55,30 +55,21 @@ public class ClienteRatis {
         getValue = client.io().send(Message.valueOf("add:" + key + ":" +value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "get":
-        getValue = client.io().sendReadOnly(Message.valueOf("get:" + key));
+      case "getAdmin":
+        getValue = client.io().sendReadOnly(Message.valueOf("getAdmin:" + key));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "del":
-        getValue = client.io().send(Message.valueOf("del:" + key));
+      case "getClient":
+        getValue = client.io().sendReadOnly(Message.valueOf("getClient:" + key + ":" + value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "clear":
-        getValue = client.io().send(Message.valueOf("clear"));
+      case "delAdmin":
+        getValue = client.io().send(Message.valueOf("delAdmin:" + key));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "add_async":
-        compGetValue = client.async().send(Message.valueOf("add:" + key + ":" +value));
-        getValue = compGetValue.get();
+      case "delClient":
+        getValue = client.io().send(Message.valueOf("delClient:" + key + ":" + value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        break;
-      case "get_stale":
-        getValue =
-            client
-                .io()
-                .sendStaleRead(Message.valueOf("get:" + key), 0, RaftPeerId.valueOf(value));
-        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
-        System.out.println("Resposta: " + response);
         break;
       default:
         System.out.println("comando inválido");

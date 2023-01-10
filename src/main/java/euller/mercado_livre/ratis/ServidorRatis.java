@@ -1,4 +1,4 @@
-package euller.mercado_livre.server.admin.config.ratis;
+package euller.mercado_livre.ratis;
 
 import org.apache.ratis.conf.RaftProperties;
 import org.apache.ratis.grpc.GrpcConfigKeys;

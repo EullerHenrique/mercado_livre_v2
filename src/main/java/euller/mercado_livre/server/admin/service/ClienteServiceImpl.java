@@ -2,7 +2,6 @@ package euller.mercado_livre.server.admin.service;
 
 import com.google.gson.Gson;
 import euller.mercado_livre.server.admin.*;
-import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
 import euller.mercado_livre.server.admin.repository.ClienteRepository;
 import euller.mercado_livre.server.admin.service.mosquitto.MosquittoService;

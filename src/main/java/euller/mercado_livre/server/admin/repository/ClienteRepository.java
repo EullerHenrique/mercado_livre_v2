@@ -1,7 +1,7 @@
 package euller.mercado_livre.server.admin.repository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
+import euller.mercado_livre.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class ClienteRepository {
             if (buscarCliente(CID) == null) {
                 Gson gson = new Gson();
                 String clienteJson = gson.toJson(cliente);
-                clienteRatis.admin("add", CID, clienteJson);
+                clienteRatis.exec("add", CID, clienteJson);
                 return clienteJson;
             }
             return null;
@@ -47,7 +47,7 @@ public class ClienteRepository {
     public String buscarCliente(String CID){
         logger.info("Buscando cliente: "+CID+"\n");
         try {
-            return clienteRatis.admin("get", CID, null);
+            return clienteRatis.exec("getAdmin", CID, null);
         }catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +65,7 @@ public class ClienteRepository {
         logger.info("Apagando cliente: " + CID + "\n");
         try {
             if (buscarCliente(CID) != null) {
-                clienteRatis.admin("del", CID, null);
+                clienteRatis.exec("delAdmin", CID, null);
                 return "Cliente apagado";
             }
             return null;

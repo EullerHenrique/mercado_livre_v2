@@ -1,9 +1,10 @@
-package euller.mercado_livre.server.cliente.config.ratis;
+package euller.mercado_livre.ratis;
+
 import java.io.IOException;
 
-public class ReplicationClienteServer {
+public class ReplicationServer {
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Criando servidor Ratis Client");
+        System.out.println("Criando servidor Ratis");
         ServidorRatis servidorRatis = new ServidorRatis("p1");
         servidorRatis = new ServidorRatis("p2");
         servidorRatis = new ServidorRatis("p3");

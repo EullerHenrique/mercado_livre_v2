@@ -1,7 +1,7 @@
 package euller.mercado_livre.server.admin.repository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.server.admin.config.ratis.ClienteRatis;
+import euller.mercado_livre.ratis.ClienteRatis;
 import euller.mercado_livre.server.admin.model.Produto;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class ProdutoRepository {
             if (buscarProduto(PID) == null) {
                 Gson gson = new Gson();
                 String produtoJson = gson.toJson(produto);
-                clienteRatis.admin("add", PID, produtoJson);
+                clienteRatis.exec("add", PID, produtoJson);
                 return produtoJson;
             }
             return null;
@@ -47,7 +47,7 @@ public class ProdutoRepository {
     public String buscarProduto(String PID){
         logger.info("Buscando produto: "+PID+"\n");
         try {
-            return clienteRatis.admin("get", PID, null);
+            return clienteRatis.exec("getAdmin", PID, null);
         }catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -57,7 +57,7 @@ public class ProdutoRepository {
         logger.info("Apagando produto: "+PID+"\n");
         try {
             if (buscarProduto(PID) != null) {
-                clienteRatis.admin("del", PID, null);
+                clienteRatis.exec("delAdmin", PID, null);
                 return "Produto apagado";
             }
             return null;

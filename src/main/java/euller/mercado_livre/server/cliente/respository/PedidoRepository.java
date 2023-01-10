@@ -1,7 +1,7 @@
 package euller.mercado_livre.server.cliente.respository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.server.cliente.config.ratis.ClienteRatis;
+import euller.mercado_livre.ratis.ClienteRatis;
 import euller.mercado_livre.server.cliente.model.Pedido;
 import euller.mercado_livre.server.cliente.model.Produto;
 
@@ -38,7 +38,7 @@ public class PedidoRepository {
             oidPedidos.add(pedido);
             cidPedidos.put(CID, oidPedidos);
             String pedidoBD = cidPedidosToJson(CID, OID, cidPedidos);
-            clienteRatis.cliente("add", UUID.randomUUID().toString(), pedidoBD);
+            clienteRatis.exec("add", UUID.randomUUID().toString(), pedidoBD);
             return pedidoBD;
         } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -60,10 +60,12 @@ public class PedidoRepository {
             cidPedidos.put(CID, new ArrayList<>());
             for (String pedidoString : pedidosSplit) {
                 Pedido pM = gson.fromJson(pedidoString, Pedido.class);
-                Hashtable<String, List<String>> oidPedido = new Hashtable<>();
-                for (Produto produto : pM.getProdutos()) {
+                if(pM.getOID()!=null) {
+                    Hashtable<String, List<String>> oidPedido = new Hashtable<>();
                     List<String> produtos = new ArrayList<>();
-                    produtos.add(gson.toJson(produto));
+                    for (Produto produto : pM.getProdutos()) {
+                        produtos.add(gson.toJson(produto));
+                    }
                     oidPedido.put(pM.getOID(), produtos);
                     cidPedidos.get(pM.getCID()).add(oidPedido);
                 }
@@ -97,7 +99,7 @@ public class PedidoRepository {
     public String buscarPedido(String CID, String OID) {
         try {
             logger.info("Buscando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
-            return clienteRatis.cliente("get", CID, OID);
+            return clienteRatis.exec("getClient", CID, OID);
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -113,16 +115,18 @@ public class PedidoRepository {
             Gson gson = new Gson();
             String[] pedidosSplit = pedidosString.split(";");
             Hashtable<String, List<Hashtable<String, List<String>>>> cidPedidos = new Hashtable<>();
+            cidPedidos.put(CID, new ArrayList<>());
             for (String pedidoString : pedidosSplit) {
                 Pedido pM = gson.fromJson(pedidoString, Pedido.class);
-                Hashtable<String, List<String>> oidPedido = new Hashtable<>();
-                for (Produto produto : pM.getProdutos()) {
+                if(pM.getOID()!=null) {
+                    Hashtable<String, List<String>> oidPedido = new Hashtable<>();
                     List<String> produtos = new ArrayList<>();
-                    produtos.add(gson.toJson(produto));
+                    for (Produto produto : pM.getProdutos()) {
+                        produtos.add(gson.toJson(produto));
+                    }
                     oidPedido.put(pM.getOID(), produtos);
+                    cidPedidos.get(pM.getCID()).add(oidPedido);
                 }
-                cidPedidos.put(pM.getCID(), new ArrayList<>());
-                cidPedidos.get(pM.getCID()).add(oidPedido);
             }
             //
 
@@ -141,6 +145,9 @@ public class PedidoRepository {
                     precosTotaisPedidos.add(precoTotalPedido);
                 }
             }
+            if(precosTotaisPedidos.isEmpty()) {
+                return null;
+            }
             return precosTotaisPedidos;
         }
         return null;
@@ -149,7 +156,7 @@ public class PedidoRepository {
     public String apagarPedido(String CID, String OID) {
         try {
             logger.info("Apagando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
-            return clienteRatis.cliente("del", CID, OID);
+            return clienteRatis.exec("delClient", CID, OID);
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -159,7 +166,7 @@ public class PedidoRepository {
 
     public String buscarPedidosPeloCliente(String CID) {
         try {
-            return clienteRatis.cliente("get", CID, "cliente");
+            return clienteRatis.exec("getClient", CID, "cliente");
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
