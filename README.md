@@ -116,7 +116,7 @@
         3. ClientCliente: Digite o telefone do cliente
         4. ClienteCliente->Grpc: CriarCliente -> Realiza uma requisição por meio do protocolo rpc
         5. ServerCliente->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente->Ratis->LevelDB: Salva o cliente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) 
+        6. ServerCliente->Ratis->LevelDB: Salva o cliente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         7. ClientCliente: O cliente criado é exibido
         
     2. Modificar Cliente
@@ -125,8 +125,8 @@
         3. ClientCliente: Digite o telefone do cliente
         4. ClienteCliente->Grpc: ModificarCliente -> Realiza uma requisição por meio do protocolo rpc
         5. ServerCliente->Grpc: ModificarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente->Ratis->LevelBD: Se o cliente estiver presente no database admin presente nas réplicas do serrvidor x (Réplicas p1, p2 e p3) -> 7
-        7. ServerCliente: Salva a modificação do cliente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        6. ServerCliente->Ratis->LevelBD: Se o cliente estiver presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3)  -> 7
+        7. ServerCliente: Salva a modificação do cliente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         8. ClientCliente: O cliente atualizado é exibido se ele existir
         9. ClientCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
         
@@ -134,7 +134,7 @@
         1. ClienteCliente: Digite o CID do cliente
         2. ClienteCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Realiza a busca do produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        4. ServerCliente: Realiza a busca do produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         5. ClienteCliente: O cliente buscado é exibido se ele existir
         6. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
         
@@ -142,8 +142,8 @@
         1. ClienteCliente: Digite o CID do cliente
         2. ClienteCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: ApagarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Se o cliente estiver presente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) -> 5
-        5. ServerCliente: Apaga o cliente presente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        4. ServerCliente: Se o cliente estiver presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3)  -> 5
+        5. ServerCliente: Apaga o cliente presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         6. ClienteCliente: A mensagem "Cliente apagado" é exibida se ele existir
         7. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir 
         
@@ -153,7 +153,7 @@
         3. ClientCliente: Digite o preço do produto
         4. ClienteCliente->Grpc: CriarProduto -> Realiza uma requisição por meio do protocolo rpc
         5. ServerCliente->Grpc: CriarProduto -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente->Ratis->LevelDB: Salva o produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        6. ServerCliente->Ratis->LevelDB: Salva o produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         12. ClientCliente: O produto criado é exibido
         
     6. Modificar Produto
@@ -163,8 +163,8 @@
         4. ClientCliente: Digite o preço do produto
         5. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         6. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. ServerCliente: Se o produto estiver presente no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) -> 8
-        8. ServerCliente: Salva a modificação do produto produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        7. ServerCliente: Se o produto estiver presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) -> 8
+        8. ServerCliente: Salva a modificação do produto produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         14. ClientCliente: O produto atualizado é exibido se ele existir
         15. ClientCliente: A mensagem "Produto não encontrado" é exibida se ele não existir
         
@@ -172,7 +172,7 @@
         1. ClienteCliente: Digite o PID do produto
         2. ClienteCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: BuscarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Realiza a busca do produto produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        4. ServerCliente: Realiza a busca do produto produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         5. ClienteCliente: O produto buscado é exibido se ele existir
         6. ClienteCliente:A mensagem "Produto não encontrado" é exibida se ele não existir
         
@@ -180,8 +180,8 @@
         1. ClienteCliente: Digite o PID do cliente
         2. ClienteCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Se o produto estiver presente produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3) -> 5
-        5. ServerCliente: Apaga o produto presente na produto no database admin presente nas réplicas do servidor x (Réplicas p1, p2 e p3)
+        4. ServerCliente: Se o produto estiver presente produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3)  -> 5
+        5. ServerCliente: Apaga o produto presente na produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         6. ClienteCliente: A mensagem "Produto apagado" é exibida se ele não existir
         7. ClienteCliente: A mensagem "Produto não encontrado" é exibida se ele não existir    
         
@@ -215,12 +215,14 @@
         27. ClientCliente: Não ->  Continua
         28. ClienteCliente->Grpc: CriarPedido -> Realiza uma requisição por meio do protocolo rpc
         29. ServerCliente->Grpc: CriarPedido -> Recebe uma requisição por meio do protocolo rpc
+        30. ServerCliente->Ratis->LevelDB: Salva o cliente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
         30. ServerCliente: Salva o pedido na tabela hash (Pedido) do servidor x
         31. ServerClient->Mosquitto: Se subscreve no tópico server/client/pedido/criar  
         32. ServerClient->Mosquitto: Publica o pedido criado no tópico server/client/pedido/criar 
         33. ServerClient: A subcrição realizada recebe o pedido que foi publicado 
         34. ServerClient: Se o pedido existir na tabela hash do servidor x, nada é feito
         35. ServerClient: Se o pedido não existir na tabela hash (Pedido) do servidor y, z, w, n ..., o pedido é salvo  no servidor y, z, w, n ... 
+        
         36. ClienteCliente: Solicita a modificação de cada produto presente no pedido:
         37. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         38. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
