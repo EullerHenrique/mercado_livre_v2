@@ -57,13 +57,24 @@
 
 ## Execução
 
+### Servidor Ratis
+
+    1. Navegue até mercado_livre/ratis/ReplicationServer
+    2. Aperte o botão play localizado ao lado de "public class ReplicationServer"
+    3. O servidor ratis cria o servidor p1 (porta 3000) da máquina de estado (A pasta será inserida no caminho /tmp/)
+    4. O servidor ratis cria o servidor p2 (porta 3500) da máquina de estado (A pasta será inserida no caminho /tmp/)
+    5. O servidor ratis cria o servidor p3 (porta 4000) da máquina de estado (A pasta será inserida no caminho /tmp/)
+    4. O servidor p1 da máquina de estado cria o database levelDB p1 (A pasta será inserida no caminho /main/resources/db/p1)
+    5. O servidor p2 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p2)
+    6. O servidor p3 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p3)
+    7. O ReplicationClient é responsável por receber solicitações e redirecionar para o ReplicationServer
+    8. o ReplicationServer é responsável por receber solitações do ReplicationServer e redirecionar para as réplicas da máquina de estado criadas
+    9. Cada máquina de estado é responsável por atender a solicitação (get, add ou del)
+    10. O ReplicationServer é responsável por enviar a resposta de cada réplica para o ReplicationClient
+    11. O ReplicationClient é responsável por enviar a resposta do ReplicationServer para quem a solicitou.
+    
 ###  Server
 
-1. Ratis
-    1. Navegue até mercado_livre/server/config/ratis/ReplicationAdminServer
-    2. Aperte o botão play localizado ao lado de "public class ReplicationAdminServer"
-    3. Três servidores Ratis Admin são criados
-    
 2. Admin
     1. Navegue até mercado_livre/server/admin/AdminServer
     2. Aperte o botão play localizado ao lado de "public class AdminServer"
@@ -75,11 +86,6 @@
     3. Digite a porta desejada (Ex: 5052)
     
 ### Client
-
-1. Ratis
-     1. Navegue até mercado_livre/server/config/ratis/ReplicationClienteServer
-     2. Aperte o botão play localizado ao lado de "public class ReplicationClienteServer"
-     3. Três servidores Ratis Client são criados 
      
 2. Admin
      1. Navegue até mercado_libre/client/admin/AdminClient
@@ -91,17 +97,14 @@
     2. Aperte o botão play localizado ao lado de "public class ClientCliente"
     3. Digite a porta escolhida ao criar o ClienteServer (Ex: 5052)
 
-## Tabelas Hash
+## Tabelas Chave/Valor (LevelDB)
 
 1. Cliente
-     1. Hashtable<String, String> 
-     2. <CID, ClienteJson>
+     1. Key: CID Value: {CID, nome, email, telefone}
 2. Produto
-     1. Hashtable<String, String>
-     2. <PID, ProdutoJson>
+     2. key: PID Value: {CID, OID, PID, produto, quantidade, preco}
 3. Pedido 
-     1. Hashtable<String, List<Hashtable<String, List< String >>>> 
-     2. <CID<List<OID, List< ProdutoJson >>>>
+     1. key: UUID Value: {CID, OID, produtos: [CID, OID, PID, produto, quantidade, preco]}
 
 ### Funcionalidades
 
