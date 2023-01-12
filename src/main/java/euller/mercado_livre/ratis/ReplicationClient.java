@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class ClienteRatis {
+public class ReplicationClient {
 
   public String exec(String function, String key, String value)
       throws IOException, InterruptedException, ExecutionException {

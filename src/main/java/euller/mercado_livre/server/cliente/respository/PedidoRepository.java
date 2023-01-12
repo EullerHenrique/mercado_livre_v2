@@ -1,7 +1,7 @@
 package euller.mercado_livre.server.cliente.respository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.ratis.ClienteRatis;
+import euller.mercado_livre.ratis.ReplicationClient;
 import euller.mercado_livre.server.cliente.model.Pedido;
 import euller.mercado_livre.server.cliente.model.Produto;
 
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class PedidoRepository {
     private final Logger logger = Logger.getLogger(PedidoRepository.class.getName());
-    private final ClienteRatis clienteRatis = new ClienteRatis();
+    private final ReplicationClient replicationClient = new ReplicationClient();
 
 
     public String criarPedido(Pedido pedidoModel) {
@@ -38,7 +38,7 @@ public class PedidoRepository {
             oidPedidos.add(pedido);
             cidPedidos.put(CID, oidPedidos);
             String pedidoBD = cidPedidosToJson(CID, OID, cidPedidos);
-            clienteRatis.exec("add", UUID.randomUUID().toString(), pedidoBD);
+            replicationClient.exec("add", UUID.randomUUID().toString(), pedidoBD);
             return pedidoBD;
         } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -99,7 +99,7 @@ public class PedidoRepository {
     public String buscarPedido(String CID, String OID) {
         try {
             logger.info("Buscando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
-            return clienteRatis.exec("getClient", CID, OID);
+            return replicationClient.exec("getClient", CID, OID);
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -156,7 +156,7 @@ public class PedidoRepository {
     public String apagarPedido(String CID, String OID) {
         try {
             logger.info("Apagando pedido: "+"CID: "+CID+"OID: "+OID+"\n");
-            return clienteRatis.exec("delClient", CID, OID);
+            return replicationClient.exec("delClient", CID, OID);
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -166,7 +166,7 @@ public class PedidoRepository {
 
     public String buscarPedidosPeloCliente(String CID) {
         try {
-            return clienteRatis.exec("getClient", CID, "cliente");
+            return replicationClient.exec("getClient", CID, "cliente");
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
