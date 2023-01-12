@@ -111,41 +111,53 @@
 1. Admin
 
     1. Criar Cliente
-        1. ClientCliente: Digite o nome do cliente
-        2. ClientCliente: Digite o email do cliente
-        3. ClientCliente: Digite o telefone do cliente
-        4. ClienteCliente->Grpc: CriarCliente -> Realiza uma requisição por meio do protocolo rpc
-        5. ServerCliente->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente->Ratis->LevelDB: Salva o cliente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        7. ClientCliente: O cliente criado é exibido
+        1. AdminClient: Digite o nome do cliente
+        2. AdminClient: Digite o email do cliente
+        3. AdminClient: Digite o telefone do cliente
+        4. AdminClient->Grpc: CriarCliente -> Realiza uma requisição por meio do protocolo rpc
+        5. AdminServer->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
+        6. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (add)
+        7. ReplicationClient: Faz uma solicitação para o ReplicationServer (add)
+        8. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        9. ReplicationClient: Retorna a resposta para o AdminServer
+        10. AdminCliente: O cliente criado é exibido
         
     2. Modificar Cliente
-        1. ClientCliente: Digite o nome do cliente
-        2. ClientCliente: Digite o email do cliente
-        3. ClientCliente: Digite o telefone do cliente
-        4. ClienteCliente->Grpc: ModificarCliente -> Realiza uma requisição por meio do protocolo rpc
-        5. ServerCliente->Grpc: ModificarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente->Ratis->LevelBD: Se o cliente estiver presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3)  -> 7
-        7. ServerCliente: Salva a modificação do cliente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        8. ClientCliente: O cliente atualizado é exibido se ele existir
-        9. ClientCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
+        1. AdminCliente: Digite o nome do cliente
+        2. AdminCliente: Digite o email do cliente
+        3. AdminCliente: Digite o telefone do cliente
+        4. AdminCliente->Grpc: ModificarCliente -> Realiza uma requisição por meio do protocolo rpc
+        5. AdminServer->Grpc: ModificarCliente -> Recebe uma requisição por meio do protocolo rpc
+        6. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (get, del e add)
+        7. ReplicationClient: Faz três solicitações para o ReplicationServer (get, del e add)
+        8. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (get, del e add)
+        9. e retorna a resposta para o ReplicationClient
+        10. ReplicationClient: Retorna a resposta para o AdminServer
+        11. AdminCliente: O cliente modificado é exibido se ele existir
+        12. AdminCliente: O cliente atualizado é exibido se ele existir
+        13. AdminCliente: A mensagem "Cliente não encontrado" é exibida se a primeira solicitação retornar null
         
     3. Buscar Cliente
-        1. ClienteCliente: Digite o CID do cliente
-        2. ClienteCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
-        3. ServerCliente->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Realiza a busca do produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        5. ClienteCliente: O cliente buscado é exibido se ele existir
-        6. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir
+        1. AdminCliente: Digite o CID do cliente
+        2. AdminCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
+        3. AdminServer->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
+        4. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (get)
+        5. ReplicationClient: Faz uma solicitação para o ReplicationServer (get)
+        6. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        7. ReplicationClient: Retorna a resposta para o AdminServer
+        8. AdminCliente: O cliente buscado é exibido se ele existir
+        9. AdminCliente: A mensagem "Cliente não encontrado" é exibida se a solicitação retornar null
         
     4. Apagar Cliente
-        1. ClienteCliente: Digite o CID do cliente
-        2. ClienteCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
-        3. ServerCliente->Grpc: ApagarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Se o cliente estiver presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3)  -> 5
-        5. ServerCliente: Apaga o cliente presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        6. ClienteCliente: A mensagem "Cliente apagado" é exibida se ele existir
-        7. ClienteCliente: A mensagem "Cliente não encontrado" é exibida se ele não existir 
+        1. AdminCliente: Digite o CID do cliente
+        2. AdminCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
+        3. AdminServer->Grpc: ApagarCliente -> Recebe uma requisição por meio do protocolo rpc
+        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (get e del)
+        5. ReplicationClient: Faz duas solicitações para o ReplicationServer (get e del)
+        6. ReplicationServer: Faz duas solicitações para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        7. ReplicationClient: Retorna a resposta para o AdminServer
+        8. AdminCliente: A mensagem "Cliente apagado" é exibida se ele existir
+        9. AdminCliente: A mensagem "Cliente não encontrado" é exibida se a primeira solicitação retornar null
         
     5. Criar Produto  
         1. ClientCliente: Digite o nome do produto
