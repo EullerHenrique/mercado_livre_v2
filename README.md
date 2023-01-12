@@ -160,42 +160,52 @@
         9. AdminCliente: A mensagem "Cliente não encontrado" é exibida se a primeira solicitação retornar null
         
     5. Criar Produto  
-        1. ClientCliente: Digite o nome do produto
-        2. ClientCliente: Digite a quantidade do produto
-        3. ClientCliente: Digite o preço do produto
-        4. ClienteCliente->Grpc: CriarProduto -> Realiza uma requisição por meio do protocolo rpc
-        5. ServerCliente->Grpc: CriarProduto -> Recebe uma requisição por meio do protocolo rpc
-        6. ServerCliente->Ratis->LevelDB: Salva o produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        12. ClientCliente: O produto criado é exibido
+        1. AdminCliente: Digite o nome do produto
+        2. AdminCliente: Digite a quantidade do produto
+        3. AdminCliente: Digite o preço do produto
+        4. AdminCliente->Grpc: CriarProduto -> Realiza uma requisição por meio do protocolo rpc
+        5. AdminServer->Grpc: CriarProduto -> Recebe uma requisição por meio do protocolo rpc
+        5. AdminServer->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
+        7. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (add)
+        8. ReplicationClient: Faz uma solicitação para o ReplicationServer (add)
+        9. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        10. ReplicationClient: Retorna a resposta para o AdminServer
+        12. AdminCliente: O produto criado é exibido
         
     6. Modificar Produto
-        1. ClientCliente: Digite o PID do produto
-        2. ClientCliente: Digite o nome do produto
-        3. ClientCliente: Digite a quantidade do produto
-        4. ClientCliente: Digite o preço do produto
-        5. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
-        6. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. ServerCliente: Se o produto estiver presente no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) -> 8
-        8. ServerCliente: Salva a modificação do produto produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        14. ClientCliente: O produto atualizado é exibido se ele existir
-        15. ClientCliente: A mensagem "Produto não encontrado" é exibida se ele não existir
+        1. AdminCliente: Digite o PID do produto
+        2. AdminCliente: Digite o nome do produto
+        3. AdminCliente: Digite a quantidade do produto
+        4. AdminCliente: Digite o preço do produto
+        5. AdminCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
+        6. AdminServer->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
+        7. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (get, del e add)
+        8. ReplicationClient: Faz três solicitações para o ReplicationServer (get, del e add)
+        9. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (get, del e add) e retorna a resposta para o ReplicationClient
+        10. AdminCliente: O produto atualizado é exibido se ele existir
+        11. AdminCliente: A mensagem "Produto não encontrado" é exibida se a primeira solicitação retornar null
         
     7. Buscar Produto
-        1. ClienteCliente: Digite o PID do produto
-        2. ClienteCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
+        1. AdminCliente: Digite o PID do produto
+        2. AdminCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: BuscarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Realiza a busca do produto produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        5. ClienteCliente: O produto buscado é exibido se ele existir
-        6. ClienteCliente:A mensagem "Produto não encontrado" é exibida se ele não existir
+        4. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (get)
+        5. ReplicationClient: Faz uma solicitação para o ReplicationServer (get)
+        6. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        7. ReplicationClient: Retorna a resposta para o AdminServer
+        8. AdminCliente: O produto buscado é exibido se ele existir
+        9. AdminCliente: A mensagem "Produto não encontrado" é exibida se a solicitação retornar null
         
     8. Apagar Produto
-        1. ClienteCliente: Digite o PID do cliente
-        2. ClienteCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
-        3. ServerCliente->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. ServerCliente: Se o produto estiver presente produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3)  -> 5
-        5. ServerCliente: Apaga o produto presente na produto no database levelDb presente em cada réplicas da máquina de estado (Réplicas p1, p2 e p3) 
-        6. ClienteCliente: A mensagem "Produto apagado" é exibida se ele não existir
-        7. ClienteCliente: A mensagem "Produto não encontrado" é exibida se ele não existir    
+        1. AdminCliente: Digite o PID do cliente
+        2. AdminCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
+        3. AdminServer->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
+        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (get e del)
+        5. ReplicationClient: Faz duas solicitações para o ReplicationServer (get e del)
+        6. ReplicationServer: Faz duas solicitações para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        7. ReplicationClient: Retorna a resposta para o AdminServer
+        8. AdminCliente: A mensagem "Produto apagado" é exibida se ele existir
+        9. AdminCliente: A mensagem "Produto não encontrado" é exibida se a primeira solicitação retornar null
         
 2. Cliente
     1. Criar Pedido
