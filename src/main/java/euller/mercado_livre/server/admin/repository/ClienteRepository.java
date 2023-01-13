@@ -1,7 +1,7 @@
 package euller.mercado_livre.server.admin.repository;
 
 import com.google.gson.Gson;
-import euller.mercado_livre.ratis.ReplicationClient;
+import euller.mercado_livre.ratis.ClientRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class ClienteRepository {
 
     private final Logger logger = Logger.getLogger(ClienteRepository.class.getName());
 
-    private final ReplicationClient replicationClient = new ReplicationClient();
+    private final ClientRatis clientRatis = new ClientRatis();
 
     public String criarCliente(Cliente cliente) {
         logger.info("Criando cliente: "+cliente+"\n");
@@ -21,7 +21,7 @@ public class ClienteRepository {
             if (buscarCliente(CID) == null) {
                 Gson gson = new Gson();
                 String clienteJson = gson.toJson(cliente);
-                replicationClient.exec("add", CID, clienteJson);
+                clientRatis.exec("add", CID, clienteJson);
                 return clienteJson;
             }
             return null;
@@ -47,7 +47,7 @@ public class ClienteRepository {
     public String buscarCliente(String CID){
         logger.info("Buscando cliente: "+CID+"\n");
         try {
-            return replicationClient.exec("getAdmin", CID, null);
+            return clientRatis.exec("getAdmin", CID, null);
         }catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +65,7 @@ public class ClienteRepository {
         logger.info("Apagando cliente: " + CID + "\n");
         try {
             if (buscarCliente(CID) != null) {
-                replicationClient.exec("delAdmin", CID, null);
+                clientRatis.exec("delAdmin", CID, null);
                 return "Cliente apagado";
             }
             return null;

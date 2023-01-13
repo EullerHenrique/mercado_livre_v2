@@ -2,7 +2,7 @@ package euller.mercado_livre.ratis;
 
 import java.io.IOException;
 
-public class ReplicationServer {
+public class Start {
     public static void main(String[] args) throws IOException, InterruptedException {
         System.out.println("Criando servidor Ratis");
         ServidorRatis servidorRatis = new ServidorRatis("p1");
