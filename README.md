@@ -132,10 +132,14 @@
         3. AdminCliente: Digite o telefone do cliente
         4. AdminCliente->Grpc: ModificarCliente -> Realiza uma requisição por meio do protocolo rpc
         5. AdminServer->Grpc: ModificarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. AdminServer->Ratis: Faz três solicitações para o ClientRatis (getAdmin:CID, delAdmin:CID e add)
-        7. ClientRatis:  Faz três solicitações para as réplicas p1, p2 e p3 (getAdmin:CID, delAdmin:CID e add) e retorna a resposta do get para o AdminServer
-        8. AdminCliente: O cliente modificado é exibido se ele existir
-        9. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
+        6. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (getAdmin:CID)
+        7. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
+        8. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
+        9. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (delAdmin:CID)
+        8. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delAdmin:CID)
+        9. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (add)
+        8. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (add) 
+        9. AdminCliente: O cliente modificado é exibido 
         
     3. Buscar Cliente
         1. AdminCliente: Digite o CID do cliente
