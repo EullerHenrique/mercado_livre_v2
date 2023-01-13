@@ -136,17 +136,17 @@
         7. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
         8. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
         9. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (delAdmin:CID)
-        8. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delAdmin:CID)
-        9. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (add)
-        8. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (add) 
-        9. AdminCliente: O cliente modificado é exibido 
+        10. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delAdmin:CID)
+        11. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (add)
+        12. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (add) 
+        13. AdminCliente: O cliente modificado é exibido 
         
     3. Buscar Cliente
         1. AdminCliente: Digite o CID do cliente
         2. AdminCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
         4. AdminServer->Ratis:Faz uma solicitação para o ClientRatis (getAdmin:CID)
-        6. ClientRatis: Faz três solicitações para as réplicas p1, p2 e p3 (getAdmin:CID) e retorna a resposta do get para o AdminServer
+        6. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
         7. AdminCliente: O cliente buscado é exibido se ele existir
         8. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
         
@@ -154,10 +154,12 @@
         1. AdminCliente: Digite o CID do cliente
         2. AdminCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: ApagarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz duas solicitações para o ClientRatis (getAdmin:CID e delAdmin:CID)
-        5. ClientRatis: Faz duas solicitações para as réplicas p1, p2 e p3 (getAdmin:CID e delAdmin:CID) e retorna a resposta do get para o AdminServer
-        6. AdminCliente: A mensagem "Cliente apagado" é exibida se ele existir
-        7. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
+        4. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (getAdmin:CID)
+        5. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
+        6. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
+        7. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (delAdmin:CID)
+        8. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delAdmin:CID)
+        9. AdminCliente: A mensagem "Cliente apagado" é exibida 
         
     5. Criar Produto  
         1. AdminCliente: Digite o nome do produto
