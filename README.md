@@ -170,7 +170,7 @@
         4. AdminCliente: Digite o preço do produto
         5. AdminCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         6. AdminServer->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (getAdmin:PID, delAdmin:PID e add)
+        7. AdminServer->Ratis: Faz três solicitações para o ClientRatis (getAdmin:PID, delAdmin:PID e add)
         8. ClientRatis: Faz três solicitações para as réplicas p1, p2 e p3 (getAdmin:PID, delAdmin:PID e add) e retorna a resposta do get para o AdminServer
         9. AdminCliente: O produto atualizado é exibido se ele existir
         10. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
@@ -188,13 +188,13 @@
         1. AdminCliente: Digite o PID do cliente
         2. AdminCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (getAdmin:PID e delAdmin:PID)
+        4. AdminServer->Ratis: Faz duas solicitações para o ClientRatis (getAdmin:PID e delAdmin:PID)
         6. ClientRatis: Faz duas solicitações para as réplicas p1, p2 e p3 (getAdmin:PID e delAdmin:PID) e retorna a resposta do get para o AdminServer
-        7. ReplicationClient: Retorna a resposta para o AdminServer
-        8. AdminCliente: A mensagem "Produto apagado" é exibida se ele existir
-        9. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
+        7. AdminCliente: A mensagem "Produto apagado" é exibida se ele existir
+        8. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
         
 2. Cliente
+
     1. Criar Pedido
         1. ClientCliente: Digite o CID
         2. ClienteCliente->Grpc: VerificarCliente -> Realiza uma requisição por meio do protocolo rpc
@@ -224,9 +224,8 @@
         27. ClientCliente: Não ->  Continua
         28. ClienteCliente->Grpc: CriarPedido -> Realiza uma requisição por meio do protocolo rpc
         29. ServerCliente->Grpc: CriarPedido -> Recebe uma requisição por meio do protocolo rpc
-        30. ServerCliente->Ratis: Faz uma solicitação para o ReplicationClient (add)
-        31. ReplicationClient: Faz uma solicitação para o ReplicationServer (add)
-        32. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 (add)
+        30. ServerCliente->Ratis: Faz uma solicitação para o ClientRatis (add)
+        32. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (add)
         34. ClienteCliente: Solicita a modificação de cada produto presente no pedido:
         35. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         36. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
@@ -266,21 +265,19 @@
         25. ClientCliente: Multiplica a quantidade escolhida pelo preço do produto e salva no objeto ProdutoPedido
         26. ClienteCliente->Grpc: ModificarPedido -> Realiza uma requisição por meio do protocolo rpc
         27. ServerCliente->Grpc: ModificarPedido -> Recebe uma requisição por meio do protocolo rpc
-        28. ClienteServer->Ratis: Faz três solicitações para o ReplicationClient (getClient, delClient e add)
-        29. ReplicationClient: Faz três solicitações para o ReplicationServer (getClient:CID, OID, delClient:CID, OID e add)
-        30. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (getClient:CID, OID, delClient:CID, OID e add) e retorna a resposta do get para o ReplicationClient
-        31. ReplicationClient: Retorna a resposta para o AdminServer
-        32. ClienteCliente: A mensagem "Pedido não encontrado" é exibida se o get retornar null
-        33. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
-        34. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        35. ClienteServer->Mosquitto: Publica o produto no tópico server/cliente/produto/modificar
-        36. AdminServer->Mosquitto: Se subscreve no tópico server/cliente/produto/modificar
-        37. AdminServer-> Armazena a nova quantidade do produto no database das 3 réplicas da máquina de estado
-        38. ClientCliente: O pedido modificado é exibido
+        28. ClienteServer->Ratis: Faz três solicitações para o ClientRatis (getClient, delClient e add)
+        30. ClientRatis: Faz três solicitações para as réplicas p1, p2 e p3 (getClient:CID, OID, delClient:CID, OID e add) e retorna a resposta do get para o ClienteServer
+        31. ClienteCliente: A mensagem "Pedido não encontrado" é exibida se o get retornar null
+        32. ClienteCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
+        33. ClienteServer->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
+        34. ClienteServer->Mosquitto: Publica o produto no tópico server/cliente/produto/modificar
+        35. AdminServer->Mosquitto: Se subscreve no tópico server/cliente/produto/modificar
+        36. AdminServer-> Armazena a nova quantidade do produto no database das 3 réplicas da máquina de estado
+        37. ClientCliente: O pedido modificado é exibido
     4. Buscar Pedido
         1. ClientCliente: Digite o CID
         2. ClienteCliente->Grpc: VerificarCliente -> Realiza uma requisição por meio do protocolo rpc
-        3. ServerCliente->Grpc: VerificarCliente -> Recebe uma requisição por meio do protocolo rpc
+        3. ClienteServer->Grpc: VerificarCliente -> Recebe uma requisição por meio do protocolo rpc
         4. ClienteServer->Mosquitto: Publica o CID no tópico server/cliente/cliente/verificar 
         6. AdminServer-> Mosquitto: Se subscreve no tópico server/cliente/cliente/verificar
         7. AdminServer-> Verifica se o cliente existe
@@ -290,11 +287,9 @@
         7. ClientCliente->Se o clinte existir:
         8. ClienteCliente: Digite o OID
         9. ClienteCliente->Grpc: BuscarPedido -> Realiza uma requisição por meio do protocolo rpc
-        10. ServerCliente->Grpc: BuscarPedido -> Recebe uma requisição por meio do protocolo rpc
-        11. ServerCliente->Ratis: Faz uma solicitação para o ReplicationClient (getClient:CID, OID)
-        12. ReplicationClient: Faz uma solicitação para o ReplicationServer (getClient:CID, OID)
-        13. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 (getClient:CID, OID) e retorna a resposta para o ReplicationClient
-        14. ReplicationClient: Retorna a resposta para o ClienteCliente
+        10. ClienteServer->Grpc: BuscarPedido -> Recebe uma requisição por meio do protocolo rpc
+        11. ClienteServer->Ratis: Faz uma solicitação para o ClientRatis (getClient:CID, OID)
+        13. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (getClient:CID, OID) e retorna a resposta para o ClienteServer
         15. ClienteCliente: O pedido é exibido se ele existir
         16. ClienteCliente: A mensagem "Pedido não encontrado" é exibida se o get retornar null                            
     5. Buscar Pedidos
@@ -310,12 +305,10 @@
         10. ClientCliente->Se o clinte existir:
         11. ClienteCliente->Grpc: BuscarPedidos -> Realiza uma requisição por meio do protocolo rpc
         12. ServerCliente->Grpc: BuscarPedidos -> Recebe uma requisição por meio do protocolo rpc
-        12. ServerCliente->Ratis: Faz uma solicitação para o ReplicationClient (getClient:CID)
-        13. ReplicationClient: Faz uma solicitação para o ReplicationServer (getClient:CID)
-        14. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 (getClient:CID) e retorna a resposta para o ReplicationClient
-        15. ReplicationClient: Retorna a resposta para o ClienteCliente
+        12. ServerCliente->Ratis: Faz uma solicitação para o ClientRatis (getClient:CID)
+        14. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (getClient:CID) e retorna a resposta para o ClientServer
         16. ClienteCliente: A mensagem "O cliente não possui pedidos" é exibida se o get retornar null         
-        17. ServerServer-> Retorna cada pedido associado a soma dos produtos presentes nele
+        17. ClientServer-> Retorna cada pedido associado a soma dos produtos presentes nele
         18. ClienCliente: As associações são exibidas
    6. Apagar Pedido
         1. ClientCliente: Digite o CID
@@ -332,10 +325,8 @@
         12. ClienteCliente->Grpc: ApagarPedido -> Realiza uma requisição por meio do protocolo rpc
         13. ServerCliente->Grpc: ApagarPedido -> Recebe uma requisição por meio do protocolo rpc
         14. ServerCliente: Se o produto estiver presente na tabela hash (Peiddo) do servidor x:
-        12. ServerCliente->Ratis: Faz uma solicitação para o ReplicationClient (getClient:CID, OID, delClient: CID, OID)
-        13. ReplicationClient: Faz uma solicitação para o ReplicationServer (getClient:CID, OID, delClient: CID, OID)
-        14. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 (getClient:CID, OID, delClient: CID, OID) e retorna a resposta para o ReplicationClient
-        15. ReplicationClient: Retorna a resposta para o ClienteCliente       
+        12. ServerCliente->Ratis: Faz duas solicitações para o ClientRatis (getClient:CID, OID, delClient: CID, OID)
+        14. ClientRatis: Faz duas solicitações para as réplicas p1, p2 e p3 (getClient:CID, OID, delClient: CID, OID) e retorna a resposta para o ClientServer
         21. ClienteCliente: A mensagem "Pedido apagado" é exibida se ele existir
         16. ClienteCliente: A mensagem "Pedido não encontrado" é exibida se o get retornar null         
     
