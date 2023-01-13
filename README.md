@@ -146,9 +146,9 @@
         2. AdminCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
         4. AdminServer->Ratis:Faz uma solicitação para o ClientRatis (getAdmin:CID)
-        6. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
-        7. AdminCliente: O cliente buscado é exibido se ele existir
-        8. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
+        5. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
+        6. AdminCliente: O cliente buscado é exibido se ele existir
+        7. AdminCliente: A mensagem "Cliente não encontrado" é exibida se o get retornar null
         
     4. Apagar Cliente
         1. AdminCliente: Digite o CID do cliente
@@ -167,10 +167,9 @@
         3. AdminCliente: Digite o preço do produto
         4. AdminCliente->Grpc: CriarProduto -> Realiza uma requisição por meio do protocolo rpc
         5. AdminServer->Grpc: CriarProduto -> Recebe uma requisição por meio do protocolo rpc
-        5. AdminServer->Grpc: CriarCliente -> Recebe uma requisição por meio do protocolo rpc
-        7. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (add)
-        8. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3  (add)
-        10. AdminCliente: O produto criado é exibido
+        6. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (add)
+        7. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3  (add)
+        8. AdminCliente: O produto criado é exibido
         
     6. Modificar Produto
         1. AdminCliente: Digite o PID do produto
@@ -179,29 +178,33 @@
         4. AdminCliente: Digite o preço do produto
         5. AdminCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         6. AdminServer->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. AdminServer->Ratis: Faz três solicitações para o ClientRatis (getAdmin:PID, delAdmin:PID e add)
-        8. ClientRatis: Faz três solicitações para as réplicas p1, p2 e p3 (getAdmin:PID, delAdmin:PID e add) e retorna a resposta do get para o AdminServer
-        9. AdminCliente: O produto atualizado é exibido se ele existir
-        10. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
+        7. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (getAdmin:CID)
+        8. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
+        9. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
+        10. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (delAdmin:CID)
+        11. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delAdmin:CID)
+        12. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (add)
+        13. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (add) 
+        14. AdminCliente: O produto modificado é exibido 
         
     7. Buscar Produto
         1. AdminCliente: Digite o PID do produto
         2. AdminCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: BuscarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (getAdmin:PID)
-        6. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (getAdmin:PID) e retorna a resposta do get para o AdminServer
-        8. AdminCliente: O produto buscado é exibido se ele existir
-        9. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
+        4. AdminServer->Ratis:Faz uma solicitação para o ClientRatis (getAdmin:CID)
+        5. ClientRatis: Faz uma solicitação para a réplica p1, p2 ou p3 (getAdmin:CID) e retorna a resposta para o AdminServer
+        6. AdminCliente: O produto buscado é exibido se ele existir
+        7. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
         
     8. Apagar Produto
         1. AdminCliente: Digite o PID do cliente
         2. AdminCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz duas solicitações para o ClientRatis (getAdmin:PID e delAdmin:PID)
-        6. ClientRatis: Faz duas solicitações para as réplicas p1, p2 e p3 (getAdmin:PID e delAdmin:PID) e retorna a resposta do get para o AdminServer
-        7. AdminCliente: A mensagem "Produto apagado" é exibida se ele existir
-        8. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
-        
+        4. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
+        5. AdminServer->Ratis: Faz uma solicitação para o ClientRatis (delAdmin:CID)
+        6. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delAdmin:CID)
+        7. AdminCliente: A mensagem "Produto apagado" é exibida 
+       
 2. Cliente
 
     1. Criar Pedido
