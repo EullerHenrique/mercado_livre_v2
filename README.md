@@ -127,8 +127,8 @@
         3. AdminCliente: Digite o telefone do cliente
         4. AdminCliente->Grpc: ModificarCliente -> Realiza uma requisição por meio do protocolo rpc
         5. AdminServer->Grpc: ModificarCliente -> Recebe uma requisição por meio do protocolo rpc
-        6. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (get, del e add)
-        7. ReplicationClient: Faz três solicitações para o ReplicationServer (get, del e add)
+        6. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (getAdmin, delAdmin e add)
+        7. ReplicationClient: Faz três solicitações para o ReplicationServer (getAdmin, delAdmin e add)
         8. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (get, del e add) e retorna a resposta do get para o ReplicationClient
         10. ReplicationClient: Retorna a resposta para o AdminServer
         11. AdminCliente: O cliente modificado é exibido se ele existir
@@ -138,8 +138,8 @@
         1. AdminCliente: Digite o CID do cliente
         2. AdminCliente->Grpc: BuscarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: BuscarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (get)
-        5. ReplicationClient: Faz uma solicitação para o ReplicationServer (get)
+        4. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (getAdmin)
+        5. ReplicationClient: Faz uma solicitação para o ReplicationServer (getAdmin)
         6. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
         7. ReplicationClient: Retorna a resposta para o AdminServer
         8. AdminCliente: O cliente buscado é exibido se ele existir
@@ -149,8 +149,8 @@
         1. AdminCliente: Digite o CID do cliente
         2. AdminCliente->Grpc: ApagarCliente -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: ApagarCliente -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (get e del)
-        5. ReplicationClient: Faz duas solicitações para o ReplicationServer (get e del)
+        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (getAdmin e del)
+        5. ReplicationClient: Faz duas solicitações para o ReplicationServer (getAdmin e del)
         6. ReplicationServer: Faz duas solicitações para as réplicas p1, p2 e p3 e retorna a resposta do get para o ReplicationClient
         7. ReplicationClient: Retorna a resposta para o AdminServer
         8. AdminCliente: A mensagem "Cliente apagado" é exibida se ele existir
@@ -175,8 +175,8 @@
         4. AdminCliente: Digite o preço do produto
         5. AdminCliente->Grpc: ModificarProduto -> Realiza uma requisição por meio do protocolo rpc
         6. AdminServer->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
-        7. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (get, del e add)
-        8. ReplicationClient: Faz três solicitações para o ReplicationServer (get, del e add)
+        7. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (getAdmin, delAdmin e add)
+        8. ReplicationClient: Faz três solicitações para o ReplicationServer (getAdmin, delAdmin e add)
         9. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (get, del e add) e retorna a resposta do get para o ReplicationClient
         10. RecationClient: Retorna a resposta para o AdminServer
         11. AdminCliente: O produto atualizado é exibido se ele existir
@@ -186,8 +186,8 @@
         1. AdminCliente: Digite o PID do produto
         2. AdminCliente->Grpc: BuscarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. ServerCliente->Grpc: BuscarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (get)
-        5. ReplicationClient: Faz uma solicitação para o ReplicationServer (get)
+        4. AdminServer->Ratis: Faz uma solicitação para o ReplicationClient (getAdmin)
+        5. ReplicationClient: Faz uma solicitação para o ReplicationServer (getAdmin)
         6. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e e retorna a resposta do get para o ReplicationClient
         7. ReplicationClient: Retorna a resposta para o AdminServer
         8. AdminCliente: O produto buscado é exibido se ele existir
@@ -197,8 +197,8 @@
         1. AdminCliente: Digite o PID do cliente
         2. AdminCliente->Grpc: ApagarProduto -> Realiza uma requisição por meio do protocolo rpc
         3. AdminServer->Grpc: ApagarProduto -> Recebe uma requisição por meio do protocolo rpc
-        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (get e del)
-        5. ReplicationClient: Faz duas solicitações para o ReplicationServer (get e del)
+        4. AdminServer->Ratis: Faz duas solicitações para o ReplicationClient (getAdmin e delAdmin)
+        5. ReplicationClient: Faz duas solicitações para o ReplicationServer (getAdmin e delAdmin)
         6. ReplicationServer: Faz duas solicitações para as réplicas p1, p2 e p3 e retorna a resposta do get para o ReplicationClient
         7. ReplicationClient: Retorna a resposta para o AdminServer
         8. AdminCliente: A mensagem "Produto apagado" é exibida se ele existir
@@ -276,7 +276,7 @@
         25. ClientCliente: Multiplica a quantidade escolhida pelo preço do produto e salva no objeto ProdutoPedido
         26. ClienteCliente->Grpc: ModificarPedido -> Realiza uma requisição por meio do protocolo rpc
         27. ServerCliente->Grpc: ModificarPedido -> Recebe uma requisição por meio do protocolo rpc
-        28. ClienteServer->Ratis: Faz três solicitações para o ReplicationClient (get, del e add)
+        28. ClienteServer->Ratis: Faz três solicitações para o ReplicationClient (getClient, delClient e add)
         29. ReplicationClient: Faz três solicitações para o ReplicationServer (get, del e add)
         30. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (get, del e add) e retorna a resposta do get para o ReplicationClient
         31. ReplicationClient: Retorna a resposta para o AdminServer
