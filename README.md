@@ -57,24 +57,27 @@
 
 ## Execução
 
-### Servidor Ratis
+### Replicação de máquina de estado
 
+- Server Ratis
     1. Navegue até mercado_livre/ratis/Start
     2. Aperte o botão play localizado ao lado de "public class Start"
     3. O servidor ratis p1 é criado
     4. O servidor ratis p2 é criado
     5. O servidor ratis p3 é criado
-    6. O servidor ratis p1 cria a réplica p1 (porta 3000) da máquina de estado e se conecta nas réplicas p2 e p3 (A pasta será inserida no caminho /tmp/p1)
-    7. O servidor ratis p1 cria a réplica p2 (porta 3500) da máquina de estado e se conecta nas réplicas p1 e p3 (A pasta será inserida no caminho /tmp/p2)
-    8. O servidor ratis p1 cria a réplica p3 (porta 4000) da máquina de estado e se conecta nas réplicas p1 e p2 (A pasta será inserida no caminho /tmp/p3)
+    6. O servidor ratis p1 cria a réplica p1 (porta 3000) da máquina de estado (A pasta será inserida no caminho /tmp/p1)
+    7. O servidor ratis p1 cria a réplica p2 (porta 3500) da máquina de estado (A pasta será inserida no caminho /tmp/p2)
+    8. O servidor ratis p1 cria a réplica p3 (porta 4000) da máquina de estado (A pasta será inserida no caminho /tmp/p3)
     4. A réplica p1 da máquina de estado cria o database levelDB p1 (A pasta será inserida no caminho /main/resources/db/p1)
     5. A réplica p2 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p2)
     6. A réplica p3 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p3)
-    7. O ClientRatis é responsável por receber solicitações e redireciona-las para as réplicas p1, p2 e p3
-    8. A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
-    9. A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    7. Se a solitaçâo exigir uma mudança de estado (add ou del), o ClientRatis irá solicitar que cada réplica processe essa solicitação -> 8, 9, 10
+    8.  A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    9.  A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
     10. A réplica p3 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
-    11. O ClientRatis é responsável por enviar a resposta recebida das réplicas para quem a solicitou.
+    11. Se a solicitação não exigir uma mudançã de estado (get), o ClientRatis irá solicitar para qualquer réplica uma resposta -> 12
+    12. A réplica p1, p2 ou p3 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    13. O ClientRatis enviar a resposta recebida para quem a solicitou.
     
 ###  Server
 
