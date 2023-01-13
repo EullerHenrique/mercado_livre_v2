@@ -177,8 +177,8 @@
         6. AdminServer->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
         7. AdminServer->Ratis: Faz três solicitações para o ReplicationClient (getAdmin:PID, delAdmin:PID e add)
         8. ReplicationClient: Faz três solicitações para o ReplicationServer (getAdmin:PID, delAdmin:PID e add)
-        9. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (get, del e add) e retorna a resposta do get para o ReplicationClient
-        10. RecationClient: Retorna a resposta para o AdminServer
+        9. ReplicationServer: Faz três solicitações para as réplicas p1, p2 e p3 (getAdmin:PID, delAdmin:PID e add) e retorna a resposta do get para o ReplicationClient
+        10. RecationClient: Retorna a resposta do get para o AdminServer
         11. AdminCliente: O produto atualizado é exibido se ele existir
         12. AdminCliente: A mensagem "Produto não encontrado" é exibida se o get retornar null
         
@@ -342,14 +342,12 @@
         12. ClienteCliente->Grpc: ApagarPedido -> Realiza uma requisição por meio do protocolo rpc
         13. ServerCliente->Grpc: ApagarPedido -> Recebe uma requisição por meio do protocolo rpc
         14. ServerCliente: Se o produto estiver presente na tabela hash (Peiddo) do servidor x:
-        15. ServerCliente: Apaga o produto presente na tabela hash (Pedido) do servidor x 
-        16. ServerCliente->Mosquitto: Se subscreve no tópico server/cliente/pedido/apagar  
-        17. ServerCliente->Mosquitto: Publica pedido no tópico server/cliente/pedido/apagar 
-        18. ServerCliente: A subcrição realizada recebe o pedido que foi publicado 
-        19. ServerCliente: Se o pedido existir na tabela hash (Pedido) do servidor x, nada é feito
-        20. ServerCliente: Se o pedido não existir na tabela hash (Produto) do servidor y, z, w, n ..., o produto é salvo  no servidor y, z, w, n ... 
+        12. ServerCliente->Ratis: Faz uma solicitação para o ReplicationClient (getClient:CID, OID, delClient: CID, OID)
+        13. ReplicationClient: Faz uma solicitação para o ReplicationServer (getClient:CID, OID, delClient: CID, OID)
+        14. ReplicationServer: Faz uma solicitação para as réplicas p1, p2 e p3 e retorna a resposta para o ReplicationClient
+        15. ReplicationClient: Retorna a resposta para o ClienteCliente       
         21. ClienteCliente: A mensagem "Pedido apagado" é exibida se ele existir
-        22. ClienteCliente: A mensagem "Pedido não encontrado" é exibida se ele não existir    
+        16. ClienteCliente: A mensagem "Pedido não encontrado" é exibida se o get retornar null         
     
  ## Critérios Atendidos
    
