@@ -32,8 +32,7 @@ class TesteCriarProduto{
         AdminClient.startServiceTeste.start(8081, new int[]{5}, new String[]{"PlayStation 5", "500", "5000"});
     }
 }
-//81a003a0-5761-4d69-967b-831f15280780
-//6de31c92-0575-4ee2-9d43-36b3863a9284
+
 class TestBuscarCliente{
     public static void start(String cid) throws InterruptedException {
         AdminClient.startServiceTeste.start(8081, new int[]{3}, new String[]{cid});
@@ -57,7 +56,7 @@ class TesteBuscarProduto{
         AdminClient.startServiceTeste.start(8086, new int[]{7}, new String[]{pid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("6de31c92-0575-4ee2-9d43-36b3863a9284");
+        start("da1ce4ed-2cb6-4ebc-a2e4-2061a609f16e");
     }
 }
 

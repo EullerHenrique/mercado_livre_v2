@@ -55,8 +55,8 @@ public class StartTest {
                                 if (opcaoAdicionarProduto == 1) {
                                     ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(valores[1]);
                                     if (produtoDTO != null) {
-                                        produtosDTO.add(produtoDTO);
                                         if (produtoDTO.getQuantidade() > 0) {
+                                            produtosDTO.add(produtoDTO);
                                             pedidoDTO = inputsView.lerPedido(pedidoDTO, produtoDTO, quantidadeProdutos[i]);
                                             if(pedidoDTO != null) {
                                                 System.out.println("\nVocê deseja adicionar mais um produto? (1 - Sim, 2 - Não): ");
@@ -84,7 +84,8 @@ public class StartTest {
                                     break;
                                 }
                             }
-                            if(pedidoDTO != null) {
+                            if(pedidoDTO != null && produtosDTO.size() > 0) {
+                                System.out.println("\nPedido realizado com sucesso!");
                                 pedidoService.criarPedido(produtosDTO, pedidoDTO);
                             }
                         }

@@ -71,8 +71,8 @@ public class Start {
                         while (true) {
                             if (opcaoAdicionarProduto == 1) {
                                 ProdutoDTO produtoDTO = inputsView.lerIdDoProduto();
-                                produtosDTO.add(produtoDTO);
                                 if (produtoDTO.getQuantidade() > 0) {
+                                    produtosDTO.add(produtoDTO);
                                     pedidoDTO = inputsView.lerPedido(pedidoDTO, produtoDTO);
                                     while(true) {
                                         System.out.println("\nVocê deseja adicionar mais um produto? (1 - Sim, 2 - Não): ");
