@@ -38,32 +38,54 @@ public class StartTest {
                 System.out.println(opcao);
                 if (opcao == 1) {
                     ClienteDTO clienteDTO = lerCliente(valores);
-                    clienteService.criarCliente(clienteDTO);
+                    if(clienteDTO != null) {
+                        clienteService.criarCliente(clienteDTO);
+                    }
                 } else if (opcao == 2) {
                     String cid = lerIdDoCliente(valores[0]);
-                    ClienteDTO clienteDTO = lerCliente(valores);
-                    clienteDTO.setCID(cid);
-                    clienteService.modificarCliente(clienteDTO);
+                    if(cid != null) {
+                        String[] valoresCliente = {valores[1], valores[2], valores[3]};
+                        ClienteDTO clienteDTO = lerCliente(valoresCliente);
+                        if(clienteDTO != null) {
+                            clienteDTO.setCID(cid);
+                            clienteService.modificarCliente(clienteDTO);
+                        }
+                    }
                 } else if (opcao == 3) {
                     String cid = lerIdDoCliente(valores[0]);
-                    clienteService.buscarCliente(cid);
+                    if(cid != null) {
+                        clienteService.buscarCliente(cid);
+                    }
                 } else if (opcao == 4) {
                     String cid = lerIdDoCliente(valores[0]);
-                    clienteService.apagarCliente(cid);
+                    if(cid != null) {
+                        clienteService.apagarCliente(cid);
+                    }
                 } else if (opcao == 5) {
                     ProdutoDTO produtoDTO = lerProduto(valores);
-                    produtoService.criarProduto(produtoDTO);
+                    if(produtoDTO != null) {
+                        produtoService.criarProduto(produtoDTO);
+                    }
                 } else if (opcao == 6) {
                     String pid = lerIdDoProduto(valores[0]);
-                    ProdutoDTO produtoDTO = lerProduto(valores);
-                    produtoDTO.setPID(pid);
-                    produtoService.modificarProduto(produtoDTO);
+                    if(pid != null) {
+                        String[] valoresProduto = {valores[1], valores[2], valores[3]};
+                        ProdutoDTO produtoDTO = lerProduto(valoresProduto);
+                        if(produtoDTO != null) {
+                            produtoDTO.setPID(pid);
+                            produtoService.modificarProduto(produtoDTO);
+                        }
+                    }
                 } else if (opcao == 7) {
                     String pid = lerIdDoProduto(valores[0]);
-                    produtoService.buscarProduto(pid);
+                    if(pid != null) {
+                        produtoService.buscarProduto(pid);
+                    }
                 } else if (opcao == 8) {
                     String pid = lerIdDoProduto(valores[0]);
-                    produtoService.apagarProduto(pid);
+                    if(pid != null) {
+                        produtoService.apagarProduto(pid);
+                    }
                 }
             }
 

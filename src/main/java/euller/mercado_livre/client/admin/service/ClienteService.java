@@ -38,7 +38,7 @@ public class ClienteService {
         String CID = clienteDTO.getCID();
         Gson gson = new Gson();
         String clienteJson = gson.toJson(clienteDTO);
-        logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + clienteDTO+"\n");
+        logger.info("Request: Modifique o cliente com o CID: " + CID +" para " + clienteJson+"\n");
         ModificarClienteRequest request = ModificarClienteRequest.newBuilder().setCID(CID).setDados(clienteJson).build();
         ModificarClienteResponse response;
         try {
