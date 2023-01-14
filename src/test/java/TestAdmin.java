@@ -5,10 +5,14 @@ import euller.mercado_livre.server.admin.AdminServer;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+class IniciarServidorRatis{
+    public static void main(String[] args) throws IOException, InterruptedException {
+        StartReplication.main(args);
+    }
+}
 
 class IniciarServidorAdmin{
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        StartReplication.main(args);
         AdminServer.startService.start(8081);
         AdminServer.startService.start(8082);
         AdminServer.startService.start(8083);
@@ -28,8 +32,8 @@ class TesteCriarProduto{
         AdminClient.startServiceTeste.start(8081, new int[]{5}, new String[]{"PlayStation 5", "500", "5000"});
     }
 }
-
-
+//81a003a0-5761-4d69-967b-831f15280780
+//6de31c92-0575-4ee2-9d43-36b3863a9284
 class TestBuscarCliente{
     public static void start(String cid) throws InterruptedException {
         AdminClient.startServiceTeste.start(8081, new int[]{3}, new String[]{cid});
@@ -40,7 +44,7 @@ class TestBuscarCliente{
         AdminClient.startServiceTeste.start(8086, new int[]{3}, new String[]{cid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("38185c81-bec8-4deb-b343-f905c1c2521b");
+        start("81a003a0-5761-4d69-967b-831f15280780");
     }
 }
 class TesteBuscarProduto{
@@ -53,21 +57,21 @@ class TesteBuscarProduto{
         AdminClient.startServiceTeste.start(8086, new int[]{7}, new String[]{pid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("e7307ecc-3971-4b37-af5e-51f15b0cac58");
+        start("6de31c92-0575-4ee2-9d43-36b3863a9284");
     }
 }
 
 
 class TesteModificarCliente{
     public static void main(String[] args) throws InterruptedException{;
-        AdminClient.startServiceTeste.start(8082, new int[]{2}, new String[]{"38185c81-bec8-4deb-b343-f905c1c2521b",
+        AdminClient.startServiceTeste.start(8082, new int[]{2}, new String[]{"81a003a0-5761-4d69-967b-831f15280780",
                 "Henrique Bandeira Oliveira", "henrique@outlook.com", "(34) 996915315"});
     }
 }
 
 class TesteModificarProduto{
     public static void main(String[] args) throws InterruptedException {;
-        AdminClient.startServiceTeste.start(8084, new int[]{6}, new String[]{"e7307ecc-3971-4b37-af5e-51f15b0cac58",
+        AdminClient.startServiceTeste.start(8084, new int[]{6}, new String[]{"6de31c92-0575-4ee2-9d43-36b3863a9284",
                 "XBOX Series X", "400", "4000"});    }
 }
 
@@ -82,7 +86,7 @@ class TesteApagarCliente{
         AdminClient.startServiceTeste.start(8086, new int[]{4}, new String[]{cid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("1af83338-a2c7-4645-8a9b-14cb5f555d5b");
+        start("81a003a0-5761-4d69-967b-831f15280780");
     }
 }
 class TesteApagarProduto{
@@ -95,7 +99,7 @@ class TesteApagarProduto{
         AdminClient.startServiceTeste.start(8086, new int[]{8}, new String[]{pid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("34036b9e-2433-4bf2-8d91-a5f384932b92");
+        start("6de31c92-0575-4ee2-9d43-36b3863a9284");
     }
 }
 

@@ -30,8 +30,8 @@ public class InputsTestView {
     public static String lerIdDoCliente(String cid) {
         System.out.println("\nDigite o id do cliente:             ");
         System.out.println(cid);
-        if (cid == null && cid.isEmpty()) {
-            System.out.println("\nCliente invãlido");
+        if (cid == null || cid.isEmpty()) {
+            System.out.println("\nId do cliente inválido");
             return null;
         }
         return cid;
@@ -76,8 +76,8 @@ public class InputsTestView {
     public static String lerIdDoProduto(String pid) {
         System.out.println("\nDigite o id do produto:             ");
         System.out.println(pid);
-        if (pid == null && pid.isEmpty()) {
-            System.out.println("\nProduto inválido");
+        if (pid == null || pid.isEmpty()) {
+            System.out.println("\nId do produto inválido");
             return null;
         }
         return pid;

@@ -8,7 +8,6 @@ import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.client.cliente.view.InputsView;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import jdk.swing.interop.SwingInterOpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +97,7 @@ public class Start {
                                         }
                                     }
                                 }
-                            } else if (opcaoAdicionarProduto == 2) {
+                            } else {
                                 break;
                             }
                         }

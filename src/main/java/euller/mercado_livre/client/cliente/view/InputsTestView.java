@@ -11,11 +11,11 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 
-public class InputsView {
+public class InputsTestView {
 
     private ClienteService clienteService;
     private ProdutoService produtoService;
-    public InputsView(ClienteService clienteService, ProdutoService produtoService) {
+    public InputsTestView(ClienteService clienteService, ProdutoService produtoService) {
         this.clienteService = clienteService;
         this.produtoService = produtoService;
     }
@@ -40,62 +40,38 @@ public class InputsView {
         System.out.println("Digite a opção desejada:                ");
     }
 
-    public String lerIdDoCliente()  {
-        String cid;
-        Scanner s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o id do cliente:             ");
-            if(s.hasNextLine()) {
-                cid = s.nextLine();
-                if (cid!= null && !cid.isEmpty() && clienteService.verificarSeClienteExiste(cid)) {
-                    break;
-                }else {
-                    System.out.println("\nCliente não existe");
-                }
-            }
+    public String lerIdDoCliente(String cid)  {
+        System.out.println("\nDigite o id do cliente:             ");
+        System.out.println(cid);
+        if (cid == null || cid.isEmpty()) {
+            System.out.println("Id do cliente inválida");
+            return null;
+        }else if(!clienteService.verificarSeClienteExiste(cid)){
+            System.out.println("Cliente não encontrado");
+            return null;
         }
         return cid;
     }
-
-    public ProdutoDTO lerIdDoProduto() {
-        Scanner s = new Scanner(System.in);
-        String pid;
+    public ProdutoDTO lerIdDoProduto(String pid) {
+        System.out.println("\nDigite o id do produto:             ");
+        System.out.println(pid);
         ProdutoDTO produtoDTO;
-        while(true) {
-            System.out.println("\nDigite o id do produto:             ");
-            if (s.hasNextLine()) {
-                pid = s.nextLine();
-                if (pid != null && !pid.isEmpty()) {
-                    String produtoJson = produtoService.buscarProduto(pid);
-                    if (!Objects.equals(produtoJson, "false")) {
-                        Gson gson = new Gson();
-                        produtoDTO = gson.fromJson(produtoJson, ProdutoDTO.class);
-                        break;
-                    }
-                }
+        if (pid != null && !pid.isEmpty()) {
+            String produtoJson = produtoService.buscarProduto(pid);
+            if (!Objects.equals(produtoJson, "false")) {
+                Gson gson = new Gson();
+                produtoDTO = gson.fromJson(produtoJson, ProdutoDTO.class);
+                produtoDTO.setPID(pid);
+                return produtoDTO;
+            }else{
+                System.out.println("Produto não encontrado");
             }
+        }else{
+            System.out.println("Id do produto inválida");
         }
-        produtoDTO.setPID(pid);
-        return produtoDTO;
+        return null;
     }
-
-    public String lerIdDoPedido() {
-        Scanner s;
-        String oid;
-        s = new Scanner(System.in);
-        while(true) {
-            System.out.println("\nDigite o id do pedido:             ");
-            if (s.hasNextLine()) {
-                oid = s.nextLine();
-                if (oid != null && !oid.isEmpty()) {
-                    break;
-                }
-            }
-        }
-        return oid;
-    }
-
-    public PedidoDTO lerPedido(PedidoDTO pedidoDTO, ProdutoDTO produtoDTO){
+    public PedidoDTO lerPedido(PedidoDTO pedidoDTO, ProdutoDTO produtoDTO, int quantidadeProdutoPedido) {
         String nomeProduto = produtoDTO.getProduto();
         int precoProduto =  produtoDTO.getPreco();
         int quantidadeProduto = produtoDTO.getQuantidade();
@@ -108,24 +84,29 @@ public class InputsView {
         ProdutoDTO produtoDTOPedido = new ProdutoDTO();
         produtoDTOPedido.setPID(produtoDTO.getPID());
         produtoDTOPedido.setProduto(nomeProduto);
-        int quantidadeProdutoPedido;
-        while(true) {
-            System.out.println("\nDigite a quantidade:                    ");
-            if (s.hasNextInt()) {
-                quantidadeProdutoPedido = s.nextInt();
-                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto) {
-                    produtoDTOPedido.setQuantidade(quantidadeProdutoPedido);
-                    break;
-                }
-            }
+        System.out.println("\nDigite a quantidade:                    ");
+        System.out.println(quantidadeProdutoPedido);
+        if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto) {
+            produtoDTOPedido.setQuantidade(quantidadeProdutoPedido);
+        }else{
+            System.out.println("\nA quantidade deve ser maior que 0 e menor ou igual a quantidade disponível");
+            return null;
         }
         int preco = precoProduto * quantidadeProdutoPedido;
         produtoDTOPedido.setPreco(preco);
         pedidoDTO.getProdutos().add(produtoDTOPedido);
         return pedidoDTO;
     }
-
-    public PedidoDTO lerPedidoAtualizado(PedidoDTO pedidoDTOAntigo, ProdutoDTO produtoDTO){
+    public String lerIdDoPedido(String oid) {
+        System.out.println("\nDigite o id do pedido:             ");
+        System.out.println(oid);
+        if (oid == null || oid.isEmpty()) {
+            System.out.println("Id do pedido inválida");
+            return null;
+        }
+        return oid;
+    }
+    public PedidoDTO lerPedidoAtualizado(PedidoDTO pedidoDTOAntigo, ProdutoDTO produtoDTO, int quantidadeProdutoPedido) {
         PedidoDTO pedidoDTONovo = new PedidoDTO();
         ProdutoDTO produtoDTOPedidoAntigo = pedidoDTOAntigo.getProdutos().stream().filter(p -> p.getPID().equals(produtoDTO.getPID())).findFirst().get();
         ProdutoDTO produtoDTOPedidoNovo = new ProdutoDTO();
@@ -142,16 +123,13 @@ public class InputsView {
         System.out.println("\nQuantidade Presente No Pedido: " + produtoDTOPedidoAntigo.getQuantidade());
         System.out.println("\nPreço Total Presente No Pedido: " + produtoDTOPedidoAntigo.getPreco());
         System.out.println("---------------------------------------");
-        int quantidadeProdutoPedido;
-        while(true) {
-            System.out.println("\nDigite a nova quantidade:                    ");
-            if (s.hasNextInt()) {
-                quantidadeProdutoPedido = s.nextInt();
-                if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+produtoDTOPedidoAntigo.getQuantidade()) {
-                    produtoDTOPedidoNovo.setQuantidade(quantidadeProdutoPedido);
-                    break;
-                }
-            }
+
+        System.out.println("\nDigite a nova quantidade:                    ");
+        if (quantidadeProdutoPedido > 0 && quantidadeProdutoPedido <= quantidadeProduto+produtoDTOPedidoAntigo.getQuantidade()) {
+            produtoDTOPedidoNovo.setQuantidade(quantidadeProdutoPedido);
+        }else{
+            System.out.println("\nA quantidade deve ser maior que 0 e menor ou igual a quantidade presente no pedido + quantidade disponível");
+            return null;
         }
 
         produtoDTOPedidoNovo.setPID(produtoDTOPedidoAntigo.getPID());
@@ -164,5 +142,6 @@ public class InputsView {
         pedidoDTONovo.getProdutos().add(produtoDTOPedidoNovo);
         return pedidoDTONovo;
     }
+
 
 }

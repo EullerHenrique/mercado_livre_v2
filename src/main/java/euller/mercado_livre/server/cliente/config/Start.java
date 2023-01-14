@@ -34,6 +34,9 @@ public class Start {
     public void start(int port) throws IOException{
         if(port==0) {
             port = lerPortaServidor();
+        }else{
+            System.out.println("\nDigite a porta desejada para a criacão do servidor:                    ");
+            System.out.println(port);
         }
         server = ServerBuilder.forPort(port)
                 .addService(new ClienteServiceImpl())

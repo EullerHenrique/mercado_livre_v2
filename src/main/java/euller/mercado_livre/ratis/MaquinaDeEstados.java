@@ -4,35 +4,36 @@ import org.apache.ratis.proto.RaftProtos;
 import org.apache.ratis.protocol.Message;
 import org.apache.ratis.statemachine.TransactionContext;
 import org.apache.ratis.statemachine.impl.BaseStateMachine;
-
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
 import org.iq80.leveldb.DB;
-
 import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
 import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
 import org.iq80.leveldb.Options;
 
 public class MaquinaDeEstados extends BaseStateMachine {
   private final Options options = new Options();
-  private DB levelDB = null;
-  public String buscarPedido(DB levelDB, String[] opKey, int type) {
+  public String buscarPedido(String[] opKey, int type) {
     StringBuilder result = new StringBuilder("");
-    levelDB.iterator().forEachRemaining(entry -> {
-      byte[] key = entry.getKey();
-      byte[] value = entry.getValue();
-      String keyString = new String(key, StandardCharsets.UTF_8);
-      String valueString = new String(value, StandardCharsets.UTF_8);
-      valueString = keyString + "--" + valueString.replace(":", ".");
-      result.append(valueString).append(";");
-    });
-
-    System.out.println("RESULT: " + result);
+    DB levelDB = null;
+    while(levelDB == null) {
+      try {
+        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+        levelDB.iterator().forEachRemaining(entry -> {
+          byte[] key = entry.getKey();
+          byte[] value = entry.getValue();
+          String keyString = new String(key, StandardCharsets.UTF_8);
+          String valueString = new String(value, StandardCharsets.UTF_8);
+          valueString = keyString + "--" + valueString.replace(":", ".");
+          result.append(valueString).append(";");
+        });
+        levelDB.close();
+        break;
+      } catch (Exception ignored) {}
+    }
 
     if (result.toString().equals("") || opKey[1] == null || opKey[2] == null) {
       return null;
@@ -51,18 +52,25 @@ public class MaquinaDeEstados extends BaseStateMachine {
     }
     return null;
   }
-  public String buscarPedidosPeloCliente(DB levelDB, String[] opKey) {
+  public String buscarPedidosPeloCliente(String[] opKey) {
     StringBuilder result = new StringBuilder("");
-    levelDB.iterator().forEachRemaining(entry -> {
-      byte[] key = entry.getKey();
-      byte[] value = entry.getValue();
-      String keyString = new String(key, StandardCharsets.UTF_8);
-      String valueString = new String(value, StandardCharsets.UTF_8);
-      valueString = keyString + "--" + valueString.replace(":", ".");
-      result.append(valueString).append(";");
-    });
+    DB levelDB = null;
+    while(levelDB == null) {
+      try {
+        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+        levelDB.iterator().forEachRemaining(entry -> {
+          byte[] key = entry.getKey();
+          byte[] value = entry.getValue();
+          String keyString = new String(key, StandardCharsets.UTF_8);
+          String valueString = new String(value, StandardCharsets.UTF_8);
+          valueString = keyString + "--" + valueString.replace(":", ".");
+          result.append(valueString).append(";");
+        });
+        levelDB.close();
+        break;
+      } catch (Exception ignored) {}
+    }
 
-    System.out.println("RESULT: " + result);
     if (result.toString().equals("") || opKey[1] == null) {
       return null;
     } else {
@@ -77,11 +85,22 @@ public class MaquinaDeEstados extends BaseStateMachine {
       }
       return resultFinal.toString();
     }
+
+    
   }
 
 
   public CompletableFuture<Message> queryAdmin(String[] opKey){
-    byte[] value = levelDB.get(bytes(opKey[1]));
+    DB levelDB = null;
+    byte[] value = null;
+    while(levelDB == null) {
+      try {
+        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+        value = levelDB.get(bytes(opKey[1]));
+        levelDB.close();
+        break;
+      } catch (Exception ignored) {}
+    }
     String result;
     if(value == null){
       result = opKey[0] + ":" + null;
@@ -91,45 +110,26 @@ public class MaquinaDeEstados extends BaseStateMachine {
       result = opKey[0] + ":" + valueString;;
     }
     LOG.debug("{}: {} = {}", opKey[0], opKey[1], result);
-    try {
-      levelDB.close();
-      levelDB=null;
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
     return CompletableFuture.completedFuture(Message.valueOf(result));
   }
 
   public CompletableFuture<Message> queryClient(String[] opKey){
     String result;
     if(Objects.equals(opKey[2], "cliente")){
-      String pedidos = buscarPedidosPeloCliente(levelDB, opKey);
+      String pedidos = buscarPedidosPeloCliente(opKey);
       if(pedidos != null){
         result = pedidos;
       }else{
         result = "false";
       }
     }else {
-      result = buscarPedido(levelDB, opKey, 1);
-    }
-    try {
-      levelDB.close();
-      levelDB=null;
-    } catch (IOException e) {
-      e.printStackTrace();
+      result = buscarPedido(opKey, 1);
     }
     return CompletableFuture.completedFuture(Message.valueOf("getClient:"+result));
   }
 
   @Override
   public CompletableFuture<Message> query(Message request) {
-    if(levelDB == null) {
-      try {
-        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
     String[] opKey = request.getContent().toString(Charset.defaultCharset()).split(":");
     if(opKey[0].equals("getAdmin")){
       return queryAdmin(opKey);
@@ -142,16 +142,12 @@ public class MaquinaDeEstados extends BaseStateMachine {
 
   @Override
   public CompletableFuture<Message> applyTransaction(TransactionContext trx) {
-    if(levelDB == null) {
-      try {
-        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
+
     final RaftProtos.LogEntryProto entry = trx.getLogEntry();
     final String[] opKeyValue =
         entry.getStateMachineLogEntry().getLogData().toString(Charset.defaultCharset()).split(":");
+
+    DB levelDB = null;
 
     final String op = opKeyValue[0];
     String result = op + ":";
@@ -160,18 +156,39 @@ public class MaquinaDeEstados extends BaseStateMachine {
     String value = opKeyValue.length < 3 ? "" : opKeyValue[2];
     switch (op) {
       case "add":
-        result += null;
         value = value.replace(".", ":");
-        levelDB.put(bytes(key), bytes(value));
+        while(levelDB == null) {
+          try {
+            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+            levelDB.put(bytes(key), bytes(value));
+            levelDB.close();
+            break;
+          } catch (Exception ignored) {}
+        }
+        result += null;
         break;
       case "delAdmin":
+        while(levelDB == null) {
+          try {
+            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+            levelDB.delete(key.getBytes());
+            levelDB.close();
+            break;
+          } catch (Exception ignored) {}
+        }
         result += null;
-        levelDB.delete(key.getBytes());
         break;
       case "delClient":
-        String keyString = buscarPedido(levelDB, opKeyValue, 2);
+        String keyString = buscarPedido(opKeyValue, 2);
         if(keyString != null) {
-          levelDB.delete(bytes(keyString));
+          while(levelDB == null) {
+            try {
+              levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+              levelDB.delete(bytes(keyString));
+              levelDB.close();
+              break;
+            } catch (Exception ignored) {}
+          }
           result += "Pedido apagado";
         }else {
           result += null;
@@ -181,12 +198,6 @@ public class MaquinaDeEstados extends BaseStateMachine {
 
     final RaftProtos.RaftPeerRole role = trx.getServerRole();
     LOG.info("{}:{} {} {}={}", role, getId(), op, key, value);
-    try {
-      levelDB.close();
-      levelDB=null;
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
     return f;
   }
 
