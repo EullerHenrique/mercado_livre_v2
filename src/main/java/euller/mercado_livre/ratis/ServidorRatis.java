@@ -62,6 +62,6 @@ public class ServidorRatis {
             .setGroup(raftGroup)
             .build();
     raftServer.start();
-    System.out.println("Servidor Ratis com id " + id + " inciado  em" + id2addr.get(id));
+    System.out.println("Servidor Ratis com id " + id + " iniciado  em" + id2addr.get(id));
   }
 }

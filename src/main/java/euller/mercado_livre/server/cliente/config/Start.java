@@ -31,8 +31,10 @@ public class Start {
         return port;
     }
 
-    public void start() throws IOException{
-        int port = lerPortaServidor();
+    public void start(int port) throws IOException{
+        if(port==0) {
+            port = lerPortaServidor();
+        }
         server = ServerBuilder.forPort(port)
                 .addService(new ClienteServiceImpl())
                 .addService(new ProdutoServiceImpl())

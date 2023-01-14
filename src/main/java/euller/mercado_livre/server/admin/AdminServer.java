@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 public class AdminServer {
-    private static final Start startService  = new Start();
+    public static final Start startService  = new Start();
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        startService.start();
+        startService.start(0);
         startService.blockUntilShutdown();
     }
 

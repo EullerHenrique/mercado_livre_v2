@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static euller.mercado_livre.client.admin.view.InputsView.*;
-import static euller.mercado_livre.client.admin.view.InputsView.lerIdDoProduto;
 
 public class Start {
 
@@ -32,8 +31,10 @@ public class Start {
         return port;
     }
 
-    public void start() throws InterruptedException {
-        int port = lerPortaServidor();
+    public void start(int port)  throws InterruptedException {
+        if(port == 0) {
+            port = lerPortaServidor();
+        }
         logger.info("Client started, listening on " + port+"\n");
         String target = "localhost:"+port;
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe

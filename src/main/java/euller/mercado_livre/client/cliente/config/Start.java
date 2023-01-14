@@ -35,8 +35,10 @@ public class Start {
         return port;
     }
 
-    public void start() throws InterruptedException {
-        int port = lerPortaServidor();
+    public void start(int port) throws InterruptedException {
+        if(port == 0) {
+            port = lerPortaServidor();
+        }
         logger.info("Client started, listening on " + port+"\n");
         // Access a service running on the local machine on port 50051
         String target = "localhost:"+port;
