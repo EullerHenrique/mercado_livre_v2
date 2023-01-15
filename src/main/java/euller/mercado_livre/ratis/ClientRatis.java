@@ -6,14 +6,12 @@ import org.apache.ratis.conf.RaftProperties;
 import org.apache.ratis.grpc.GrpcFactory;
 import org.apache.ratis.protocol.*;
 import org.apache.ratis.thirdparty.com.google.protobuf.ByteString;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -47,7 +45,6 @@ public class ClientRatis {
             .build();
 
     RaftClientReply getValue;
-    CompletableFuture<RaftClientReply> compGetValue;
     String response = null;
     switch (function) {
       case "add":
@@ -75,12 +72,11 @@ public class ClientRatis {
         System.out.println("comando inválido");
     }
     client.close();
-
-    if(response.split(":")[1].equals("null")){
-      return null;
-    }else{
-      return response.split(":")[1].replace(".", ":");
+    if(response != null) {
+      if (!response.split(":")[1].equals("null")) {
+        return response.split(":")[1].replace(".", ":");
+      }
     }
-
+    return null;
   }
 }
