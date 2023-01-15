@@ -35,7 +35,6 @@ public class ProdutoRepository {
     public String modificarProduto(Produto produto) {
         logger.info("Modificando produto: "+produto+"\n");
         String PID = produto.getPID();
-        System.out.println(buscarProduto(PID));
         if(buscarProduto(PID) != null){
             if(apagarProduto(PID, false) != null){
                 String produtoJson = criarProduto(produto);
@@ -58,7 +57,6 @@ public class ProdutoRepository {
             //Get Of Database
             try {
                 String produtoJson = clientRatis.exec("getAdmin", PID, null);
-                System.out.println(produtoJson);
                 if(produtoJson != null){
                     //Save On Cache
                     produtos.put(PID, produtoJson);
