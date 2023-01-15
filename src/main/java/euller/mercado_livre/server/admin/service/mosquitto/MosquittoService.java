@@ -43,26 +43,15 @@ public class MosquittoService {
         client.subscribe(topicFrom, (topic, message) -> {
             logger.info("Subscribing topic: "+topic);
             logger.info("Subscribing message: "+message+"\n");
-            Gson gson = new Gson();
             String CID;
-            String clienteJson;
-            Cliente cliente;
             switch (topicFrom) {
                 case "server/cliente/cliente/verificar":
-                    publish(topicTo, clienteRepository.isCliente(new String(message.getPayload())));
-                    break;
-                case "server/admin/cliente/modificar":
-                    clienteJson = new String(message.getPayload());
-                    cliente = gson.fromJson(clienteJson, Cliente.class);
-                    if(!clienteJson.equals(clienteRepository.buscarCliente(cliente.getCID()))) {
-                        clienteRepository.modificarCLiente(cliente);
-                    }
+                    CID = new String(message.getPayload());
+                    publish(topicTo, clienteRepository.isCliente(CID));
                     break;
                 case "server/admin/cliente/apagar":
                     CID = new String(message.getPayload());
-                    if(clienteRepository.buscarCliente(CID)!=null) {
-                        clienteRepository.apagarCliente(CID,true);
-                    }
+                    clienteRepository.apagarCliente(CID,true);
                     break;
             }
         });
@@ -85,32 +74,22 @@ public class MosquittoService {
             String PID;
             switch (topicFrom){
                 case "server/cliente/produto/buscar":
-                    produtoJson = produtoRepository.buscarProduto(new String(message.getPayload()));
+                    PID = new String(message.getPayload());
+                    produtoJson = produtoRepository.buscarProduto(PID);
                     if(produtoJson == null){
                         publish(topicTo, "false");
                     }else{
                         publish(topicTo, produtoJson);
                     }
                     break;
-                case "server/admin/produto/criar":
-                    produto = gson.fromJson(new String(message.getPayload()), Produto.class);
-                    if(produtoRepository.buscarProduto(produto.getPID())==null){
-                        produtoRepository.criarProduto(produto);
-                    }
-                    break;
                 case "server/cliente/produto/modificar":
-                case "server/admin/produto/modificar":
                     produtoJson = new String(message.getPayload());
-                    produto = gson.fromJson(new String(message.getPayload()), Produto.class);
-                    if(!produtoJson.equals(produtoRepository.buscarProduto(produto.getPID()))){
-                        produtoRepository.modificarProduto(produto);
-                    }
+                    produto = gson.fromJson(produtoJson, Produto.class);
+                    produtoRepository.modificarProduto(produto);
                     break;
                 case "server/admin/produto/apagar":
                     PID = new String(message.getPayload());
-                    if(produtoRepository.buscarProduto(PID)!=null) {
-                        produtoRepository.apagarProduto(PID, true);
-                    }
+                    produtoRepository.apagarProduto(PID, true);
                     break;
             }
         });

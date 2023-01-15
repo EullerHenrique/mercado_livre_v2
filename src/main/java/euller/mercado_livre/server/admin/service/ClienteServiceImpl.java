@@ -18,7 +18,6 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
         try {
             MosquittoService mosquittoService = new MosquittoService();
             mosquittoService.subscribeCliente("server/cliente/cliente/verificar", "server/admin/cliente/verificar", clienteRepository);
-            mosquittoService.subscribeCliente("server/admin/cliente/modificar", "", clienteRepository);
             mosquittoService.subscribeCliente("server/admin/cliente/apagar", "", clienteRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);

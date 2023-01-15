@@ -57,27 +57,9 @@ public class MosquittoService {
             logger.info("Subscribing message: "+message+"\n");
             Gson gson = new Gson();
             Pedido pedido;
-            String pedidoJson;
-            switch (topicFrom){
-                case "server/cliente/pedido/criar":
-                    pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    if(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID())==null) {
-                        pedidoRepository.criarPedido(pedido);
-                    }
-                    break;
-                case "server/cliente/pedido/modificar":
-                    pedidoJson = new String(message.getPayload());
-                    pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    if(!pedidoJson.equals(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID()))) {
-                        pedidoRepository.modificarPedido(pedido);
-                    }
-                    break;
-                case "server/cliente/pedido/apagar":
-                    pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                    if(pedidoRepository.buscarPedido(pedido.getCID(), pedido.getOID())!=null) {
-                        pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID());
-                    }
-                    break;
+            if ("server/cliente/pedido/apagar".equals(topicFrom)) {
+                pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
+                pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID());
             }
         });
     }

@@ -24,6 +24,7 @@ public class ClienteRepository {
                 Gson gson = new Gson();
                 String clienteJson = gson.toJson(cliente);
                 clientRatis.exec("add", CID, clienteJson);
+                System.out.println("Produto salvo no database");
                 return clienteJson;
             }
         } catch (Exception e) {

@@ -19,8 +19,6 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
     public PedidoServiceImpl() {
         try {
             MosquittoService mosquittoService = new MosquittoService();
-            mosquittoService.subscribePedido("server/cliente/pedido/criar", pedidoRepository);
-            mosquittoService.subscribePedido("server/cliente/pedido/modificar", pedidoRepository);
             mosquittoService.subscribePedido("server/cliente/pedido/apagar", pedidoRepository);
         }catch (MqttException e) {
             throw new RuntimeException(e);
