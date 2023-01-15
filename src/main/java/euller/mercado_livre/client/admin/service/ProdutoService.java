@@ -70,7 +70,7 @@ public class ProdutoService {
     }
 
     public void apagarProduto(String PID) {
-        logger.info("Request: Exclua o cliente com o PID: " + PID+"\n");
+        logger.info("Request: Exclua o produto com o PID: " + PID+"\n");
         ApagarProdutoRequest request = ApagarProdutoRequest.newBuilder().setPID(PID).build();
         ApagarProdutoResponse response;
         try {

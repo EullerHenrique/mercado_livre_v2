@@ -59,7 +59,7 @@ public class MosquittoService {
             Pedido pedido;
             if ("server/cliente/pedido/apagar".equals(topicFrom)) {
                 pedido = gson.fromJson(new String(message.getPayload()), Pedido.class);
-                pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID());
+                pedidoRepository.apagarPedido(pedido.getCID(), pedido.getOID(), true);
             }
         });
     }

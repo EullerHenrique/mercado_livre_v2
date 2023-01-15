@@ -60,9 +60,10 @@ public class ClienteRepository {
             try {
                 String clienteJson = clientRatis.exec("getAdmin", CID, null);
                 if(clienteJson != null){
+                    System.out.println("Cliente encontrado no database");
                     //Save On Cache
                     clientes.put(CID, clienteJson);
-                    System.out.println("Cliente encontrado no database");
+                    System.out.println("Cliente salvo no database");
                 }else {
                     System.out.println("Cliente não encontrado no database");
                 }
@@ -102,17 +103,17 @@ public class ClienteRepository {
                 if (clientRatis.exec("delAdmin", CID, null) != null) {
                     System.out.println("Cliente apagado do database");
                     isDeleteDatabase = true;
+
+                    //Send Message for the others servers: Delete of Cache
+                    try {
+                        mosquittoService.publish("server/admin/cliente/apagar", CID);
+                        System.out.println("Mensagem 'Delete cliente of cache' enviada para os outros servidores");
+                    } catch (Exception e) {
+                        logger.info("Erro ao solicitar que os outros servidores apaguem o cliente do cache " + e.getMessage() + "\n");
+                    }
                 }
             } catch (Exception e) {
                 logger.info("Erro ao apagar o cliente do database: " + e.getMessage() + "\n");
-            }
-
-            //Send Message for the others servers: Delete of Cache
-            try {
-                mosquittoService.publish("server/admin/cliente/apagar", CID);
-                System.out.println("Mensagem 'Delete of cache' enviada para os outros servidores");
-            } catch (Exception e) {
-                logger.info("Erro ao solicitar que os outros servidores apaguem o cliente do cache " + e.getMessage() + "\n");
             }
         }else{
             if(isDeleteCache) {

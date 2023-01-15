@@ -58,9 +58,10 @@ public class ProdutoRepository {
             try {
                 String produtoJson = clientRatis.exec("getAdmin", PID, null);
                 if(produtoJson != null){
+                    System.out.println("Produto encontrado no database");
                     //Save On Cache
                     produtos.put(PID, produtoJson);
-                    System.out.println("Produto encontrado no database");
+                    System.out.println("Produto salvo no database");
                 }else {
                     System.out.println("Produto não encontrado no database");
                 }
@@ -91,17 +92,17 @@ public class ProdutoRepository {
                 if (clientRatis.exec("delAdmin", PID, null) != null) {
                     System.out.println("Produto apagado do database");
                     isDeleteDatabase = true;
+
+                    //Send Message for the others servers: Delete of Cache
+                    try {
+                        mosquittoService.publish("server/admin/produto/apagar", PID);
+                        System.out.println("Mensagem 'Delete produto of cache' enviada para os outros servidores");
+                    } catch (Exception e) {
+                        logger.info("Erro ao solicitar que os outros servidores apaguem o produto do cache " + e.getMessage() + "\n");
+                    }
                 }
             } catch (Exception e) {
                 logger.info("Erro ao apagar o produto do database: " + e.getMessage() + "\n");
-            }
-
-            //Send Message for the others servers: Delete of Cache
-            try {
-                mosquittoService.publish("server/admin/produto/apagar", PID);
-                System.out.println("Mensagem 'Delete of cache' enviada para os outros servidores");
-            } catch (Exception e) {
-                logger.info("Erro ao solicitar que os outros servidores apaguem o produto do cache " + e.getMessage() + "\n");
             }
         }else{
             if(isDeleteCache) {

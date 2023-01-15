@@ -82,7 +82,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
 
     @Override
     public void apagarPedido(ApagarPedidoRequest req, StreamObserver<ApagarPedidoResponse> responseObserver) {
-        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID());
+        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID(), false);
         if(pedidoJson == null){
             pedidoJson = "Pedido não encontrado";
         }
