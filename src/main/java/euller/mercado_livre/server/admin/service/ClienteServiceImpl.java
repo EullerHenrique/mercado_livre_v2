@@ -17,7 +17,6 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     public ClienteServiceImpl() {
         try {
             MosquittoService mosquittoService = new MosquittoService();
-            mosquittoService.subscribeCliente("server/admin/cliente/criar", "", clienteRepository);
             mosquittoService.subscribeCliente("server/cliente/cliente/verificar", "server/admin/cliente/verificar", clienteRepository);
             mosquittoService.subscribeCliente("server/admin/cliente/modificar", "", clienteRepository);
             mosquittoService.subscribeCliente("server/admin/cliente/apagar", "", clienteRepository);
@@ -63,7 +62,7 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     }
     @Override
     public void apagarCliente(ApagarClienteRequest req, StreamObserver<ApagarClienteResponse> responseObserver) {
-        String msg = clienteRepository.apagarCliente(req.getCID());
+        String msg = clienteRepository.apagarCliente(req.getCID(),false);
         if(msg == null){
             msg = "Cliente não encontrado";
         }

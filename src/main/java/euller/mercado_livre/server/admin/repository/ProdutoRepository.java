@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class ProdutoRepository {
 
     private final Logger logger = Logger.getLogger(ProdutoRepository.class.getName());
-    private Hashtable<String, String> produtos = new Hashtable<>();
+    private final Hashtable<String, String> produtos = new Hashtable<>();
     private final ClientRatis clientRatis = new ClientRatis();
 
     private final MosquittoService mosquittoService = new MosquittoService();
@@ -27,7 +27,7 @@ public class ProdutoRepository {
                 return produtoJson;
             }
         } catch (Exception e) {
-            logger.info("Erro ao buscar o produto: "+e.getMessage()+"\n");
+            logger.info("Erro ao buscar o produto no database: "+e.getMessage()+"\n");
         }
         return null;
     }

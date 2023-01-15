@@ -51,12 +51,6 @@ public class MosquittoService {
                 case "server/cliente/cliente/verificar":
                     publish(topicTo, clienteRepository.isCliente(new String(message.getPayload())));
                     break;
-                case "server/admin/cliente/criar":
-                    cliente = gson.fromJson(new String(message.getPayload()), Cliente.class);
-                    if(clienteRepository.buscarCliente(cliente.getCID())==null){
-                        clienteRepository.criarCliente(cliente);
-                    }
-                    break;
                 case "server/admin/cliente/modificar":
                     clienteJson = new String(message.getPayload());
                     cliente = gson.fromJson(clienteJson, Cliente.class);
@@ -67,7 +61,7 @@ public class MosquittoService {
                 case "server/admin/cliente/apagar":
                     CID = new String(message.getPayload());
                     if(clienteRepository.buscarCliente(CID)!=null) {
-                        clienteRepository.apagarCliente(CID);
+                        clienteRepository.apagarCliente(CID,true);
                     }
                     break;
             }
