@@ -115,7 +115,7 @@ public class MosquittoService {
                 case "server/admin/produto/apagar":
                     PID = new String(message.getPayload());
                     if(produtoRepository.buscarProduto(PID)!=null) {
-                        produtoRepository.apagarProduto(PID);
+                        produtoRepository.apagarProduto(PID, true);
                     }
                     break;
             }

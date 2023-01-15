@@ -176,7 +176,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
             break;
           } catch (Exception ignored) {}
         }
-        result += null;
+        result += "Cliente/Produto apagado";
         break;
       case "delClient":
         String keyString = buscarPedido(opKeyValue, 2);
@@ -194,6 +194,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
           result += null;
         }
     }
+
     final CompletableFuture<Message> f = CompletableFuture.completedFuture(Message.valueOf(result));
 
     final RaftProtos.RaftPeerRole role = trx.getServerRole();

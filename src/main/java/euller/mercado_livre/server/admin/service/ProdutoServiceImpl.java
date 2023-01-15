@@ -64,7 +64,7 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     }
     @Override
     public void apagarProduto(ApagarProdutoRequest req, StreamObserver<ApagarProdutoResponse> responseObserver) {
-        String msg = produtoRepository.apagarProduto(req.getPID());
+        String msg = produtoRepository.apagarProduto(req.getPID(), false);
         if(msg == null) {
             msg = "Produto não encontrado";
         }
