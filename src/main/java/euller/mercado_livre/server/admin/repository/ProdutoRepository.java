@@ -88,11 +88,9 @@ public class ProdutoRepository {
         if(!otherServerUpdate) {
             //Delete of Database
             try {
-                if (buscarProduto(PID) != null) {
-                    if (clientRatis.exec("delAdmin", PID, null) != null) {
-                        System.out.println("Produto apagado do database");
-                        isDeleteDatabase = true;
-                    }
+                if (clientRatis.exec("delAdmin", PID, null) != null) {
+                    System.out.println("Produto apagado do database");
+                    isDeleteDatabase = true;
                 }
             } catch (Exception e) {
                 logger.info("Erro ao apagar o produto do database: " + e.getMessage() + "\n");
@@ -106,7 +104,9 @@ public class ProdutoRepository {
                 logger.info("Erro ao solicitar que os outros servidores apaguem o produto do cache " + e.getMessage() + "\n");
             }
         }else{
-            System.out.println("O servidor recebeu a mensagem e apagou o produto do cache");
+            if(isDeleteCache) {
+                System.out.println("O servidor recebeu a mensagem e apagou o produto do cache");
+            }
         }
 
         if(isDeleteCache || isDeleteDatabase) {

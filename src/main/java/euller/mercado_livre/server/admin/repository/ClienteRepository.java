@@ -99,11 +99,9 @@ public class ClienteRepository {
         if(!otherServerUpdate) {
             //Delete of Database
             try {
-                if (buscarCliente(CID) != null) {
-                    if (clientRatis.exec("delAdmin", CID, null) != null) {
-                        System.out.println("Cliente apagado do database");
-                        isDeleteDatabase = true;
-                    }
+                if (clientRatis.exec("delAdmin", CID, null) != null) {
+                    System.out.println("Cliente apagado do database");
+                    isDeleteDatabase = true;
                 }
             } catch (Exception e) {
                 logger.info("Erro ao apagar o cliente do database: " + e.getMessage() + "\n");
@@ -117,7 +115,9 @@ public class ClienteRepository {
                 logger.info("Erro ao solicitar que os outros servidores apaguem o cliente do cache " + e.getMessage() + "\n");
             }
         }else{
-            System.out.println("O servidor recebeu a mensagem e apagou o cliente do cache");
+            if(isDeleteCache) {
+                System.out.println("O servidor recebeu a mensagem e apagou o cliente do cache");
+            }
         }
 
         if(isDeleteCache || isDeleteDatabase) {

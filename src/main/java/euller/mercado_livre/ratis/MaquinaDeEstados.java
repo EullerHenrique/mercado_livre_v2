@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+
 import org.iq80.leveldb.DB;
 import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
 import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
@@ -75,7 +76,6 @@ public class MaquinaDeEstados extends BaseStateMachine {
       return null;
     } else {
       String[] results = result.toString().split(";");
-      boolean flag = false;
       StringBuilder resultFinal = new StringBuilder("");
       for (String r : results) {
         //if r.contains(CID)
@@ -168,15 +168,28 @@ public class MaquinaDeEstados extends BaseStateMachine {
         result += null;
         break;
       case "delAdmin":
-        while(levelDB == null) {
-          try {
-            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
-            levelDB.delete(key.getBytes());
-            levelDB.close();
-            break;
-          } catch (Exception ignored) {}
+        boolean isPresent = false;
+        try {
+          String pedidoJson = query(Message.valueOf("getAdmin:" + key)).get().getContent().toString(Charset.defaultCharset());
+          if(!pedidoJson.split(":")[1].equals("null")){
+            isPresent = true;
+          }
+        } catch (Exception ignored) {}
+        System.out.println("id"+key+"idPresent?"+isPresent);
+        if(isPresent) {
+          while (levelDB == null) {
+            try {
+              levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+              levelDB.delete(key.getBytes());
+              levelDB.close();
+              break;
+            } catch (Exception ignored) {
+            }
+          }
+          result += "Cliente/Produto apagado";
+        }else{
+          result += null;
         }
-        result += "Cliente/Produto apagado";
         break;
       case "delClient":
         String keyString = buscarPedido(opKeyValue, 2);
