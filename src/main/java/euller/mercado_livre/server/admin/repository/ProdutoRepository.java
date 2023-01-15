@@ -87,20 +87,20 @@ public class ProdutoRepository {
             isDeleteCache = true;
         }
 
-        //Delete of Database
-        try {
-            if (buscarProduto(PID) != null) {
-                if (clientRatis.exec("delAdmin", PID, null) != null) {
-                    System.out.println("Produto apagado do database");
-                    isDeleteDatabase = true;
-                }
-            }
-        } catch (Exception e) {
-            logger.info("Erro ao apagar o produto do database: " + e.getMessage() + "\n");
-        }
-
-        //Send Message for the others servers: Delete of Cache
         if(!otherServerUpdate) {
+            //Delete of Database
+            try {
+                if (buscarProduto(PID) != null) {
+                    if (clientRatis.exec("delAdmin", PID, null) != null) {
+                        System.out.println("Produto apagado do database");
+                        isDeleteDatabase = true;
+                    }
+                }
+            } catch (Exception e) {
+                logger.info("Erro ao apagar o produto do database: " + e.getMessage() + "\n");
+            }
+
+            //Send Message for the others servers: Delete of Cache
             try {
                 mosquittoService.publish("server/admin/produto/apagar", PID);
                 System.out.println("Mensagem 'Delete of cache' enviada para os outros servidores");
