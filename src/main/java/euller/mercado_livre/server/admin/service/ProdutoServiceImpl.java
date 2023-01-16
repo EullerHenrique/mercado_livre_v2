@@ -19,7 +19,6 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
             MosquittoService mosquittoService = new MosquittoService();
             mosquittoService.subscribeProduto("server/cliente/produto/buscar", "server/admin/produto/buscar", produtoRepository);
             mosquittoService.subscribeProduto("server/cliente/produto/modificar", "", produtoRepository);
-            mosquittoService.subscribeProduto("server/admin/produto/apagar", "", produtoRepository);
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
@@ -62,7 +61,7 @@ public class ProdutoServiceImpl extends ProdutoServiceGrpc.ProdutoServiceImplBas
     }
     @Override
     public void apagarProduto(ApagarProdutoRequest req, StreamObserver<ApagarProdutoResponse> responseObserver) {
-        String msg = produtoRepository.apagarProduto(req.getPID(), false);
+        String msg = produtoRepository.apagarProduto(req.getPID(), true);
         if(msg == null) {
             msg = "Produto não encontrado";
         }
