@@ -29,7 +29,10 @@ public class MaquinaDeEstados extends BaseStateMachine {
           String keyString = new String(key, StandardCharsets.UTF_8);
           String valueString = new String(value, StandardCharsets.UTF_8);
           valueString = keyString + "--" + valueString.replace(":", ".");
-          result.append(valueString).append(";");
+          if(keyString.contains("pedido->")) {
+            System.out.println("keyString: " + keyString);
+            result.append(valueString).append(";");
+          }
         });
         levelDB.close();
         break;
@@ -46,7 +49,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
           if(type == 1) {
             return r.split("--")[1];
           }else if(type == 2){
-            return r.split("--")[0];
+            return "pedido->"+r.split("--")[0];
           }
         }
       }
@@ -65,7 +68,10 @@ public class MaquinaDeEstados extends BaseStateMachine {
           String keyString = new String(key, StandardCharsets.UTF_8);
           String valueString = new String(value, StandardCharsets.UTF_8);
           valueString = keyString + "--" + valueString.replace(":", ".");
-          result.append(valueString).append(";");
+          if(keyString.contains("pedido->")) {
+            System.out.println("keyString: " + keyString);
+            result.append(valueString).append(";");
+          }
         });
         levelDB.close();
         break;
@@ -131,12 +137,14 @@ public class MaquinaDeEstados extends BaseStateMachine {
   @Override
   public CompletableFuture<Message> query(Message request) {
     String[] opKey = request.getContent().toString(Charset.defaultCharset()).split(":");
-    if(opKey[0].equals("getAdmin")){
-      return queryAdmin(opKey);
-    }else if(opKey[0].equals("getClient")){
-      return queryClient(opKey);
-    }else{
-      return null;
+    switch (opKey[0]) {
+      case "getCliente":
+      case "getProduto":
+        return queryAdmin(opKey);
+      case "getPedido":
+        return queryClient(opKey);
+      default:
+        return null;
     }
   }
 
@@ -154,8 +162,9 @@ public class MaquinaDeEstados extends BaseStateMachine {
 
     String key = opKeyValue.length < 2 ? "" : opKeyValue[1];
     String value = opKeyValue.length < 3 ? "" : opKeyValue[2];
+    boolean isPresent = false;
     switch (op) {
-      case "add":
+      case "addCliente":
         value = value.replace(".", ":");
         while(levelDB == null) {
           try {
@@ -167,10 +176,33 @@ public class MaquinaDeEstados extends BaseStateMachine {
         }
         result += null;
         break;
-      case "delAdmin":
-        boolean isPresent = false;
+      case "addProduto":
+        value = value.replace(".", ":");
+        while(levelDB == null) {
+          try {
+            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+            levelDB.put(bytes(key), bytes(value));
+                    levelDB.close();
+            break;
+          } catch (Exception ignored) {}
+        }
+        result += null;
+        break;
+      case "addPedido":
+        value = value.replace(".", ":");
+        while(levelDB == null) {
+          try {
+            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+            levelDB.put(bytes(key), bytes(value));
+            levelDB.close();
+            break;
+          } catch (Exception ignored) {}
+        }
+        result += null;
+        break;
+      case "delCliente":
         try {
-          String pedidoJson = query(Message.valueOf("getAdmin:" + key)).get().getContent().toString(Charset.defaultCharset());
+          String pedidoJson = query(Message.valueOf("getCliente:" + key)).get().getContent().toString(Charset.defaultCharset());
           if(!pedidoJson.split(":")[1].equals("null")){
             isPresent = true;
           }
@@ -186,12 +218,35 @@ public class MaquinaDeEstados extends BaseStateMachine {
             } catch (Exception ignored) {
             }
           }
-          result += "Cliente/Produto apagado";
+          result += "Cliente apagado";
         }else{
           result += null;
         }
         break;
-      case "delClient":
+      case "delProduto":
+        try {
+          String pedidoJson = query(Message.valueOf("getProduto:" + key)).get().getContent().toString(Charset.defaultCharset());
+          if(!pedidoJson.split(":")[1].equals("null")){
+            isPresent = true;
+          }
+        } catch (Exception ignored) {}
+        System.out.println("id"+key+"idPresent?"+isPresent);
+        if(isPresent) {
+          while (levelDB == null) {
+            try {
+              levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+              levelDB.delete(key.getBytes());
+              levelDB.close();
+              break;
+            } catch (Exception ignored) {
+            }
+          }
+          result += "Produto apagado";
+        }else{
+          result += null;
+        }
+        break;
+      case "delPedido":
         String keyString = buscarPedido(opKeyValue, 2);
         if(keyString != null) {
           while(levelDB == null) {

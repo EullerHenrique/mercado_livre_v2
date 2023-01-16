@@ -41,7 +41,7 @@ public class PedidoRepository {
             oidPedidos.add(pedido);
             cidPedidos.put(CID, oidPedidos);
             String pedidoBD = cidPedidosToJson(CID, OID, cidPedidos);
-            clientRatis.exec("add", UUID.randomUUID().toString(), pedidoBD);
+            clientRatis.exec("addPedido", UUID.randomUUID().toString(), pedidoBD);
             System.out.println("Pedido salvo no database!");
             return pedidoBD;
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class PedidoRepository {
             System.out.println("Pedido não encontrado no cache");
             //Get Of Database
             try {
-                String pedidoJson = clientRatis.exec("getClient", CID, OID);
+                String pedidoJson = clientRatis.exec("getPedido", CID, OID);
                 if (pedidoJson != null) {
                     System.out.println("Pedido encontrado no database!");
                     //Save On Cache
@@ -224,10 +224,11 @@ public class PedidoRepository {
                 }
             }
         }
+        System.out.println("otherServerUpdate: " + otherServerUpdate);
         if (!otherServerUpdate) {
             //Delete Of Database
             try {
-                if(clientRatis.exec("delClient", CID, OID) != null) {
+                if(clientRatis.exec("delPedido", CID, OID) != null) {
                     System.out.println("Pedido apagado do database!");
                     isDeleteDatabase = true;
 
@@ -264,7 +265,7 @@ public class PedidoRepository {
 
     public String buscarPedidosPeloCliente(String CID) {
         try {
-            return clientRatis.exec("getClient", CID, "cliente");
+            return clientRatis.exec("getPedido", CID, "cliente");
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -290,13 +291,5 @@ public class PedidoRepository {
         }
         return null;
     }
-
-
-
-    //Criar Pedido -> Feito
-    //Modificar Pedido -> Fazer buscar pedidos pelo cliente, Feito -> ?
-    //Buscar Pedido -> Feito
-    //Buscar Pedidos -> Fazer buscar pedidos pelo cliente -> Feito -> ?
-    //Apagar Pedido -> Feito
 
 }

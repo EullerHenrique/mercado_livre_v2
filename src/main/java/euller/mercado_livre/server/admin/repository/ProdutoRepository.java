@@ -22,7 +22,7 @@ public class ProdutoRepository {
             if (buscarProduto(PID) == null) {
                 Gson gson = new Gson();
                 String produtoJson = gson.toJson(produto);
-                clientRatis.exec("add", PID, produtoJson);
+                clientRatis.exec("addProduto", PID, produtoJson);
                 System.out.println("Produto salvo no database");
                 return produtoJson;
             }
@@ -56,12 +56,12 @@ public class ProdutoRepository {
             System.out.println("Produto não encontrado no cache");
             //Get Of Database
             try {
-                String produtoJson = clientRatis.exec("getAdmin", PID, null);
+                String produtoJson = clientRatis.exec("getProduto", PID, null);
                 if(produtoJson != null){
                     System.out.println("Produto encontrado no database");
                     //Save On Cache
                     produtos.put(PID, produtoJson);
-                    System.out.println("Produto salvo no database");
+                    System.out.println("Produto salvo no cache");
                 }else {
                     System.out.println("Produto não encontrado no database");
                 }
@@ -89,7 +89,7 @@ public class ProdutoRepository {
         if(!otherServerUpdate) {
             //Delete of Database
             try {
-                if (clientRatis.exec("delAdmin", PID, null) != null) {
+                if (clientRatis.exec("delProduto", PID, null) != null) {
                     System.out.println("Produto apagado do database");
                     isDeleteDatabase = true;
 

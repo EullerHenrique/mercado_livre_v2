@@ -23,8 +23,8 @@ public class ClienteRepository {
             if (buscarCliente(CID) == null) {
                 Gson gson = new Gson();
                 String clienteJson = gson.toJson(cliente);
-                clientRatis.exec("add", CID, clienteJson);
-                System.out.println("Produto salvo no database");
+                clientRatis.exec("addCliente", CID, clienteJson);
+                System.out.println("Cliente salvo no database");
                 return clienteJson;
             }
         } catch (Exception e) {
@@ -58,12 +58,12 @@ public class ClienteRepository {
             System.out.println("Cliente não encontrado no cache");
             //Get Of Database
             try {
-                String clienteJson = clientRatis.exec("getAdmin", CID, null);
+                String clienteJson = clientRatis.exec("getCliente", CID, null);
                 if(clienteJson != null){
                     System.out.println("Cliente encontrado no database");
                     //Save On Cache
                     clientes.put(CID, clienteJson);
-                    System.out.println("Cliente salvo no database");
+                    System.out.println("Cliente salvo no cache");
                 }else {
                     System.out.println("Cliente não encontrado no database");
                 }
@@ -100,7 +100,7 @@ public class ClienteRepository {
         if(!otherServerUpdate) {
             //Delete of Database
             try {
-                if (clientRatis.exec("delAdmin", CID, null) != null) {
+                if (clientRatis.exec("delCliente", CID, null) != null) {
                     System.out.println("Cliente apagado do database");
                     isDeleteDatabase = true;
 

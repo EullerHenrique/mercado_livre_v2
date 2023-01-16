@@ -47,25 +47,43 @@ public class ClientRatis {
     RaftClientReply getValue;
     String response = null;
     switch (function) {
-      case "add":
+      case "addCliente":
         value = value.replace(":", ".");
-        getValue = client.io().send(Message.valueOf("add:" + key + ":" +value));
+        getValue = client.io().send(Message.valueOf("addCliente:" + "cliente->"+key + ":" +value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "getAdmin":
-        getValue = client.io().sendReadOnly(Message.valueOf("getAdmin:" + key));
+      case "addProduto":
+        value = value.replace(":", ".");
+        getValue = client.io().send(Message.valueOf("addProduto:" + "produto->"+key + ":" +value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "getClient":
-        getValue = client.io().sendReadOnly(Message.valueOf("getClient:" + key + ":" + value));
+      case "addPedido":
+        value = value.replace(":", ".");
+        getValue = client.io().send(Message.valueOf("addPedido:" + "pedido->"+key + ":" +value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "delAdmin":
-        getValue = client.io().send(Message.valueOf("delAdmin:" + key));
+      case "getCliente":
+        getValue = client.io().sendReadOnly(Message.valueOf("getCliente:" + "cliente->"+key));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
-      case "delClient":
-        getValue = client.io().send(Message.valueOf("delClient:" + key + ":" + value));
+      case "getProduto":
+        getValue = client.io().sendReadOnly(Message.valueOf("getProduto:" + "produto->"+key));
+        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+        break;
+      case "getPedido":
+        getValue = client.io().sendReadOnly(Message.valueOf("getPedido:" + key + ":" + value));
+        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+        break;
+      case "delCliente":
+        getValue = client.io().send(Message.valueOf("delCliente:" + "cliente->"+key));
+        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+        break;
+      case "delProduto":
+        getValue = client.io().send(Message.valueOf("delProduto:" + "produto->"+key));
+        response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
+        break;
+      case "delPedido":
+        getValue = client.io().send(Message.valueOf("delPedido:" +  key + ":" + value));
         response = getValue.getMessage().getContent().toString(Charset.defaultCharset());
         break;
       default:
