@@ -45,7 +45,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
       String[] results = result.toString().split(";");
       for (String r : results) {
         //if r.contains(CID) and r.contains(OID)
-        if (r.contains(opKey[1]) && r.contains(opKey[2])) {
+        if (r.contains("\"CID\".\""+opKey[1]+"\"") && r.contains("\"OID\".\""+opKey[2]+"\"")) {
           if(type == 1) {
             return r.split("--")[1];
           }else if(type == 2){
@@ -85,7 +85,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
       StringBuilder resultFinal = new StringBuilder("");
       for (String r : results) {
         //if r.contains(CID)
-        if (r.contains(opKey[1])) {
+        if (r.contains("\"CID\".\""+opKey[1]+"\"")) {
           resultFinal.append(r.split("--")[1]).append(";");
         }
       }
