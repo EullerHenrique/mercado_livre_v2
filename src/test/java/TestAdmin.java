@@ -21,7 +21,8 @@ class IniciarServidorAdmin{
         AdminServer.startService.start(8086);
     }
 }
-
+//7cf84abb-087d-4ea8-87a7-78e6a0dbc1fd
+//d1a399b7-a317-4229-8de3-589a226871f0
 class TesteCriarCliente {
     public static void main(String[] args) throws InterruptedException {;
         //for(int i = 0; i<=100;i++) {
@@ -29,8 +30,6 @@ class TesteCriarCliente {
         //}
     }
 }
-//4c1880e9-7879-4000-8503-729e36726332
-//8538f187-2646-49cc-a09d-afb258decca0
 
 class TesteCriarProduto{
     public static void main(String[] args) throws InterruptedException {

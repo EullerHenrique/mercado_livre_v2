@@ -3,8 +3,9 @@ package euller.mercado_livre.server.admin.repository;
 import com.google.gson.Gson;
 import euller.mercado_livre.ratis.ClientRatis;
 import euller.mercado_livre.server.admin.model.Cliente;
-import euller.mercado_livre.server.admin.service.mosquitto.MosquittoService;
 import java.util.Hashtable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Logger;
 
 public class ClienteRepository {
@@ -13,8 +14,16 @@ public class ClienteRepository {
     private final Hashtable<String, String> clientes = new Hashtable<>();
     private final ClientRatis clientRatis = new ClientRatis();
 
-    private final MosquittoService mosquittoService = new MosquittoService();
-
+    public void salvarCLienteNoCache(String CID, String clienteJson){
+        clientes.put(CID, clienteJson);
+        System.out.println("Cliente salvo no cache");
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = () -> {
+            System.out.println("A vida útil do cache se esgotou!");
+            apagarCliente(CID, false);
+        };
+        executor.schedule(task, 60, java.util.concurrent.TimeUnit.SECONDS);
+    }
 
     public String criarCliente(Cliente cliente) {
         logger.info("Criando cliente: "+cliente+"\n");
@@ -25,7 +34,7 @@ public class ClienteRepository {
                 String clienteJson = gson.toJson(cliente);
                 clientRatis.exec("addCliente", CID, clienteJson);
                 System.out.println("Cliente salvo no database");
-                return clienteJson;
+                return buscarCliente(CID);
             }
         } catch (Exception e) {
             logger.info("Erro ao buscar o cliente no database: "+e.getMessage()+"\n");
@@ -36,8 +45,8 @@ public class ClienteRepository {
     public String modificarCLiente(Cliente cliente) {
         logger.info("Modificando cliente: "+cliente+"\n");
         String CID = cliente.getCID();
-        if(buscarCliente(CID) !=null){
-            if(apagarCliente(CID,false) != null){
+        if(buscarCliente(CID) != null){
+            if(apagarCliente(CID,true) != null){
                 String clienteJson = criarCliente(cliente);
                 if(clienteJson != null){
                     return clienteJson;
@@ -56,14 +65,16 @@ public class ClienteRepository {
             return clientes.get(CID);
         }else {
             System.out.println("Cliente não encontrado no cache");
+
             //Get Of Database
             try {
                 String clienteJson = clientRatis.exec("getCliente", CID, null);
                 if(clienteJson != null){
                     System.out.println("Cliente encontrado no database");
-                    //Save On Cache
-                    clientes.put(CID, clienteJson);
-                    System.out.println("Cliente salvo no cache");
+
+                    //Save Of Cache and delete after 1 minute
+                    salvarCLienteNoCache(CID, clienteJson);
+
                 }else {
                     System.out.println("Cliente não encontrado no database");
                 }
@@ -84,7 +95,7 @@ public class ClienteRepository {
         return "false";
     }
 
-    public String apagarCliente(String CID, boolean otherServerUpdate) {
+    public String apagarCliente(String CID, boolean deleteOfDatabase) {
         logger.info("Apagando cliente: " + CID + "\n");
 
         boolean isDeleteCache = false;
@@ -97,27 +108,15 @@ public class ClienteRepository {
             isDeleteCache = true;
         }
 
-        if(!otherServerUpdate) {
+        if(deleteOfDatabase) {
             //Delete of Database
             try {
                 if (clientRatis.exec("delCliente", CID, null) != null) {
                     System.out.println("Cliente apagado do database");
                     isDeleteDatabase = true;
-
-                    //Send Message for the others servers: Delete of Cache
-                    try {
-                        mosquittoService.publish("server/admin/cliente/apagar", CID);
-                        System.out.println("Mensagem 'Delete cliente of cache' enviada para os outros servidores");
-                    } catch (Exception e) {
-                        logger.info("Erro ao solicitar que os outros servidores apaguem o cliente do cache " + e.getMessage() + "\n");
-                    }
                 }
             } catch (Exception e) {
                 logger.info("Erro ao apagar o cliente do database: " + e.getMessage() + "\n");
-            }
-        }else{
-            if(isDeleteCache) {
-                System.out.println("O servidor recebeu a mensagem e apagou o cliente do cache");
             }
         }
 

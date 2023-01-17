@@ -47,11 +47,9 @@ public class MosquittoService {
             switch (topicFrom) {
                 case "server/cliente/cliente/verificar":
                     CID = new String(message.getPayload());
+                    //Del Of Cache
+                    clienteRepository.apagarCliente(CID, false);
                     publish(topicTo, clienteRepository.isCliente(CID));
-                    break;
-                case "server/admin/cliente/apagar":
-                    CID = new String(message.getPayload());
-                    clienteRepository.apagarCliente(CID,true);
                     break;
             }
         });
@@ -75,6 +73,8 @@ public class MosquittoService {
             switch (topicFrom){
                 case "server/cliente/produto/buscar":
                     PID = new String(message.getPayload());
+                    //Del Of Cache
+                    produtoRepository.apagarProduto(PID, false);
                     produtoJson = produtoRepository.buscarProduto(PID);
                     if(produtoJson == null){
                         publish(topicTo, "false");
@@ -85,11 +85,9 @@ public class MosquittoService {
                 case "server/cliente/produto/modificar":
                     produtoJson = new String(message.getPayload());
                     produto = gson.fromJson(produtoJson, Produto.class);
+                    //Del Of Cache
+                    produtoRepository.apagarProduto(produto.getPID(), false);
                     produtoRepository.modificarProduto(produto);
-                    break;
-                case "server/admin/produto/apagar":
-                    PID = new String(message.getPayload());
-                    produtoRepository.apagarProduto(PID, true);
                     break;
             }
         });

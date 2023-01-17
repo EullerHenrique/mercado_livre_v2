@@ -94,16 +94,20 @@ public class StartTest {
                         String cid = inputsView.lerIdDoCliente(valores[0]);
                         String oid = inputsView.lerIdDoPedido(valores[1]);
 
-                        String pedidoAntigoJson  = pedidoService.buscarPedido(cid, oid);
-                        if ("Pedido não encontrado".equals(pedidoAntigoJson)) {
-                            System.out.println("\nPedido não encontrado.");
-                        }else {
-                            ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(valores[2]);
-                            if (produtoDTO != null) {
-                                PedidoDTO pedidoDTOAntigo;
-                                pedidoDTOAntigo = gson.fromJson(pedidoAntigoJson, PedidoDTO.class);
-                                PedidoDTO pedidoDTONovo = inputsView.lerPedidoAtualizado(pedidoDTOAntigo, produtoDTO, quantidadeProdutos[0]);
-                                pedidoService.modificarPedido(pedidoDTOAntigo, pedidoDTONovo, produtoDTO);
+                        if(cid != null && oid != null) {
+                            String pedidoAntigoJson = pedidoService.buscarPedido(cid, oid);
+                            if ("Pedido não encontrado".equals(pedidoAntigoJson)) {
+                                System.out.println("\nPedido não encontrado.");
+                            } else {
+                                ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(valores[2]);
+                                if (produtoDTO != null) {
+                                    PedidoDTO pedidoDTOAntigo;
+                                    pedidoDTOAntigo = gson.fromJson(pedidoAntigoJson, PedidoDTO.class);
+                                    PedidoDTO pedidoDTONovo = inputsView.lerPedidoAtualizado(pedidoDTOAntigo, produtoDTO, quantidadeProdutos[0]);
+                                    if (pedidoDTONovo != null) {
+                                        pedidoService.modificarPedido(pedidoDTOAntigo, pedidoDTONovo, produtoDTO);
+                                    }
+                                }
                             }
                         }
                     } else if (opcao == 3) {
@@ -114,7 +118,6 @@ public class StartTest {
                                 pedidoService.buscarPedido(cid, oid);
                             }
                         }
-
                     } else if (opcao == 4) {
                         String cid = inputsView.lerIdDoCliente(valores[0]);
                         if(cid != null) {

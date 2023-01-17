@@ -61,7 +61,7 @@ public class ClienteServiceImpl extends ClienteServiceGrpc.ClienteServiceImplBas
     }
     @Override
     public void apagarCliente(ApagarClienteRequest req, StreamObserver<ApagarClienteResponse> responseObserver) {
-        String msg = clienteRepository.apagarCliente(req.getCID(),false);
+        String msg = clienteRepository.apagarCliente(req.getCID(),true);
         if(msg == null){
             msg = "Cliente não encontrado";
         }

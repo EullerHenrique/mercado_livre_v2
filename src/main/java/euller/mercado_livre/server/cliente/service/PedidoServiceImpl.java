@@ -24,7 +24,6 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
             throw new RuntimeException(e);
         }
     }
-
     @Override
     public void criarPedido(CriarPedidoRequest req, StreamObserver<CriarPedidoResponse> responseObserver) {
         String CID = req.getCID();
@@ -72,7 +71,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         List<Hashtable<String, Integer>> pedidos = pedidoRepository.buscarPedidos(req.getCID());
         BuscarPedidosResponse reply;
         if(pedidos == null){
-            reply = BuscarPedidosResponse.newBuilder().setMessage("O cliente"+req.getCID()+" não possui pedidos").build();
+            reply = BuscarPedidosResponse.newBuilder().setMessage("O cliente" + req.getCID()+" não possui pedidos").build();
         }else{
             reply = BuscarPedidosResponse.newBuilder().setMessage(req.getCID()+":"+pedidos).build();
         }
@@ -82,7 +81,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
 
     @Override
     public void apagarPedido(ApagarPedidoRequest req, StreamObserver<ApagarPedidoResponse> responseObserver) {
-        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID(), false);
+        String pedidoJson = pedidoRepository.apagarPedido(req.getCID(), req.getOID(), true);
         if(pedidoJson == null){
             pedidoJson = "Pedido não encontrado";
         }
