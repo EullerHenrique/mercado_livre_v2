@@ -126,7 +126,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
       if(pedidos != null){
         result = pedidos;
       }else{
-        result = "false";
+        result = "null";
       }
     }else {
       result = buscarPedido(opKey, 1);

@@ -15,14 +15,16 @@ public class ClienteRepository {
     private final ClientRatis clientRatis = new ClientRatis();
 
     public void salvarCLienteNoCache(String CID, String clienteJson){
+        //Save On Cache
         clientes.put(CID, clienteJson);
         System.out.println("Cliente salvo no cache");
+        //Delete of cache after x seconds
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Runnable task = () -> {
             System.out.println("A vida útil do cache se esgotou!");
             apagarCliente(CID, false);
         };
-        executor.schedule(task, 60, java.util.concurrent.TimeUnit.SECONDS);
+        executor.schedule(task, 30, java.util.concurrent.TimeUnit.SECONDS);
     }
 
     public String criarCliente(Cliente cliente) {

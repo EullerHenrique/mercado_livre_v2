@@ -12,14 +12,14 @@ class IniciarServidorCliente{
         ClienteServer.startService.start(9096);
     }
 }
-//7cf84abb-087d-4ea8-87a7-78e6a0dbc1fd
-//d1a399b7-a317-4229-8de3-589a226871f0
+//ddb8ca2d-86c6-4944-8656-60f3125b3f55
+//6993c9d3-b5f0-4c6d-9f35-485c9805565a
 
 class TesteCriarPedido {
     public static void main(String[] args) throws InterruptedException {;
         //Porta -- List->Operação -- List->Deseja Adiconar Mais um produto -- List->Quantidade do produto -- CID e PID
-        ClienteClient.startServiceTeste.start(9091, new int[]{1},new int[]{2}, new int[]{250},
-                new String[]{"7cf84abb-087d-4ea8-87a7-78e6a0dbc1fd", "d1a399b7-a317-4229-8de3-589a226871f0"});
+        ClienteClient.startServiceTeste.start(9091, new int[]{1},new int[]{2}, new int[]{9},
+                new String[]{"ddb8ca2d-86c6-4944-8656-60f3125b3f55", "6993c9d3-b5f0-4c6d-9f35-485c9805565a"});
     }
 }
 
@@ -34,7 +34,7 @@ class TesteBuscarPedido{
         ClienteClient.startServiceTeste.start(9096, new int[]{3}, new int[]{}, new int[]{}, new String[]{cid, oid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        buscarPedido("2e07f24b-6bb5-4333-9d3d-a640872f4cc2", "e5fc507f-7a07-4880-9fb9-0fe63e399448");
+        buscarPedido("0daecae7-e677-4386-81aa-02afce324edb", "df05b0b0-cc2b-4394-8af7-1aef675c6a8f");
     }
 }
 
@@ -49,7 +49,7 @@ class TesteBuscarPedidos{
         ClienteClient.startServiceTeste.start(9096, new int[]{4}, new int[]{}, new int[]{}, new String[]{cid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        buscarPedidos("7cf84abb-087d-4ea8-87a7-78e6a0dbc1fd");
+        buscarPedidos("ddb8ca2d-86c6-4944-8656-60f3125b3f55");
     }
 }
 
@@ -58,9 +58,9 @@ class TesteBuscarPedidos{
 class TesteModificarPedido{
     public static void main(String[] args) throws InterruptedException {;
         //Porta -- List->Operação -- empty -- List->Quantidade do produto -- CID, OID e PID
-        ClienteClient.startServiceTeste.start(9091, new int[]{2},new int[]{}, new int[]{379},
-                new String[]{"7e40cfa8-eab5-4617-99c9-9216c0fb3176", "15f9ddf0-ddb9-4fb3-b334-5a6db813e989",
-                        "387bd024-02c5-4d8c-85a8-6211a14b71c0"});
+        ClienteClient.startServiceTeste.start(9091, new int[]{2},new int[]{}, new int[]{100},
+                new String[]{"0daecae7-e677-4386-81aa-02afce324edb", "f5628618-dfe2-41b3-b70a-26063b92bf51",
+                        "492d86e8-b5dc-4f77-9fae-6ab82636930a"});
     }
 }
 class TesteApagarPedido{
@@ -74,7 +74,8 @@ class TesteApagarPedido{
         ClienteClient.startServiceTeste.start(9096, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        apagarPedido("7e40cfa8-eab5-4617-99c9-9216c0fb3176", "15f9ddf0-ddb9-4fb3-b334-5a6db813e989");
+        apagarPedido("ddb8ca2d-86c6-4944-8656-60f3125b3f55", "cbd74699-84de-49f2-ad1b-dba56dc1b0d2");
+        //apagarPedido("7a9a904b-8c6a-4239-940c-c646b664a7f9", "40205f54-a5a4-430a-a4cd-f2b943b57642");
     }
 }
 

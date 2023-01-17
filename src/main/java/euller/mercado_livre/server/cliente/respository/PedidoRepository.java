@@ -17,8 +17,6 @@ public class PedidoRepository {
     private final Hashtable<String, List<Hashtable<String, List<String>>>> pedidos = new Hashtable<>();
     private final ClientRatis clientRatis = new ClientRatis();
 
-
-    //TODO: CORRECT?YES
     public void salvarPedidoNoCache(String CID, String OID, String pedidoJson){
 
         //Save On Cache
@@ -38,18 +36,16 @@ public class PedidoRepository {
         }
         System.out.println("Pedido salvo no cache!");
 
-        //Delete of cache after 1 minute
+        //Delete of cache after x seconds
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Runnable task = () -> {
             System.out.println("A vida útil do cache se esgotou!");
             apagarPedido(CID, OID, false);
         };
-        executor.schedule(task, 60, java.util.concurrent.TimeUnit.SECONDS);
+        executor.schedule(task, 30, java.util.concurrent.TimeUnit.SECONDS);
 
     }
 
-
-    //TODO: CORRECT?YES
     public String criarPedido(Pedido pedidoModel) {
          logger.info("\nCriando pedido: "+pedidoModel+"\n");
          String CID = pedidoModel.getCID();
@@ -86,8 +82,6 @@ public class PedidoRepository {
         return buscarPedido(CID, OID);
     }
 
-
-    //TODO: CORRECT?YES
     public String modificarPedido(Pedido pedidoModel) {
         logger.info("Modificando pedido: " + pedidoModel + "\n");
 
@@ -139,13 +133,11 @@ public class PedidoRepository {
         }
         return null;
     }
-
-    //TODO: CORRECT?YES
     public String buscarPedido(String CID, String OID) {
         logger.info("Buscando pedido: " + "CID: " + CID + "OID: " + OID + "\n");
 
         //Get Of Cache
-        if(pedidos.containsKey(CID) && pedidos.get(CID).size() > 0) {
+        if(pedidos.containsKey(CID) && !pedidos.get(CID).isEmpty()) {
             for(Hashtable<String, List<String>> pedido : pedidos.get(CID)) {
                 if(pedido.containsKey(OID)) {
                     List<String> produtosJson = pedido.get(OID);
@@ -184,19 +176,16 @@ public class PedidoRepository {
         return null;
     }
 
-
-
-    //TODO: CORRECT?YES
     public List<Hashtable<String,Integer>> buscarPedidos(String CID) {
         logger.info("Buscando pedidos:  " + "CID: " + CID + "\n");
 
         //Get Of Cache
-        if (pedidos.containsKey(CID) && pedidos.get(CID).size() > 0) {
-            List<Hashtable<String, List<String>>> pedidos = this.pedidos.get(CID);
+        if (pedidos.containsKey(CID) && !pedidos.get(CID).isEmpty()) {
+            List<Hashtable<String, List<String>>> oidsPedidos = this.pedidos.get(CID);
             List<Hashtable<String,Integer>> precosTotaisPedidos = new ArrayList<>();
-            for (Hashtable<String, List<String>> pedido : pedidos) {
-                for (String OID : pedido.keySet()) {
-                    List<String> produtos = pedido.get(OID);
+            for (Hashtable<String, List<String>> oidProdutos : oidsPedidos) {
+                for (String OID : oidProdutos.keySet()) {
+                    List<String> produtos = oidProdutos.get(OID);
                     int precoTotalProduto = 0;
                     for (String produto : produtos) {
                         Gson gson = new Gson();
@@ -224,31 +213,33 @@ public class PedidoRepository {
             Gson gson = new Gson();
             for (String pedidoString : pedidosSplit) {
                 Pedido pM = gson.fromJson(pedidoString, Pedido.class);
-                Hashtable<String, List<String>> oidPedido = new Hashtable<>();
+                Hashtable<String, List<String>> oidProdutos = new Hashtable<>();
                 List<String> produtos = new ArrayList<>();
                 for (Produto produto : pM.getProdutos()) {
                     produtos.add(gson.toJson(produto));
                 }
-                oidPedido.put(pM.getOID(), produtos);
-                cidPedidos.get(pM.getCID()).add(oidPedido);
+                oidProdutos.put(pM.getOID(), produtos);
+                cidPedidos.get(pM.getCID()).add(oidProdutos);
             }
             //
             List<Hashtable<String, List<String>>> oidsPedidos = cidPedidos.get(CID);
             List<Hashtable<String, Integer>> precosTotaisPedidos = new ArrayList<>();
-            for (Hashtable<String, List<String>> oidPedido : oidsPedidos) {
-                for (String OID : oidPedido.keySet()) {
-                    List<String> produtos = oidPedido.get(OID);
-                    int precoTotalProduto = 0;
-                    for (String produto : produtos) {
-                        Produto produtoModel = gson.fromJson(produto, Produto.class);
-                        precoTotalProduto += produtoModel.getPreco();
-                    }
-                    Hashtable<String, Integer> precoTotalPedido = new Hashtable<>();
-                    precoTotalPedido.put(OID, precoTotalProduto);
-                    precosTotaisPedidos.add(precoTotalPedido);
-                    String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
-                    if(pedidoJson!=null) {
-                        salvarPedidoNoCache(CID, OID, pedidoJson);
+            if(oidsPedidos != null && !oidsPedidos.isEmpty()){
+                for (Hashtable<String, List<String>> oidPedido : oidsPedidos) {
+                    for (String OID : oidPedido.keySet()) {
+                        List<String> produtos = oidPedido.get(OID);
+                        int precoTotalProduto = 0;
+                        for (String produto : produtos) {
+                            Produto produtoModel = gson.fromJson(produto, Produto.class);
+                            precoTotalProduto += produtoModel.getPreco();
+                        }
+                        Hashtable<String, Integer> precoTotalPedido = new Hashtable<>();
+                        precoTotalPedido.put(OID, precoTotalProduto);
+                        precosTotaisPedidos.add(precoTotalPedido);
+                        String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
+                        if (pedidoJson != null) {
+                            salvarPedidoNoCache(CID, OID, pedidoJson);
+                        }
                     }
                 }
             }
@@ -260,7 +251,6 @@ public class PedidoRepository {
         return null;
     }
 
-    //TODO: CORRECT?YES
     public String apagarPedido(String CID, String OID, boolean deleteOfDatabase) {
         logger.info("Apagando pedido: " + "CID: " + CID + " OID: " + OID + "\n");
 
@@ -268,7 +258,7 @@ public class PedidoRepository {
         boolean isDeleteDatabase = false;
 
         //Delete Of Cache
-        if (pedidos.containsKey(CID) && pedidos.get(CID).size() > 0) {
+        if (pedidos.containsKey(CID) && !pedidos.get(CID).isEmpty()) {
             for (Hashtable<String, List<String>> pedidoCache : pedidos.get(CID)) {
                 if (pedidoCache.containsKey(OID)) {
                     pedidoCache.remove(OID);

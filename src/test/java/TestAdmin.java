@@ -21,8 +21,8 @@ class IniciarServidorAdmin{
         AdminServer.startService.start(8086);
     }
 }
-//7cf84abb-087d-4ea8-87a7-78e6a0dbc1fd
-//d1a399b7-a317-4229-8de3-589a226871f0
+//ddb8ca2d-86c6-4944-8656-60f3125b3f55
+//6993c9d3-b5f0-4c6d-9f35-485c9805565a
 class TesteCriarCliente {
     public static void main(String[] args) throws InterruptedException {;
         //for(int i = 0; i<=100;i++) {

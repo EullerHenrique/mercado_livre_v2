@@ -15,14 +15,16 @@ public class ProdutoRepository {
     private final ClientRatis clientRatis = new ClientRatis();
 
     public void salvarProdutoNoCache(String PID, String produtoJson){
+        //Save On Cache
         produtos.put(PID, produtoJson);
         System.out.println("Produto  salvo no cache");
+        //Delete of cache after x seconds
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Runnable task = () -> {
             System.out.println("A vida útil do cache se esgotou!");
             apagarProduto(PID, false);
         };
-        executor.schedule(task, 60, java.util.concurrent.TimeUnit.SECONDS);
+        executor.schedule(task, 30, java.util.concurrent.TimeUnit.SECONDS);
     }
 
     public String criarProduto(Produto produto) {

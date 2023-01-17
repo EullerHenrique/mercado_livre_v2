@@ -71,7 +71,7 @@ public class PedidoServiceImpl extends PedidoServiceGrpc.PedidoServiceImplBase {
         List<Hashtable<String, Integer>> pedidos = pedidoRepository.buscarPedidos(req.getCID());
         BuscarPedidosResponse reply;
         if(pedidos == null){
-            reply = BuscarPedidosResponse.newBuilder().setMessage("O cliente" + req.getCID()+" não possui pedidos").build();
+            reply = BuscarPedidosResponse.newBuilder().setMessage("O cliente " + req.getCID()+" não possui pedidos").build();
         }else{
             reply = BuscarPedidosResponse.newBuilder().setMessage(req.getCID()+":"+pedidos).build();
         }
