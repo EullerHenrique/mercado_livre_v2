@@ -49,7 +49,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
           if(type == 1) {
             return r.split("--")[1];
           }else if(type == 2){
-            return "pedido->"+r.split("--")[0];
+            return r.split("--")[0];
           }
         }
       }
