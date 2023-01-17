@@ -209,53 +209,51 @@ public class PedidoRepository {
                 }
             }
             return precosTotaisPedidos;
-        }else {
-            System.out.println("Pedidos não encontrados no cache");
-
-            //Get of Database
-            String pedidosString = buscarPedidosPeloCliente(CID);
-            if (pedidosString != null) {
-                System.out.println("Pedidos encontrados no database");
-                //cidPedidos: {CID: [{OID: [{PID: [Produto]}]}]}
-                String[] pedidosSplit = pedidosString.split(";");
-                Hashtable<String, List<Hashtable<String, List<String>>>> cidPedidos = new Hashtable<>();
-                cidPedidos.put(CID, new ArrayList<>());
-                Gson gson = new Gson();
-                for (String pedidoString : pedidosSplit) {
-                    Pedido pM = gson.fromJson(pedidoString, Pedido.class);
-                    Hashtable<String, List<String>> oidPedido = new Hashtable<>();
-                    List<String> produtos = new ArrayList<>();
-                    for (Produto produto : pM.getProdutos()) {
-                        produtos.add(gson.toJson(produto));
-                    }
-                    oidPedido.put(pM.getOID(), produtos);
-                    cidPedidos.get(pM.getCID()).add(oidPedido);
+        }
+        System.out.println("Pedidos não encontrados no cache");
+        //Get of Database
+        String pedidosString = buscarPedidosPeloCliente(CID);
+        if (pedidosString != null) {
+            System.out.println("Pedidos encontrados no database");
+            //cidPedidos: {CID: [{OID: [{PID: [Produto]}]}]}
+            String[] pedidosSplit = pedidosString.split(";");
+            Hashtable<String, List<Hashtable<String, List<String>>>> cidPedidos = new Hashtable<>();
+            cidPedidos.put(CID, new ArrayList<>());
+            Gson gson = new Gson();
+            for (String pedidoString : pedidosSplit) {
+                Pedido pM = gson.fromJson(pedidoString, Pedido.class);
+                Hashtable<String, List<String>> oidPedido = new Hashtable<>();
+                List<String> produtos = new ArrayList<>();
+                for (Produto produto : pM.getProdutos()) {
+                    produtos.add(gson.toJson(produto));
                 }
-                //
-                List<Hashtable<String, List<String>>> oidsPedidos = cidPedidos.get(CID);
-                List<Hashtable<String, Integer>> precosTotaisPedidos = new ArrayList<>();
-                for (Hashtable<String, List<String>> oidPedido : oidsPedidos) {
-                    for (String OID : oidPedido.keySet()) {
-                        List<String> produtos = oidPedido.get(OID);
-                        int precoTotalProduto = 0;
-                        for (String produto : produtos) {
-                            Produto produtoModel = gson.fromJson(produto, Produto.class);
-                            precoTotalProduto += produtoModel.getPreco();
-                        }
-                        Hashtable<String, Integer> precoTotalPedido = new Hashtable<>();
-                        precoTotalPedido.put(OID, precoTotalProduto);
-                        precosTotaisPedidos.add(precoTotalPedido);
-                        String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
-                        if(pedidoJson!=null) {
-                            salvarPedidoNoCache(CID, OID, pedidoJson);
-                        }
-                    }
-                }
-                if (precosTotaisPedidos.isEmpty()) {
-                    return null;
-                }
-                return precosTotaisPedidos;
+                oidPedido.put(pM.getOID(), produtos);
+                cidPedidos.get(pM.getCID()).add(oidPedido);
             }
+            //
+            List<Hashtable<String, List<String>>> oidsPedidos = cidPedidos.get(CID);
+            List<Hashtable<String, Integer>> precosTotaisPedidos = new ArrayList<>();
+            for (Hashtable<String, List<String>> oidPedido : oidsPedidos) {
+                for (String OID : oidPedido.keySet()) {
+                    List<String> produtos = oidPedido.get(OID);
+                    int precoTotalProduto = 0;
+                    for (String produto : produtos) {
+                        Produto produtoModel = gson.fromJson(produto, Produto.class);
+                        precoTotalProduto += produtoModel.getPreco();
+                    }
+                    Hashtable<String, Integer> precoTotalPedido = new Hashtable<>();
+                    precoTotalPedido.put(OID, precoTotalProduto);
+                    precosTotaisPedidos.add(precoTotalPedido);
+                    String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
+                    if(pedidoJson!=null) {
+                        salvarPedidoNoCache(CID, OID, pedidoJson);
+                    }
+                }
+            }
+            if (precosTotaisPedidos.isEmpty()) {
+                return null;
+            }
+            return precosTotaisPedidos;
         }
         return null;
     }
