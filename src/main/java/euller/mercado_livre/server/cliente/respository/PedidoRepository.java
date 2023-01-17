@@ -208,13 +208,15 @@ public class PedidoRepository {
                     precosTotaisPedidos.add(precoTotalPedido);
                 }
             }
-            return precosTotaisPedidos;
+            if (!precosTotaisPedidos.isEmpty()) {
+                System.out.println("Pedidos encontrados no cache");
+                return precosTotaisPedidos;
+            }
         }
         System.out.println("Pedidos não encontrados no cache");
         //Get of Database
         String pedidosString = buscarPedidosPeloCliente(CID);
         if (pedidosString != null) {
-            System.out.println("Pedidos encontrados no database");
             //cidPedidos: {CID: [{OID: [{PID: [Produto]}]}]}
             String[] pedidosSplit = pedidosString.split(";");
             Hashtable<String, List<Hashtable<String, List<String>>>> cidPedidos = new Hashtable<>();
@@ -250,10 +252,10 @@ public class PedidoRepository {
                     }
                 }
             }
-            if (precosTotaisPedidos.isEmpty()) {
-                return null;
+            if (!precosTotaisPedidos.isEmpty()) {
+                System.out.println("Pedidos encontrados no database");
+                return precosTotaisPedidos;
             }
-            return precosTotaisPedidos;
         }
         return null;
     }
