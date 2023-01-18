@@ -10,6 +10,7 @@
   - [Server](#server)   
   - [Client](#client)
   - [Funcionalidades](#funcionalidades)
+  - [Cache](#cache)
   
 ## Tecnologias Utilizadas
 
@@ -106,11 +107,11 @@
 ## Tabelas Chave/Valor (LevelDB)
 
 1. Cliente
-     1. Key: CID Value: {CID, nome, email, telefone}
+     - Key: "cliente->CID" Value: "{CID, nome, email, telefone}"
 2. Produto
-     2. key: PID Value: {CID, OID, PID, produto, quantidade, preco}
+     - Key: "produto->PID" Value: "{CID, OID, PID, produto, quantidade, preco}"
 3. Pedido 
-     1. key: UUID Value: {CID, OID, produtos: [CID, OID, PID, produto, quantidade, preco]}
+     - Key: "pedido->UUID" Value: "{CID, OID, produtos: List[CID, OID, PID, produto, quantidade, preco]}"
 
 ### Funcionalidades
 
@@ -349,7 +350,45 @@
         18. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delClient: CID, OID)
         19. ClienteCliente: A mensagem "Produto apagado" é exibida 
                    
- ## Critérios Atendidos
+ ### Cache
+ 
+ 1. Admin
+ 
+    1. Criar Cliente/Criar Produto
+      1. O cliente/produto é salvo no levelDB de cada réplica da máquina de estado
+      2. A função buscarCliente/buscarProduto é chamada
+    2. Modificar Cliente/Modificar Produto
+      1. A função buscarCliente é chamada
+      1. A função apagarCliente/ApagarProduto é chamada
+      2. A função criarCliente/CriarProduto é chamada
+    3. Buscar Cliente/Buscar Produto
+      1. Se o cliente/produto existir no cache, ele é retornado
+      2. Se o cliente/produto exisitr no levelDB de qualquer réplica da máquina de estado
+          1. Ele é salvo no cache
+          2. Ele é retornado
+    4. Apagar Cliente/Apagar Produto
+      1. Se o cliente/produto existir no cache, ele é apagado
+      2. Se o cliente/produto existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
+      
+3. Cliente
+ 
+  1. Criar Pedido 
+    1.
+    2.
+  
+  2. Modificar Pedido
+    1.
+    2.
+  
+  4. Buscar Pedido
+    1.
+    2.
+  
+  5. Apagar Pedido
+    1.
+    2.
+
+## Critérios Atendidos
    
  ## Vídeo De Apresentação
 
