@@ -85,8 +85,6 @@ public class MosquittoService {
                 case "server/cliente/produto/modificar":
                     produtoJson = new String(message.getPayload());
                     produto = gson.fromJson(produtoJson, Produto.class);
-                    //Del Of Cache
-                    produtoRepository.apagarProduto(produto.getPID(), false);
                     produtoRepository.modificarProduto(produto);
                     break;
             }
