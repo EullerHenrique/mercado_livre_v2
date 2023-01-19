@@ -7,6 +7,7 @@
 - - [Mosquitto](#mosquitto)
 - - [Java](#java)
 - [Execução](#execução)
+  - [Ratis](#ratis)
   - [Server](#server)   
   - [Client](#client)
 - [Tabelas Hash](#tabelas-hash) 
