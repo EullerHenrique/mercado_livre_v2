@@ -355,39 +355,55 @@
  1. Admin
  
     1. Criar Cliente/Criar Produto
-      1. O cliente/produto é salvo no levelDB de cada réplica da máquina de estado
-      2. A função buscarCliente/buscarProduto é chamada
+        1. O cliente/produto é salvo no levelDB de cada réplica da máquina de estado
+        2. A função buscarCliente/buscarProduto é chamada
     2. Modificar Cliente/Modificar Produto
-      1. A função buscarCliente é chamada
-      1. A função apagarCliente/ApagarProduto é chamada
-      2. A função criarCliente/CriarProduto é chamada
+        1. A função buscarCliente/buscarProduto é chamada
+        1. A função apagarCliente/ApagarProduto é chamada
+        2. A função criarCliente/CriarProduto é chamada
     3. Buscar Cliente/Buscar Produto
-      1. Se o cliente/produto existir no cache, ele é retornado
-      2. Se o cliente/produto exisitr no levelDB de qualquer réplica da máquina de estado
-          1. Ele é salvo no cache
-          2. Ele é retornado
+        1. Se o cliente/produto existir no cache, ele é retornado
+        2. Se o cliente/produto exisitr no levelDB de qualquer réplica da máquina de estado
+            1. Ele é salvo no cache
+            2. Ele é retornado
     4. Apagar Cliente/Apagar Produto
-      1. Se o cliente/produto existir no cache, ele é apagado
-      2. Se o cliente/produto existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
+        1. Se o cliente/produto existir no cache, ele é apagado
+        2. Se o cliente/produto existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
       
-3. Cliente
+2. Cliente
  
-  1. Criar Pedido 
-    1.
-    2.
-  
-  2. Modificar Pedido
-    1.
-    2.
-  
-  4. Buscar Pedido
-    1.
-    2.
-  
-  5. Apagar Pedido
-    1.
-    2.
-
+    1. Criar Pedido  
+        1. O pedido é salvo no levelDB de cada réplica da máquina de estado
+        2. A função buscarPedido é chamada 
+    2. Modificar Pedido
+        1. A função buscarPedido é chamada
+        2. A função apagarPedido é chamada
+        3. A função criarPedido é chamada
+    4. Buscar Pedido
+       1. Se o pedido existir no cache, ele é retornado
+       2. Se o pedido exisitr no levelDB de qualquer réplica da máquina de estado
+            1. Ele é salvo no cache (Tempo de expiração: 30 segundos)
+            2. Ele é retornado
+    5. BuscarPedidos
+       1. Se o cliente possuir pelo menos um pedido no cache, cliente: List[{pedido: soma dos produtos}] é retornado
+       2. Se o cliente possuir pelo menos um pedido no levelDB de qualquer réplica da máquina de estado
+            1.  O (s) pedido (s) é/sào salvo (s) no cache (Tempo de expiração: 30 segundos)
+            2.  List[{pedido: soma dos produtos}] é retornado 
+    7. Apagar Pedido
+       1. Se o pedido existir no cache, ele é apagado
+       2. Se o pedido existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
+      
+ 3.  Cliente -> Admin 
+ - Admin
+    1. verificarSeClienteExiste
+       1. A função apagarCliente é chamada
+       2. A função isCliente é chamada
+    2. buscarProduto
+       1. A função apagarProduto é chamada
+       2. A função buscarProduto é chamada
+    3. modificarProduto
+       1. A função modificarProduto é chamada
+       
 ## Critérios Atendidos
    
  ## Vídeo De Apresentação
