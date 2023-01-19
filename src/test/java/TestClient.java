@@ -12,14 +12,15 @@ class IniciarServidorCliente{
         ClienteServer.startService.start(9096);
     }
 }
-//ddb8ca2d-86c6-4944-8656-60f3125b3f55
-//6993c9d3-b5f0-4c6d-9f35-485c9805565a
+//7a2899de-4747-4439-8e73-8c0cb38a3a3a
+//a6c4a3ba-e722-4512-b943-9daf0d54a008
 
+//1: OK
 class TesteCriarPedido {
     public static void main(String[] args) throws InterruptedException {;
         //Porta -- List->Operação -- List->Deseja Adiconar Mais um produto -- List->Quantidade do produto -- CID e PID
         ClienteClient.startServiceTeste.start(9091, new int[]{1},new int[]{2}, new int[]{9},
-                new String[]{"ddb8ca2d-86c6-4944-8656-60f3125b3f55", "6993c9d3-b5f0-4c6d-9f35-485c9805565a"});
+                new String[]{"7a2899de-4747-4439-8e73-8c0cb38a3a3a", "a6c4a3ba-e722-4512-b943-9daf0d54a008"});
     }
 }
 
@@ -67,14 +68,9 @@ class TesteApagarPedido{
     public static void apagarPedido(String cid, String oid) throws InterruptedException {
         //Porta -- List->Operação -- empty -- empty -- CID e OID
         ClienteClient.startServiceTeste.start(9091, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
-        ClienteClient.startServiceTeste.start(9092, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
-        ClienteClient.startServiceTeste.start(9093, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
-        ClienteClient.startServiceTeste.start(9094, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
-        ClienteClient.startServiceTeste.start(9095, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
-        ClienteClient.startServiceTeste.start(9096, new int[]{5}, new int[]{}, new int[]{}, new String[]{cid, oid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        apagarPedido("ddb8ca2d-86c6-4944-8656-60f3125b3f55", "cbd74699-84de-49f2-ad1b-dba56dc1b0d2");
+        apagarPedido("7a2899de-4747-4439-8e73-8c0cb38a3a3a", "5cac5580-7d0a-132132-a28f-13123");
         //apagarPedido("7a9a904b-8c6a-4239-940c-c646b664a7f9", "40205f54-a5a4-430a-a4cd-f2b943b57642");
     }
 }

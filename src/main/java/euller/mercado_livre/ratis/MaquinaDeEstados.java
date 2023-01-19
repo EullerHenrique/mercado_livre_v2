@@ -22,7 +22,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
     DB levelDB = null;
     while(levelDB == null) {
       try {
-        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+        levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
         levelDB.iterator().forEachRemaining(entry -> {
           byte[] key = entry.getKey();
           byte[] value = entry.getValue();
@@ -61,7 +61,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
     DB levelDB = null;
     while(levelDB == null) {
       try {
-        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+        levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
         levelDB.iterator().forEachRemaining(entry -> {
           byte[] key = entry.getKey();
           byte[] value = entry.getValue();
@@ -101,7 +101,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
     byte[] value = null;
     while(levelDB == null) {
       try {
-        levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+        levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
         value = levelDB.get(bytes(opKey[1]));
         levelDB.close();
         break;
@@ -119,7 +119,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
     return CompletableFuture.completedFuture(Message.valueOf(result));
   }
 
-  public CompletableFuture<Message> queryClient(String[] opKey){
+  public CompletableFuture<Message> queryClient(String[] opKey, int type){
     String result;
     if(Objects.equals(opKey[2], "cliente")){
       String pedidos = buscarPedidosPeloCliente(opKey);
@@ -129,7 +129,7 @@ public class MaquinaDeEstados extends BaseStateMachine {
         result = "null";
       }
     }else {
-      result = buscarPedido(opKey, 1);
+      result = buscarPedido(opKey, type);
     }
     return CompletableFuture.completedFuture(Message.valueOf("getClient:"+result));
   }
@@ -142,7 +142,9 @@ public class MaquinaDeEstados extends BaseStateMachine {
       case "getProduto":
         return queryAdmin(opKey);
       case "getPedido":
-        return queryClient(opKey);
+        return queryClient(opKey, 1);
+      case "getKeyPedido":
+        return queryClient(opKey, 2);
       default:
         return null;
     }
@@ -165,34 +167,12 @@ public class MaquinaDeEstados extends BaseStateMachine {
     boolean isPresent = false;
     switch (op) {
       case "addCliente":
-        value = value.replace(".", ":");
-        while(levelDB == null) {
-          try {
-            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
-            levelDB.put(bytes(key), bytes(value));
-            levelDB.close();
-            break;
-          } catch (Exception ignored) {}
-        }
-        result += null;
-        break;
       case "addProduto":
-        value = value.replace(".", ":");
-        while(levelDB == null) {
-          try {
-            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
-            levelDB.put(bytes(key), bytes(value));
-                    levelDB.close();
-            break;
-          } catch (Exception ignored) {}
-        }
-        result += null;
-        break;
       case "addPedido":
         value = value.replace(".", ":");
         while(levelDB == null) {
           try {
-            levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+            levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
             levelDB.put(bytes(key), bytes(value));
             levelDB.close();
             break;
@@ -207,11 +187,10 @@ public class MaquinaDeEstados extends BaseStateMachine {
             isPresent = true;
           }
         } catch (Exception ignored) {}
-        System.out.println("id"+key+"idPresent?"+isPresent);
         if(isPresent) {
           while (levelDB == null) {
             try {
-              levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+              levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
               levelDB.delete(key.getBytes());
               levelDB.close();
               break;
@@ -230,16 +209,14 @@ public class MaquinaDeEstados extends BaseStateMachine {
             isPresent = true;
           }
         } catch (Exception ignored) {}
-        System.out.println("id"+key+"idPresent?"+isPresent);
         if(isPresent) {
           while (levelDB == null) {
             try {
-              levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+              levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
               levelDB.delete(key.getBytes());
               levelDB.close();
               break;
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
           }
           result += "Produto apagado";
         }else{
@@ -247,11 +224,18 @@ public class MaquinaDeEstados extends BaseStateMachine {
         }
         break;
       case "delPedido":
-        String keyString = buscarPedido(opKeyValue, 2);
+        String keyString = null;
+        try {
+          keyString = query(Message.valueOf("getKeyPedido:" + key + ":" + value)).get().getContent().toString(Charset.defaultCharset());
+          if(keyString.split(":")[1].equals("null")){
+            keyString = null;
+          }
+        }catch (Exception ignored) {}
+
         if(keyString != null) {
           while(levelDB == null) {
             try {
-              levelDB = factory.open(new File("src/main/resources/db/" + this.getLifeCycle().toString().split(":")[1]), options);
+              levelDB = factory.open(new File("/tmp/" + this.getLifeCycle().toString().split(":")[1] +"/db/"), options);
               levelDB.delete(bytes(keyString));
               levelDB.close();
               break;
