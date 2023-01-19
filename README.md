@@ -9,9 +9,12 @@
 - [Execução](#execução)
   - [Server](#server)   
   - [Client](#client)
-  - [Funcionalidades](#funcionalidades)
-  - [Cache](#cache)
-  
+- [Tabelas Hash](#tabelas-hash) 
+- [Tabelas LevelDB](#tabelas-leveldb)  
+- [Funcionalidades](#funcionalidades)
+- [Cache](#cache)
+- [Critérios Atendidos](#critérios-atendidos)
+- [Vídeo De Apresentação](#vídeo-de-apresentação) 
 ## Tecnologias Utilizadas
 
 - Java
@@ -103,8 +106,20 @@
     1. Navegue até mercado_libre/client/cliente/ClientCliente
     2. Aperte o botão play localizado ao lado de "public class ClientCliente"
     3. Digite a porta escolhida ao criar o ClienteServer (Ex: 5052)
+    
+## Tabelas Hash
 
-## Tabelas Chave/Valor (LevelDB)
+1. Cliente
+     1. Hashtable<String, String> 
+     2. <CID, ClienteJson>
+2. Produto
+     1. Hashtable<String, String>
+     2. <PID, ProdutoJson>
+3. Pedido 
+     1. Hashtable<String, List<Hashtable<String, List< String >>>> 
+     2. <CID<List<OID, List< ProdutoJson >>>>
+
+## Tabelas LevelDB
 
 1. Cliente
      - Key: "cliente->CID" Value: "{CID, nome, email, telefone}"
