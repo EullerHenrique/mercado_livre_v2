@@ -9,8 +9,12 @@
 - [Execução](#execução)
   - [Server](#server)   
   - [Client](#client)
-  - [Funcionalidades](#funcionalidades)
-  
+- [Tabelas Hash](#tabelas-hash) 
+- [Tabelas LevelDB](#tabelas-leveldb)  
+- [Funcionalidades](#funcionalidades)
+- [Cache](#cache)
+- [Critérios Atendidos](#critérios-atendidos)
+- [Vídeo De Apresentação](#vídeo-de-apresentação) 
 ## Tecnologias Utilizadas
 
 - Java
@@ -57,10 +61,10 @@
 
 ## Execução
 
-### Replicação de máquina de estado
+### Ratis
 
-- Server Ratis
-    1. Navegue até mercado_livre/ratis/Start
+- Replicação da máquina de estado
+    1. Navegue até mercado_livre/ratis/StartReolication
     2. Aperte o botão play localizado ao lado de "public class Start"
     3. O servidor ratis p1 é criado
     4. O servidor ratis p2 é criado
@@ -72,12 +76,12 @@
     5. A réplica p2 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p2)
     6. A réplica p3 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p3)
     7. Se a solitaçâo exigir uma mudança de estado (add ou del), o ClientRatis irá solicitar que cada réplica processe essa solicitação -> 8, 9, 10
-    8.  A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
-    9.  A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    8. A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    9. A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
     10. A réplica p3 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
     11. Se a solicitação não exigir uma mudançã de estado (get), o ClientRatis irá solicitar para qualquer réplica uma resposta -> 12
     12. A réplica p1, p2 ou p3 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
-    13. O ClientRatis enviar a resposta recebida para quem a solicitou.
+    13. O ClientRatis envia a resposta recebida para quem a solicitou.
     
 ###  Server
 
@@ -102,15 +106,27 @@
     1. Navegue até mercado_libre/client/cliente/ClientCliente
     2. Aperte o botão play localizado ao lado de "public class ClientCliente"
     3. Digite a porta escolhida ao criar o ClienteServer (Ex: 5052)
-
-## Tabelas Chave/Valor (LevelDB)
+    
+## Tabelas Hash
 
 1. Cliente
-     1. Key: CID Value: {CID, nome, email, telefone}
+     1. Hashtable<String, String> 
+     2. <CID, ClienteJson>
 2. Produto
-     2. key: PID Value: {CID, OID, PID, produto, quantidade, preco}
+     1. Hashtable<String, String>
+     2. <PID, ProdutoJson>
 3. Pedido 
-     1. key: UUID Value: {CID, OID, produtos: [CID, OID, PID, produto, quantidade, preco]}
+     1. Hashtable<String, List<Hashtable<String, List< String >>>> 
+     2. <CID<List<OID, List< ProdutoJson >>>>
+
+## Tabelas LevelDB
+
+1. Cliente
+     - Key: "cliente->CID" Value: "{CID, nome, email, telefone}"
+2. Produto
+     - Key: "produto->PID" Value: "{CID, OID, PID, produto, quantidade, preco}"
+3. Pedido 
+     - Key: "pedido->UUID" Value: "{CID, OID, produtos: List[CID, OID, PID, produto, quantidade, preco]}"
 
 ### Funcionalidades
 
@@ -349,7 +365,73 @@
         18. ClientRatis: Faz uma solicitação para as réplicas p1, p2 e p3 (delClient: CID, OID)
         19. ClienteCliente: A mensagem "Produto apagado" é exibida 
                    
- ## Critérios Atendidos
+ ### Cache
+ 
+ 1. Admin
+ 
+    1. Criar Cliente/Criar Produto
+        1. O cliente/produto é salvo no levelDB de cada réplica da máquina de estado
+        2. A função buscarCliente/buscarProduto é chamada
+    2. Modificar Cliente/Modificar Produto
+        1. A função buscarCliente/buscarProduto é chamada
+        1. A função apagarCliente/ApagarProduto é chamada
+        2. A função criarCliente/CriarProduto é chamada
+    3. Buscar Cliente/Buscar Produto
+        1. Se o cliente/produto existir no cache, ele é retornado
+        2. Se o cliente/produto exisitr no levelDB de qualquer réplica da máquina de estado
+            1. Ele é salvo no cache
+            2. Ele é retornado
+    4. Apagar Cliente/Apagar Produto
+        1. Se o cliente/produto existir no cache, ele é apagado
+        2. Se o cliente/produto existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
+      
+2. Cliente
+ 
+    1. Criar Pedido  
+        1. O pedido é salvo no levelDB de cada réplica da máquina de estado
+        2. A função buscarPedido é chamada 
+    2. Modificar Pedido
+        1. A função buscarPedido é chamada
+        2. A função apagarPedido é chamada
+        3. A função criarPedido é chamada
+    4. Buscar Pedido
+       1. Se o pedido existir no cache, ele é retornado
+       2. Se o pedido exisitr no levelDB de qualquer réplica da máquina de estado
+            1. Ele é salvo no cache (Tempo de expiração: 30 segundos)
+            2. Ele é retornado
+    5. BuscarPedidos
+       1. Se o cliente possuir pelo menos um pedido no cache, cliente: List[{pedido: soma dos produtos}] é retornado
+       2. Se o cliente possuir pelo menos um pedido no levelDB de qualquer réplica da máquina de estado
+            1.  O (s) pedido (s) é/sào salvo (s) no cache (Tempo de expiração: 30 segundos)
+            2.  List[{pedido: soma dos produtos}] é retornado 
+    7. Apagar Pedido
+       1. Se o pedido existir no cache, ele é apagado
+       2. Se o pedido existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
+      
+ 3.  Cliente -> Admin 
+ - Admin
+    1. verificarSeClienteExiste
+       1. A função apagarCliente é chamada
+       2. A função isCliente é chamada
+    2. buscarProduto
+       1. A função apagarProduto é chamada
+       2. A função buscarProduto é chamada
+    3. modificarProduto
+       1. A função modificarProduto é chamada
+       
+## Critérios Atendidos
+
+ - Como é possível notar:
+    1. Todos os casos de uso foram implementados
+    2. Há suporte para múltiplos clientes/servidores
+    3. Dois tipos de comunicação foram utilizados RPC (Grpc) e PUB/SUB (Mosquitto)
+    4. A documentação da configuração, execução e do uso foi feita
+    5. As exçeções foram tratadas e os erros foram retornados
+    6. Os portais possuem cache 
+    7. Clientes e adminstradores possuem interface interativa (terminal)
+    8. Testes automatizados foram criados
+    9. 3 réplicas da máquina de estado foram criadas por meio do Ratis
+    10. Cada réplica da máquina de estado contém um database levelDB
    
  ## Vídeo De Apresentação
 
