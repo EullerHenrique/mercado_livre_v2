@@ -64,7 +64,7 @@
 ### Ratis
 
 - Replicação da máquina de estado
-    1. Navegue até mercado_livre/ratis/Start
+    1. Navegue até mercado_livre/ratis/StartReolication
     2. Aperte o botão play localizado ao lado de "public class Start"
     3. O servidor ratis p1 é criado
     4. O servidor ratis p2 é criado
@@ -76,12 +76,12 @@
     5. A réplica p2 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p2)
     6. A réplica p3 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p3)
     7. Se a solitaçâo exigir uma mudança de estado (add ou del), o ClientRatis irá solicitar que cada réplica processe essa solicitação -> 8, 9, 10
-    8.  A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
-    9.  A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    8. A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
+    9. A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
     10. A réplica p3 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
     11. Se a solicitação não exigir uma mudançã de estado (get), o ClientRatis irá solicitar para qualquer réplica uma resposta -> 12
     12. A réplica p1, p2 ou p3 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
-    13. O ClientRatis enviar a resposta recebida para quem a solicitou.
+    13. O ClientRatis envia a resposta recebida para quem a solicitou.
     
 ###  Server
 
@@ -431,7 +431,7 @@
     7. Clientes e adminstradores possuem interface interativa (terminal)
     8. Testes automatizados foram criados
     9. 3 réplicas da máquina de estado foram criadas por meio do Ratis
-    10. Cada réplica da máquina de estado contém um instância levelDB
+    10. Cada réplica da máquina de estado contém um database levelDB
    
  ## Vídeo De Apresentação
 
