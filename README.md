@@ -61,9 +61,9 @@
 
 ## Execução
 
-### Replicação de máquina de estado
+### Ratis
 
-- Server Ratis
+- Replicação da máquina de estado
     1. Navegue até mercado_livre/ratis/Start
     2. Aperte o botão play localizado ao lado de "public class Start"
     3. O servidor ratis p1 é criado
