@@ -17,7 +17,11 @@ public class PedidoRepository {
     private final Hashtable<String, List<Hashtable<String, List<String>>>> pedidos = new Hashtable<>();
     private final ClientRatis clientRatis = new ClientRatis();
 
-    public void salvarPedidoNoCache(String CID, String OID, String pedidoJson){
+    public void salvarPedidoNoCache(String CID, String OID, String pedidoJson, boolean cleanCache){
+
+        if(cleanCache){
+            pedidos.put(CID, new ArrayList<>());
+        }
 
         //Save On Cache
         Pedido pedidoModel = new Gson().fromJson(pedidoJson, Pedido.class);
@@ -165,7 +169,7 @@ public class PedidoRepository {
                 System.out.println("Pedido encontrado no database!");
 
                 //Save On Cache and delete after 1 minute
-                salvarPedidoNoCache(CID, OID, pedidoJson);
+                salvarPedidoNoCache(CID, OID, pedidoJson, false);
 
             } else {
                 System.out.println("Pedido não encontrado no database!");
@@ -225,6 +229,7 @@ public class PedidoRepository {
             //
             List<Hashtable<String, List<String>>> oidsPedidos = cidPedidos.get(CID);
             List<Hashtable<String, Integer>> precosTotaisPedidos = new ArrayList<>();
+            boolean cleanCache = true;
             if(oidsPedidos != null && !oidsPedidos.isEmpty()){
                 for (Hashtable<String, List<String>> oidPedido : oidsPedidos) {
                     for (String OID : oidPedido.keySet()) {
@@ -239,7 +244,10 @@ public class PedidoRepository {
                         precosTotaisPedidos.add(precoTotalPedido);
                         String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
                         if (pedidoJson != null) {
-                            salvarPedidoNoCache(CID, OID, pedidoJson);
+                            salvarPedidoNoCache(CID, OID, pedidoJson, cleanCache);
+                            if(cleanCache){
+                                cleanCache = false;
+                            }
                         }
                     }
                 }
