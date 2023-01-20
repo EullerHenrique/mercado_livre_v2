@@ -14,6 +14,7 @@
 - [Tabelas LevelDB](#tabelas-leveldb)  
 - [Funcionalidades](#funcionalidades)
 - [Cache](#cache)
+- [Testes Automatizados](#testesAutomatizados)
 - [Critérios Atendidos](#critérios-atendidos)
 - [Vídeo De Apresentação](#vídeo-de-apresentação) 
 ## Tecnologias Utilizadas
