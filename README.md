@@ -491,7 +491,7 @@
         
     2. TesteCriarPedido
         - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) crie um pedido
-        - Parâmetros: Porta -- Operação -- List->Adicionar mais um produto (1=sim, 2=nâo) -- List->Quantidade do produto CID, CID e PID
+        - Parâmetros: Porta -- Operação -- List->Deseja Adicionar Mais um produto? -- List->Quantidade do produto -- CID -- null -- List->PID
         - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
         -      Escolha um dos 50 PIDs retornados no TesteCriarProduto
     
@@ -502,7 +502,7 @@
         - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) buscar um pedido
         - O portal cliente (ClienteClient) com a porta 9095 solicita que o servidor cliente (ServerAdmin) buscar um pedido
         - O portal cliente (ClienteClient) com a porta 9096 solicita que o servidor cliente (ServerAdmin) buscar um pedido
-        - Parâmetros: Porta -- Operação -- empty -- CID -- OID
+        - Parâmetros: Porta -- Operação -- null -- null -- CID -- OID -- null
         - Obs: Utilize o CID utilizado no TesteCriarPedido
         -      Utilize o OID retornado no TesteCriarPedido
     
@@ -513,20 +513,21 @@
         - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
         - O portal cliente (ClienteClient) com a porta 9095 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente     
         - O portal cliente (ClienteClient) com a porta 9096 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente     
-        - Parâmetros: Porta -- Operação -- empty -- CID 
+        - Parâmetros: Porta -- Operação -- null -- null -- CID -- OID -- null
         - Obs: Utilize o CID utilizado no TesteCriarPedido
         -      Utilize o OID retornado no TesteCriarPedido
     
     5. TesteModificarPedido
         - O portal cliente (ClienteClient) com a porta 9093 solicita que o servidor cliente (ServerAdmin) modifique o produto de um determinado pedido
-         - Parâmetros: Porta -- Operação -- empty -- Nova Quantidade -- CID -- OID -- PID
+         - Parâmetros: Porta -- Operação -- null -- List->Quantidade do produto -- CID -- OID -- PID
+
          - Obs: Utilize o CID utilizado no TesteCriarPedido
          -      Utilize o PID utilizado no TesteCriarPedido
          -      Utilize o OID retornado no TesteCriarPedido
     
     6. TesteApagarPedido
         - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) apague um pedido
-        - Parâmetros: Porta -- Operação -- empty -- empty -- CID -- OID
+        - Parâmetros: Porta -- Operação -- null -- null -- CID -- OID -- null
         - Obs:  Utilize o CID utilizado no TesteCriarPedido
         -       Utilize o PID utilizado no TesteCriarPedido
         -       Utilize o OID retornado no TesteCriarPedido
