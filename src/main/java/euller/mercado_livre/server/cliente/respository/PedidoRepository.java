@@ -125,8 +125,9 @@ public class PedidoRepository {
 
                     String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
                     if(pedidoJson != null) {
-                        apagarPedido(CID, OID, true);
-                        return criarPedido(gson.fromJson(pedidoJson, Pedido.class));
+                        if(apagarPedido(CID, OID, true) != null) {
+                            return criarPedido(gson.fromJson(pedidoJson, Pedido.class));
+                        }
                     }
                 }
             }

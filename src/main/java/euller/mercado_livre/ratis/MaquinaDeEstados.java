@@ -226,8 +226,8 @@ public class MaquinaDeEstados extends BaseStateMachine {
       case "delPedido":
         String keyString = null;
         try {
-          keyString = query(Message.valueOf("getKeyPedido:" + key + ":" + value)).get().getContent().toString(Charset.defaultCharset());
-          if(keyString.split(":")[1].equals("null")){
+          keyString = query(Message.valueOf("getKeyPedido:" + key + ":" + value)).get().getContent().toString(Charset.defaultCharset()).split(":")[1];
+          if(keyString.equals("null")){
             keyString = null;
           }
         }catch (Exception ignored) {}
