@@ -6,22 +6,20 @@ import euller.mercado_livre.client.cliente.service.PedidoService;
 import euller.mercado_livre.client.cliente.service.external.ClienteService;
 import euller.mercado_livre.client.cliente.service.external.ProdutoService;
 import euller.mercado_livre.client.cliente.view.InputsTestView;
-import euller.mercado_livre.client.cliente.view.InputsView;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import jdk.swing.interop.SwingInterOpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
 
 public class StartTest {
 
     private final Logger logger = Logger.getLogger(Start.class.getName());
 
-    public void start(int port, int[] opcoes, int[] opcoesAdicionarProduto, int[] quantidadeProdutos, String[] valores) throws InterruptedException {
+    public void start(int port, int[] opcoes, int[] opcoesAdicionarProduto, int[] quantidadeProdutos, String CID, String OID, String[] PIDS) throws InterruptedException {
         System.out.println("\nDigite a porta desejada para a conexão com o servidor:                    ");
         System.out.println(port);
         logger.info("Client started, listening on " + port+"\n");
@@ -45,7 +43,7 @@ public class StartTest {
                 inputsView.exibeOpcoes();
                     if (opcao == 1) {
                         PedidoDTO pedidoDTO = new PedidoDTO();
-                        String cid = inputsView.lerIdDoCliente(valores[0]);
+                        String cid = inputsView.lerIdDoCliente(CID);
                         if(cid != null) {
                             pedidoDTO.setCID(cid);
                             List<ProdutoDTO> produtosDTO = new ArrayList<>();
@@ -53,7 +51,7 @@ public class StartTest {
                             int i = 0;
                             while (true) {
                                 if (opcaoAdicionarProduto == 1) {
-                                    ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(valores[1]);
+                                    ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(PIDS[i]);
                                     if (produtoDTO != null) {
                                         if (produtoDTO.getQuantidade() > 0) {
                                             produtosDTO.add(produtoDTO);
@@ -91,15 +89,15 @@ public class StartTest {
                         }
                     } else if (opcao == 2) {
                         Gson gson = new Gson();
-                        String cid = inputsView.lerIdDoCliente(valores[0]);
-                        String oid = inputsView.lerIdDoPedido(valores[1]);
+                        String cid = inputsView.lerIdDoCliente(CID);
+                        String oid = inputsView.lerIdDoPedido(OID);
 
                         if(cid != null && oid != null) {
                             String pedidoAntigoJson = pedidoService.buscarPedido(cid, oid);
                             if ("Pedido não encontrado".equals(pedidoAntigoJson)) {
                                 System.out.println("\nPedido não encontrado.");
                             } else {
-                                ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(valores[2]);
+                                ProdutoDTO produtoDTO = inputsView.lerIdDoProduto(PIDS[0]);
                                 if (produtoDTO != null) {
                                     PedidoDTO pedidoDTOAntigo;
                                     pedidoDTOAntigo = gson.fromJson(pedidoAntigoJson, PedidoDTO.class);
@@ -111,22 +109,22 @@ public class StartTest {
                             }
                         }
                     } else if (opcao == 3) {
-                        String cid = inputsView.lerIdDoCliente(valores[0]);
+                        String cid = inputsView.lerIdDoCliente(CID);
                         if(cid != null) {
-                            String oid = inputsView.lerIdDoPedido(valores[1]);
+                            String oid = inputsView.lerIdDoPedido(OID);
                             if(oid != null) {
                                 pedidoService.buscarPedido(cid, oid);
                             }
                         }
                     } else if (opcao == 4) {
-                        String cid = inputsView.lerIdDoCliente(valores[0]);
+                        String cid = inputsView.lerIdDoCliente(CID);
                         if(cid != null) {
                             pedidoService.buscarPedidos(cid);
                         }
                     } else if (opcao == 5) {
-                        String cid = inputsView.lerIdDoCliente(valores[0]);
+                        String cid = inputsView.lerIdDoCliente(CID);
                         if(cid != null) {
-                            String oid = inputsView.lerIdDoPedido(valores[1]);
+                            String oid = inputsView.lerIdDoPedido(OID);
                             if(oid != null) {
                                 pedidoService.excluirPedido(cid, oid);
                             }

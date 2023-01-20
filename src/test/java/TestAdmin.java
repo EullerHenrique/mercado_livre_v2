@@ -5,14 +5,14 @@ import euller.mercado_livre.server.admin.AdminServer;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-//OK
+
 class IniciarServidorRatis{
     public static void main(String[] args) throws IOException, InterruptedException {
         StartReplication.main(args);
     }
 }
 
-//OK
+
 class IniciarServidorAdmin{
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AdminServer.startService.start(8081);
@@ -24,28 +24,29 @@ class IniciarServidorAdmin{
     }
 }
 
-//100: 0K
-//1-100: 7a2899de-4747-4439-8e73-8c0cb38a3a3a
+//056d36a3-146a-4d1e-b365-890c67aa9d54
 class TesteCriarCliente {
-    public static void main(String[] args) throws InterruptedException {;
-        for(int i = 0; i<=100;i++) {
-            AdminClient.startServiceTeste.start(8081, new int[]{1}, new String[]{"Euller Henrique Bandeira Oliveira"+i, "eullerhenrique@outlook.com", "(34) 996915315"});
+    public static void main(String[] args) throws InterruptedException {
+        for(int i = 1; i <=50;i++) {
+            AdminClient.startServiceTeste.start(8081, new int[]{1}, new String[]{"Euller Henrique Bandeira Oliveira "+i, "eullerhenrique@outlook.com "+i, "(34) 996915315"+i});
         }
     }
 }
+//15620115-b4ad-4039-8dcf-3b658362b753
 
-//100: OK
-//1-100: a6c4a3ba-e722-4512-b943-9daf0d54a008
+//05d13ccc-01e0-4d89-8df3-c6cbe253de01
+//53362219-72f9-4ffc-9060-08445130b391
+//bb99fc40-20b8-41be-b381-b3af359f25c4
+//c0e04967-1496-46ea-ad85-740a95a21885
 class TesteCriarProduto{
     public static void main(String[] args) throws InterruptedException {
-        for(int i = 0; i<=100;i++) {
-            AdminClient.startServiceTeste.start(8081, new int[]{5}, new String[]{"XBOX "+i, "500", "5000"});
+        for(int i = 1; i <= 50;i++) {
+            //Porta -- Operação -- Nome -- Quantidade -- Preço
+            AdminClient.startServiceTeste.start(8082, new int[]{5}, new String[]{"PS "+i, String.valueOf(i*10), String.valueOf(i*100)});
         }
     }
 }
 
-//1-100: OK
-//CACHE: OK
 class TestBuscarCliente{
     public static void start(String cid) throws InterruptedException {
         AdminClient.startServiceTeste.start(8081, new int[]{3}, new String[]{cid});
@@ -60,8 +61,6 @@ class TestBuscarCliente{
     }
 }
 
-//1-100: OK
-//CACHE: OK
 class TesteBuscarProduto{
     public static void start(String pid) throws InterruptedException {
         AdminClient.startServiceTeste.start(8081, new int[]{7}, new String[]{pid});
@@ -72,13 +71,12 @@ class TesteBuscarProduto{
         AdminClient.startServiceTeste.start(8086, new int[]{7}, new String[]{pid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("b2ca3256-0775-43e9-9340-33e59e3c2679");
+        start("53362219-72f9-4ffc-9060-08445130b391");
     }
 }
 
 
-//1-100: OK
-//CACHE: OK
+
 class TesteModificarCliente{
     public static void main(String[] args) throws InterruptedException{
         AdminClient.startServiceTeste.start(8081, new int[]{2}, new String[]{"e3d28c17-79ac-460e-ab7e-8e5de87434b2",
@@ -86,17 +84,14 @@ class TesteModificarCliente{
     }
 }
 
-//1-100: OK
-//CACHE: OK
 class TesteModificarProduto{
     public static void main(String[] args) throws InterruptedException {
-        AdminClient.startServiceTeste.start(8081, new int[]{6}, new String[]{"b2ca3256-0775-43e9-9340-33e59e3c2679",
+        AdminClient.startServiceTeste.start(8082, new int[]{6}, new String[]{"b2ca3256-0775-43e9-9340-33e59e3c2679",
                     "ADASD XVCX X", "200", "8000"});
     }
 }
 
-//1-100: OK
-//CACHE: OK
+
 class TesteApagarCliente{
     public static void start(String cid) throws InterruptedException {
         AdminClient.startServiceTeste.start(8081, new int[]{4}, new String[]{cid});
@@ -106,11 +101,9 @@ class TesteApagarCliente{
     }
 }
 
-//1-100: OK
-//CACHE: OK
 class TesteApagarProduto{
     public static void start(String pid) throws InterruptedException {
-        AdminClient.startServiceTeste.start(8081, new int[]{8}, new String[]{pid});
+        AdminClient.startServiceTeste.start(8082, new int[]{8}, new String[]{pid});
     }
     public static void main(String[] args) throws InterruptedException{;
         start("b2ca3256-0775-43e9-9340-33e59e3c2679");
