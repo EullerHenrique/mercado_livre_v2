@@ -73,9 +73,9 @@
     6. O servidor ratis p1 cria a réplica p1 (porta 3000) da máquina de estado (A pasta será inserida no caminho /tmp/p1)
     7. O servidor ratis p1 cria a réplica p2 (porta 3500) da máquina de estado (A pasta será inserida no caminho /tmp/p2)
     8. O servidor ratis p1 cria a réplica p3 (porta 4000) da máquina de estado (A pasta será inserida no caminho /tmp/p3)
-    4. A réplica p1 da máquina de estado cria o database levelDB p1 (A pasta será inserida no caminho /main/resources/db/p1)
-    5. A réplica p2 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p2)
-    6. A réplica p3 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /main/resources/db/p3)
+    4. A réplica p1 da máquina de estado cria o database levelDB p1 (A pasta será inserida no caminho /tmp/p1/db)
+    5. A réplica p2 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /tmp/p2/db)
+    6. A réplica p3 da máquina de estado cria o database levelDB p2 (A pasta será inserida no caminho /tmp/p3/db)
     7. Se a solitaçâo exigir uma mudança de estado (add ou del), o ClientRatis irá solicitar que cada réplica processe essa solicitação -> 8, 9, 10
     8. A réplica p1 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
     9. A réplica p2 da máquina de estado atende a solicitação e envia a resposta para o ClientRatis
@@ -262,7 +262,7 @@
         36. ServerCliente->Grpc: ModificarProduto -> Recebe uma requisição por meio do protocolo rpc
         37. ClienteServer->Mosquitto: Publica o produto no tópico server/cliente/produto/modificar
         38. AdminServer->Mosquitto: Se subscreve no tópico server/cliente/produto/modificar
-        39. AdminServer-> Armazena a nova quantidade do produto no database levelDB das 3 réplicas da máquina de estado
+        39. AdminServer-> Armazena a nova quantidade do produto no database das 3 réplicas da máquina de estado
         40. ClientCliente: O pedido criado é exibido
         
     2. Modificar Pedido
@@ -440,10 +440,12 @@
       
     3. TesteCriarCliente
         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 50 clientes
-    
+        - Parâmetros: Porta -- Operação -- Nome -- Email -- Telefone
+        
     4. TesteCriarProduto
         - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 50 produtos
-      
+        - Parâmetros: Porta -- Operação -- Nome -- Quantidade -- Preço
+
     5. TesteBuscarCliente
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) busque um cliente 
@@ -451,6 +453,7 @@
          - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         - Parâmetros: Porta -- Operação -- CID
          - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
       
     6. TesteBuscarProduto
@@ -460,22 +463,27 @@
          - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um produto 
          - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um produto 
          - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um produto
+         - Parâmetros: Porta -- Operação -- PID
          - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
          
     7. TesteModificarCliente
         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um cliente 
+        - Parâmetros: Porta -- Operação -- CID -- Nome -- Email -- Telefone
         - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
 
     8. TesteModificarProduto
         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um produto
+        - Parâmetros: Porta -- Operação -- CID -- Nome -- Quantidade -- Preço
         - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
 
     9. TesteApagarCliente
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) apague um cliente
+         - Porta -- Operação -- CID
          - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
           
     10. TesteApagarProduto
         - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) modifique um produto
+        - Porta -- Operação -- PID
         - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
 
 1. TesteClient.java
@@ -493,7 +501,7 @@
         - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) crie um pedido
         - Parâmetros: Porta -- Operação -- List->Deseja Adicionar Mais um produto? -- List->Quantidade do produto -- CID -- null -- List->PID
         - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
-        -      Escolha um dos 50 PIDs retornados no TesteCriarProduto
+        -      Escolha um ou mais PIDs dos 50 PIDs retornados no TesteCriarProduto
     
     3. TesteBuscarPedido
         - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) buscar um pedido
