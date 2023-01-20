@@ -420,6 +420,73 @@
     3. modificarProduto
        1. A função modificarProduto é chamada
        
+## Testes Automatizados
+
+- Os testes estão localizados na pasta /mercado_livre/src/test/java
+
+1. TesteAdmin.java
+
+    1. IniciarServidorRatis
+      - Cria 3 réplicas da máquina de estado
+    
+    2. IniciarServidorAdmin
+      - Cria um portal admin (AdminServer) na porta 8080
+      - Cria um portal admin (AdminServer) na porta 8081
+      - Cria um portal admin (AdminServer) na porta 8082
+      - Cria um portal admin (AdminServer) na porta 8083
+      - Cria um portal admin (AdminServer) na porta 8084
+      - Cria um portal admin (AdminServer) na porta 8085
+      - Cria um portal admin (AdminServer) na porta 8086
+      
+    3. TesteCriarCliente
+      - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 50 clientes
+    
+    4. TesteCriarProduto
+      - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 50 produtos
+      
+    5. TesteBuscarCliente
+         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         - O portal admin (AdminServer) com a porta 8083 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um cliente 
+         Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+      
+    6. TesteBuscarProduto
+         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) busque um produto 
+         - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) busque um produto 
+         - O portal admin (AdminServer) com a porta 8083 solicita que o servidor admin (ServerAdmin) busque um produto 
+         - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um produto 
+         - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um produto 
+         - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um produto
+         Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+         
+    7. TesteModificarCliente
+        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um cliente 
+          Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+
+    8. TesteModificarProduto
+        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um produto
+          Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+
+    9. TesteApagarCliente
+         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) apague um cliente
+          Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+          
+    10. TesteApagarProduto
+        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) modifique um produto
+          Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+
+1. TesteClient.java
+
+    1. IniciarServidorCliente
+    2. TesteCriarPedido
+    3. TesteBuscarPedido
+    4. TesteBuscarPedidos
+    5. TesteModificarPedido
+    6. TesteApagarPedido
+
 ## Critérios Atendidos
 
  - Como é possível notar:
