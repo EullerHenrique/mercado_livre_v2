@@ -427,22 +427,22 @@
 1. TesteAdmin.java
 
     1. IniciarServidorRatis
-      - Cria 3 réplicas da máquina de estado
+        - Cria 3 réplicas da máquina de estado
     
     2. IniciarServidorAdmin
-      - Cria um portal admin (AdminServer) na porta 8080
-      - Cria um portal admin (AdminServer) na porta 8081
-      - Cria um portal admin (AdminServer) na porta 8082
-      - Cria um portal admin (AdminServer) na porta 8083
-      - Cria um portal admin (AdminServer) na porta 8084
-      - Cria um portal admin (AdminServer) na porta 8085
-      - Cria um portal admin (AdminServer) na porta 8086
+        - Cria um servidor admin (AdminServer) na porta 8080
+        - Cria um servidor admin (AdminServer) na porta 8081
+        - Cria um servidor admin (AdminServer) na porta 8082
+        - Cria um servidor admin (AdminServer) na porta 8083
+        - Cria um servidor admin (AdminServer) na porta 8084
+        - Cria um servidor admin (AdminServer) na porta 8085
+        - Cria um servidor admin (AdminServer) na porta 8086
       
     3. TesteCriarCliente
-      - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 50 clientes
+        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 50 clientes
     
     4. TesteCriarProduto
-      - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 50 produtos
+        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 50 produtos
       
     5. TesteBuscarCliente
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) busque um cliente 
@@ -451,7 +451,7 @@
          - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um cliente 
-         Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+           Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
       
     6. TesteBuscarProduto
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) busque um produto 
@@ -460,7 +460,7 @@
          - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um produto 
          - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um produto 
          - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um produto
-         Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+           Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
          
     7. TesteModificarCliente
         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um cliente 
@@ -472,7 +472,7 @@
 
     9. TesteApagarCliente
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) apague um cliente
-          Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+           Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
           
     10. TesteApagarProduto
         - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) modifique um produto
@@ -481,12 +481,51 @@
 1. TesteClient.java
 
     1. IniciarServidorCliente
+        - Cria um servidor cliente (ClienteServer) na porta 9080
+        - Cria um servidor cliente (ClienteServer) na porta 9091
+        - Cria um servidor cliente (ClienteServer) na porta 9092
+        - Cria um servidor cliente (ClienteServer) na porta 9093
+        - Cria um servidor cliente (ClienteServer) na porta 9094
+        - Cria um servidor cliente (ClienteServer) na porta 9095
+        - Cria um servidor cliente (ClienteServer) na porta 9096
+        
     2. TesteCriarPedido
+        - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) crie um pedido
+           Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+                Escolha um dos 50 PIDs retornados no TesteCriarProduto
+    
     3. TesteBuscarPedido
+        - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) buscar um pedido
+        - O portal cliente (ClienteClient) com a porta 9092 solicita que o servidor cliente (ServerAdmin) buscar um pedido
+        - O portal cliente (ClienteClient) com a porta 9093 solicita que o servidor cliente (ServerAdmin) buscar um pedido
+        - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) buscar um pedido
+        - O portal cliente (ClienteClient) com a porta 9095 solicita que o servidor cliente (ServerAdmin) buscar um pedido
+        - O portal cliente (ClienteClient) com a porta 9096 solicita que o servidor cliente (ServerAdmin) buscar um pedido
+          Obs: Utilize o CID utilizado no TesteCriarPedido
+               Utilize o OID retornado no TesteCriarPedido
+    
     4. TesteBuscarPedidos
+        - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
+        - O portal cliente (ClienteClient) com a porta 9092 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
+        - O portal cliente (ClienteClient) com a porta 9093 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
+        - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
+        - O portal cliente (ClienteClient) com a porta 9095 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente     
+        - O portal cliente (ClienteClient) com a porta 9096 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente     
+        -  Obs: Utilize o CID utilizado no TesteCriarPedido
+                Utilize o OID retornado no TesteCriarPedido
+    
     5. TesteModificarPedido
+        - O portal cliente (ClienteClient) com a porta 9093 solicita que o servidor cliente (ServerAdmin) modifique o produto de um determinado pedido
+            Obs: Utilize o CID utilizado no TesteCriarPedido
+                 Utilize o PID utilizado no TesteCriarPedido
+                 Utilize o OID retornado no TesteCriarPedido
+    
     6. TesteApagarPedido
-
+        - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) apague um pedido
+          Obs: Utilize o CID utilizado no TesteCriarPedido
+               Utilize o PID utilizado no TesteCriarPedido
+               Utilize o OID retornado no TesteCriarPedido
+        
 ## Critérios Atendidos
 
  - Como é possível notar:
