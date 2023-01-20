@@ -451,7 +451,7 @@
          - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um cliente 
          - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um cliente 
-           Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+         - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
       
     6. TesteBuscarProduto
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) busque um produto 
@@ -460,23 +460,23 @@
          - O portal admin (AdminServer) com a porta 8084 solicita que o servidor admin (ServerAdmin) busque um produto 
          - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) busque um produto 
          - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) busque um produto
-           Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+         - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
          
     7. TesteModificarCliente
         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um cliente 
-          Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+        - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
 
     8. TesteModificarProduto
         - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um produto
-          Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+        - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
 
     9. TesteApagarCliente
          - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) apague um cliente
-           Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+         - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
           
     10. TesteApagarProduto
         - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) modifique um produto
-          Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
+        - Obs: Escolha um dos 50 PIDs retornados no TesteCriarProduto
 
 1. TesteClient.java
 
@@ -491,8 +491,9 @@
         
     2. TesteCriarPedido
         - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) crie um pedido
-           Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
-                Escolha um dos 50 PIDs retornados no TesteCriarProduto
+        - Parâmetros: Porta -- Operação -- List->Adicionar mais um produto (1=sim, 2=nâo) -- List->Quantidade do produto CID, CID e PID
+        - Obs: Escolha um dos 50 CIDs retornados no TesteCriarCliente 
+        -      Escolha um dos 50 PIDs retornados no TesteCriarProduto
     
     3. TesteBuscarPedido
         - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) buscar um pedido
@@ -501,8 +502,9 @@
         - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) buscar um pedido
         - O portal cliente (ClienteClient) com a porta 9095 solicita que o servidor cliente (ServerAdmin) buscar um pedido
         - O portal cliente (ClienteClient) com a porta 9096 solicita que o servidor cliente (ServerAdmin) buscar um pedido
-          Obs: Utilize o CID utilizado no TesteCriarPedido
-               Utilize o OID retornado no TesteCriarPedido
+        - Parâmetros: Porta -- Operação -- empty -- CID -- OID
+        - Obs: Utilize o CID utilizado no TesteCriarPedido
+        -      Utilize o OID retornado no TesteCriarPedido
     
     4. TesteBuscarPedidos
         - O portal cliente (ClienteClient) com a porta 9091 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
@@ -511,20 +513,23 @@
         - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente
         - O portal cliente (ClienteClient) com a porta 9095 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente     
         - O portal cliente (ClienteClient) com a porta 9096 solicita que o servidor cliente (ServerAdmin) busque o valor total de cada pedido de um determinado cliente     
-        -  Obs: Utilize o CID utilizado no TesteCriarPedido
-                Utilize o OID retornado no TesteCriarPedido
+        - Parâmetros: Porta -- Operação -- empty -- CID 
+        - Obs: Utilize o CID utilizado no TesteCriarPedido
+        -      Utilize o OID retornado no TesteCriarPedido
     
     5. TesteModificarPedido
         - O portal cliente (ClienteClient) com a porta 9093 solicita que o servidor cliente (ServerAdmin) modifique o produto de um determinado pedido
-            Obs: Utilize o CID utilizado no TesteCriarPedido
-                 Utilize o PID utilizado no TesteCriarPedido
-                 Utilize o OID retornado no TesteCriarPedido
+         - Parâmetros: Porta -- Operação -- empty -- Nova Quantidade -- CID -- OID -- PID
+         - Obs: Utilize o CID utilizado no TesteCriarPedido
+         -      Utilize o PID utilizado no TesteCriarPedido
+         -      Utilize o OID retornado no TesteCriarPedido
     
     6. TesteApagarPedido
         - O portal cliente (ClienteClient) com a porta 9094 solicita que o servidor cliente (ServerAdmin) apague um pedido
-          Obs: Utilize o CID utilizado no TesteCriarPedido
-               Utilize o PID utilizado no TesteCriarPedido
-               Utilize o OID retornado no TesteCriarPedido
+        - Parâmetros: Porta -- Operação -- empty -- empty -- CID -- OID
+        - Obs:  Utilize o CID utilizado no TesteCriarPedido
+        -       Utilize o PID utilizado no TesteCriarPedido
+        -       Utilize o OID retornado no TesteCriarPedido
         
 ## Critérios Atendidos
 
