@@ -14,14 +14,15 @@ import java.util.logging.Logger;
 
 public class PedidoRepository {
     private final Logger logger = Logger.getLogger(PedidoRepository.class.getName());
-    private final Hashtable<String, List<Hashtable<String, List<String>>>> pedidos = new Hashtable<>();
+
+    //Cache 1
+    private final Hashtable<String, List<Hashtable<String, List<String>>>> pedidosBuscarPedido = new Hashtable<>();
+
+    //Cache 2 (ALL)
+    private final Hashtable<String, List<Hashtable<String, List<String>>>> pedidosBuscarPedidos = new Hashtable<>();
     private final ClientRatis clientRatis = new ClientRatis();
 
-    public void salvarPedidoNoCache(String CID, String OID, String pedidoJson, boolean cleanCache){
-
-        if(cleanCache){
-            pedidos.put(CID, new ArrayList<>());
-        }
+    public void salvarPedidoNoCache(String CID, String OID, String pedidoJson, int numCache){
 
         //Save On Cache
         Pedido pedidoModel = new Gson().fromJson(pedidoJson, Pedido.class);
@@ -31,15 +32,25 @@ public class PedidoRepository {
             produtos.add(new Gson().toJson(produto));
         }
         pedido.put(OID, produtos);
-        if (!pedidos.containsKey(CID)) {
-            List<Hashtable<String, List<String>>> pedidos = new ArrayList<>();
-            pedidos.add(pedido);
-            this.pedidos.put(CID, pedidos);
-        } else {
-            this.pedidos.get(CID).add(pedido);
+        if(numCache==1) {
+            if (!pedidosBuscarPedido.containsKey(CID)) {
+                List<Hashtable<String, List<String>>> pedidos = new ArrayList<>();
+                pedidos.add(pedido);
+                this.pedidosBuscarPedido.put(CID, pedidos);
+            } else {
+                this.pedidosBuscarPedido.get(CID).add(pedido);
+            }
+            System.out.println("Pedido salvo no cache!");
+        }else if(numCache==2){
+            if (!pedidosBuscarPedidos.containsKey(CID)) {
+                List<Hashtable<String, List<String>>> pedidos = new ArrayList<>();
+                pedidos.add(pedido);
+                this.pedidosBuscarPedidos.put(CID, pedidos);
+            } else {
+                this.pedidosBuscarPedidos.get(CID).add(pedido);
+            }
+            System.out.println("Pedido salvo no cache!");
         }
-        System.out.println("Pedido salvo no cache!");
-
         //Delete of cache after x seconds
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Runnable task = () -> {
@@ -141,9 +152,30 @@ public class PedidoRepository {
     public String buscarPedido(String CID, String OID) {
         logger.info("Buscando pedido: " + "CID: " + CID + "OID: " + OID + "\n");
 
-        //Get Of Cache
-        if(pedidos.containsKey(CID) && !pedidos.get(CID).isEmpty()) {
-            for(Hashtable<String, List<String>> pedido : pedidos.get(CID)) {
+        //Get Of Cache 1
+        if(pedidosBuscarPedido.containsKey(CID) && !pedidosBuscarPedido.get(CID).isEmpty()) {
+            for(Hashtable<String, List<String>> pedido : pedidosBuscarPedido.get(CID)) {
+                if(pedido.containsKey(OID)) {
+                    List<String> produtosJson = pedido.get(OID);
+                    List<Produto> produtos =  new ArrayList<>();
+                    for (String produtoJson : produtosJson) {
+                        Produto produto = new Gson().fromJson(produtoJson, Produto.class);
+                        produtos.add(produto);
+                    }
+                    Pedido pedidoModel = new Pedido();
+                    pedidoModel.setCID(CID);
+                    pedidoModel.setOID(OID);
+                    pedidoModel.setProdutos(produtos);
+                    Gson gson = new Gson();
+                    System.out.println("Pedido encontrado no cache");
+                    return gson.toJson(pedidoModel);
+                }
+            }
+        }
+
+        //Get Of Cache 2
+        if(pedidosBuscarPedidos.containsKey(CID) && !pedidosBuscarPedidos.get(CID).isEmpty()) {
+            for(Hashtable<String, List<String>> pedido : pedidosBuscarPedidos.get(CID)) {
                 if(pedido.containsKey(OID)) {
                     List<String> produtosJson = pedido.get(OID);
                     List<Produto> produtos =  new ArrayList<>();
@@ -162,6 +194,7 @@ public class PedidoRepository {
             }
         }
         System.out.println("Pedido não encontrado no cache");
+
         //Get Of Database
         try {
             String pedidoJson = clientRatis.exec("getPedido", CID, OID);
@@ -169,7 +202,7 @@ public class PedidoRepository {
                 System.out.println("Pedido encontrado no database!");
 
                 //Save On Cache and delete after 1 minute
-                salvarPedidoNoCache(CID, OID, pedidoJson, false);
+                salvarPedidoNoCache(CID, OID, pedidoJson, 1);
 
             } else {
                 System.out.println("Pedido não encontrado no database!");
@@ -184,9 +217,9 @@ public class PedidoRepository {
     public List<Hashtable<String,Integer>> buscarPedidos(String CID) {
         logger.info("Buscando pedidos:  " + "CID: " + CID + "\n");
 
-        //Get Of Cache
-        if (pedidos.containsKey(CID) && !pedidos.get(CID).isEmpty()) {
-            List<Hashtable<String, List<String>>> oidsPedidos = this.pedidos.get(CID);
+        //Get Of Cache 2
+        if (pedidosBuscarPedidos.containsKey(CID) && !pedidosBuscarPedidos.get(CID).isEmpty()) {
+            List<Hashtable<String, List<String>>> oidsPedidos = this.pedidosBuscarPedidos.get(CID);
             List<Hashtable<String,Integer>> precosTotaisPedidos = new ArrayList<>();
             for (Hashtable<String, List<String>> oidProdutos : oidsPedidos) {
                 for (String OID : oidProdutos.keySet()) {
@@ -229,7 +262,6 @@ public class PedidoRepository {
             //
             List<Hashtable<String, List<String>>> oidsPedidos = cidPedidos.get(CID);
             List<Hashtable<String, Integer>> precosTotaisPedidos = new ArrayList<>();
-            boolean cleanCache = true;
             if(oidsPedidos != null && !oidsPedidos.isEmpty()){
                 for (Hashtable<String, List<String>> oidPedido : oidsPedidos) {
                     for (String OID : oidPedido.keySet()) {
@@ -244,10 +276,7 @@ public class PedidoRepository {
                         precosTotaisPedidos.add(precoTotalPedido);
                         String pedidoJson = cidPedidosToJson(CID, OID, cidPedidos);
                         if (pedidoJson != null) {
-                            salvarPedidoNoCache(CID, OID, pedidoJson, cleanCache);
-                            if(cleanCache){
-                                cleanCache = false;
-                            }
+                            salvarPedidoNoCache(CID, OID, pedidoJson, 2);
                         }
                     }
                 }
@@ -266,13 +295,23 @@ public class PedidoRepository {
         boolean isDeleteCache = false;
         boolean isDeleteDatabase = false;
 
-        //Delete Of Cache
-        if (pedidos.containsKey(CID) && !pedidos.get(CID).isEmpty()) {
-            for (Hashtable<String, List<String>> pedidoCache : pedidos.get(CID)) {
+        //Delete Of Cache 1
+        if (pedidosBuscarPedido.containsKey(CID) && !pedidosBuscarPedido.get(CID).isEmpty()) {
+            for (Hashtable<String, List<String>> pedidoCache : pedidosBuscarPedido.get(CID)) {
                 if (pedidoCache.containsKey(OID)) {
                     pedidoCache.remove(OID);
                     isDeleteCache = true;
                     System.out.println("Pedido apagado do cache");
+                }
+            }
+        }
+
+        //Delete Of Cache 2
+        if (pedidosBuscarPedidos.containsKey(CID) && !pedidosBuscarPedidos.get(CID).isEmpty()) {
+            for (Hashtable<String, List<String>> pedidoCache : pedidosBuscarPedidos.get(CID)) {
+                if (pedidoCache.containsKey(OID)) {
+                    pedidoCache.remove(OID);
+                    isDeleteCache = true;
                 }
             }
         }
