@@ -77,6 +77,8 @@ public class StartTest {
                                                 System.out.println("Opção inválida!");
                                             }
                                         }
+                                    }else{
+                                        break;
                                     }
                                 } else if (opcaoAdicionarProduto == 2) {
                                     break;

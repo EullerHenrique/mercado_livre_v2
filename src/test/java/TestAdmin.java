@@ -24,26 +24,30 @@ class IniciarServidorAdmin{
     }
 }
 
-//056d36a3-146a-4d1e-b365-890c67aa9d54
+
 class TesteCriarCliente {
     public static void main(String[] args) throws InterruptedException {
-        for(int i = 1; i <=50;i++) {
+        for(int i = 1; i <=25;i++) {
             //Porta -- Operação -- Nome -- Email -- Telefone
             AdminClient.startServiceTeste.start(8081, new int[]{1}, new String[]{"Euller Henrique Bandeira Oliveira "+i, "eullerhenrique@outlook.com "+i, "(34) 996915315"+i});
         }
+        for(int i = 26; i <=50;i++) {
+            //Porta -- Operação -- Nome -- Email -- Telefone
+            AdminClient.startServiceTeste.start(8086, new int[]{1}, new String[]{"Euller Henrique Bandeira Oliveira "+i, "eullerhenrique@outlook.com "+i, "(34) 996915315"+i});
+        }
     }
 }
-//15620115-b4ad-4039-8dcf-3b658362b753
 
-//05d13ccc-01e0-4d89-8df3-c6cbe253de01
-//53362219-72f9-4ffc-9060-08445130b391
-//bb99fc40-20b8-41be-b381-b3af359f25c4
-//c0e04967-1496-46ea-ad85-740a95a21885
+
 class TesteCriarProduto{
     public static void main(String[] args) throws InterruptedException {
-        for(int i = 1; i <= 50;i++) {
+        for (int i = 1; i <= 25; i++) {
             //Porta -- Operação -- Nome -- Quantidade -- Preço
-            AdminClient.startServiceTeste.start(8082, new int[]{5}, new String[]{"PS "+i, String.valueOf(i*10), String.valueOf(i*100)});
+            AdminClient.startServiceTeste.start(8082, new int[]{5}, new String[]{"PS " + i, String.valueOf(i * 400), String.valueOf(i * 100)});
+        }
+        for (int i = 26; i <= 50; i++) {
+            //   //Porta -- Operação -- Nome -- Quantidade -- Preço
+            AdminClient.startServiceTeste.start(8086, new int[]{5}, new String[]{"PS " + i, String.valueOf(i * 40), String.valueOf(i * 100)});
         }
     }
 }
@@ -74,7 +78,7 @@ class TesteBuscarProduto{
         AdminClient.startServiceTeste.start(8086, new int[]{7}, new String[]{pid});
     }
     public static void main(String[] args) throws InterruptedException{;
-        start("53362219-72f9-4ffc-9060-08445130b391");
+        start("bd791389-4cc9-488f-b326-494c7e5997be");
     }
 }
 

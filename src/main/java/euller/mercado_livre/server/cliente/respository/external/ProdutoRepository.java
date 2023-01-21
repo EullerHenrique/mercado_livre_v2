@@ -10,14 +10,21 @@ public class ProdutoRepository {
     private final MosquittoService mosquittoService = new MosquittoService();
 
     public String buscarProduto(String PID) throws MqttException {
-        String produto = mosquittoService.buscarProduto(PID);
         Gson gson = new Gson();
-        Produto produtoModel = gson.fromJson(produto, Produto.class);
-        while(!produtoModel.getPID().equals(PID)){
-            produto = mosquittoService.buscarProduto(PID);
-            produtoModel = gson.fromJson(produto, Produto.class);
+
+        String produtoJson;
+        Produto produtoModel;
+        for (int i = 0 ; i <= 100; i++){
+            produtoJson = mosquittoService.buscarProduto(PID);
+            if(!produtoJson.equals("false")) {
+                produtoModel = gson.fromJson(produtoJson, Produto.class);
+                if(produtoModel.getPID().equals(PID)){
+                    return produtoJson;
+                }
+            }
         }
-        return produto;
+        return "false";
+
     }
 
     public void modificarProduto(Produto produto) throws MqttException {

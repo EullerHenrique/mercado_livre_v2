@@ -12,29 +12,29 @@ class IniciarServidorCliente{
         ClienteServer.startService.start(9096);
     }
 }
-//056d36a3-146a-4d1e-b365-890c67aa9d54
 
-//05d13ccc-01e0-4d89-8df3-c6cbe253de01
-//53362219-72f9-4ffc-9060-08445130b391
-//bb99fc40-20b8-41be-b381-b3af359f25c4
-//c0e04967-1496-46ea-ad85-740a95a21885
-//1: OK
+
+
+
+//OK
 class TesteCriarPedido {
-    public static void main(String[] args) throws InterruptedException {;
+    //a0d8e3bb-ee3b-471e-9207-4ae2cec72c58
+    public static void main(String[] args) throws InterruptedException {
         //Porta -- Operação -- List->Deseja Adicionar Mais um produto? -- List->Quantidade do produto -- CID -- null -- List->PID
         ClienteClient.startServiceTeste.start(
                 9091,
                 new int[]{1},
                 new int[]{1, 1, 1, 2},
-                new int[]{1, 20, 300, 400},
-                "7f2a1be5-ca81-4f08-8df7-2ffecd63037a",
+                new int[]{1, 20, 30, 40},
+                "2fedf459-6a5d-483d-a7ae-a2f01da8c7a1",
                 null,
-                new String[]{"2db3d2d5-b1b6-4821-978e-0562581bbeeb",
-                        "bcba4f4c-9287-478a-9970-545aa6144482",
-                        "476a45a6-f0f9-4897-a7e3-01e606c4071e",
-                        "8fadbf3c-a56f-47a5-8782-d2a93880c2d5"});
+                new String[]{"821d4289-3e77-449d-8008-80cd3199c239",
+                        "50914700-33dd-4fc8-bdf1-5ea74e45459b",
+                        "ad716e01-fad7-449d-8aab-52089fecfb26",
+                        "ff0b8a97-fcdd-4975-9500-5a72744c15f8"});
     }
 }
+
 
 //
 class TesteBuscarPedido{
@@ -48,10 +48,11 @@ class TesteBuscarPedido{
         ClienteClient.startServiceTeste.start(9096, new int[]{3}, null,null, cid, oid, null);
     }
     public static void main(String[] args) throws InterruptedException{;
-        buscarPedido("15620115-b4ad-4039-8dcf-3b658362b753", "c99ebb55-5f9a-49b8-bbdf-7b03a4d3360d");
+        buscarPedido("2fedf459-6a5d-483d-a7ae-a2f01da8c7a1", "f7daaf00-0be9-48fa-be2b-c7c79b6fd2a7");
     }
 }
 
+//OK
 class TesteBuscarPedidos{
     public static void buscarPedidos(String cid) throws InterruptedException {
         //Porta -- Operação -- null -- null -- CID -- OID -- null
@@ -63,28 +64,23 @@ class TesteBuscarPedidos{
         ClienteClient.startServiceTeste.start(9096, new int[]{4}, null, null, cid, null, null);
     }
     public static void main(String[] args) throws InterruptedException{;
-        buscarPedidos("ddb8ca2d-86c6-4944-8656-60f3125b3f55");
+        buscarPedidos("2fedf459-6a5d-483d-a7ae-a2f01da8c7a1");
     }
 }
 
-//3e65a3a8-1e96-4bcf-bd0a-493d90b27269
-//e3a60c0d-fee7-46c7-a48a-a2f166a0bd7d
+
 class TesteModificarPedido{
     public static void main(String[] args) throws InterruptedException {;
         //Porta -- Operação -- null -- List->Quantidade do produto -- CID -- OID -- PID
-        ClienteClient.startServiceTeste.start(9093, new int[]{2}, null, new int[]{100},
-                "0daecae7-e677-4386-81aa-02afce324edb", "f5628618-dfe2-41b3-b70a-26063b92bf51",
-                        new String[]{"492d86e8-b5dc-4f77-9fae-6ab82636930a"});
+        ClienteClient.startServiceTeste.start(9093, new int[]{2}, null, new int[]{55},
+                "2fedf459-6a5d-483d-a7ae-a2f01da8c7a1", "f7daaf00-0be9-48fa-be2b-c7c79b6fd2a7",
+                        new String[]{"ad716e01-fad7-449d-8aab-52089fecfb26"});
     }
 }
 class TesteApagarPedido{
-    public static void apagarPedido(String cid, String oid) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException{
         //Porta -- Operação -- null -- null -- CID -- OID -- null
-        ClienteClient.startServiceTeste.start(9094, new int[]{5}, null, null, cid, oid, null);
-    }
-    public static void main(String[] args) throws InterruptedException{;
-        apagarPedido("7a2899de-4747-4439-8e73-8c0cb38a3a3a", "5cac5580-7d0a-132132-a28f-13123");
-        //apagarPedido("7a9a904b-8c6a-4239-940c-c646b664a7f9", "40205f54-a5a4-430a-a4cd-f2b943b57642");
+        ClienteClient.startServiceTeste.start(9094, new int[]{5}, null, null, "2fedf459-6a5d-483d-a7ae-a2f01da8c7a1", "f7daaf00-0be9-48fa-be2b-c7c79b6fd2a7", null);
     }
 }
 
