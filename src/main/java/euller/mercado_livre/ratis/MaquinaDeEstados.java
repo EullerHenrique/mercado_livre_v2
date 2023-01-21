@@ -30,7 +30,6 @@ public class MaquinaDeEstados extends BaseStateMachine {
           String valueString = new String(value, StandardCharsets.UTF_8);
           valueString = keyString + "--" + valueString.replace(":", ".");
           if(keyString.contains("pedido->")) {
-            System.out.println("keyString: " + keyString);
             result.append(valueString).append(";");
           }
         });
@@ -69,7 +68,6 @@ public class MaquinaDeEstados extends BaseStateMachine {
           String valueString = new String(value, StandardCharsets.UTF_8);
           valueString = keyString + "--" + valueString.replace(":", ".");
           if(keyString.contains("pedido->")) {
-            System.out.println("keyString: " + keyString);
             result.append(valueString).append(";");
           }
         });
