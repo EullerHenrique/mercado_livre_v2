@@ -381,7 +381,7 @@
     3. Buscar Cliente/Buscar Produto
         1. Se o cliente/produto existir no cache, ele é retornado
         2. Se o cliente/produto exisitr no levelDB de qualquer réplica da máquina de estado
-            1. Ele é salvo no cache
+            1. Ele é salvo no cache (Tempo de expiração: 30 segundos)
             2. Ele é retornado
     4. Apagar Cliente/Apagar Produto
         1. Se o cliente/produto existir no cache, ele é apagado
@@ -397,18 +397,20 @@
         2. A função apagarPedido é chamada
         3. A função criarPedido é chamada
     4. Buscar Pedido
-       1. Se o pedido existir no cache, ele é retornado
-       2. Se o pedido exisitr no levelDB de qualquer réplica da máquina de estado
-            1. Ele é salvo no cache (Tempo de expiração: 30 segundos)
+       1. Se o pedido existir no cache 1 [pedidosBuscarPedido], ele é retornado
+       2. Se o pedido existir no cache 2 [pedidosBuscarPedidos], ele é retornado
+       3. Se o pedido exisitr no levelDB de qualquer réplica da máquina de estado
+            1. Ele é salvo no cache 1 [pedidosBuscarPedido] (Tempo de expiração: 30 segundos)
             2. Ele é retornado
     5. BuscarPedidos
-       1. Se o cliente possuir pelo menos um pedido no cache, cliente: List[{pedido: soma dos produtos}] é retornado
+       1. Se o cliente possuir pelo menos um pedido no cache 2 [pedidosBuscarPedidos], cliente: List[{pedido: soma dos produtos}] é retornado
        2. Se o cliente possuir pelo menos um pedido no levelDB de qualquer réplica da máquina de estado
-            1.  O (s) pedido (s) é/sào salvo (s) no cache (Tempo de expiração: 30 segundos)
+            1.  O (s) pedido (s) é/sào salvo (s) no cache 2 [pedidosBuscarPedidos] (Tempo de expiração: 30 segundos)
             2.  List[{pedido: soma dos produtos}] é retornado 
     7. Apagar Pedido
-       1. Se o pedido existir no cache, ele é apagado
-       2. Se o pedido existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
+       1. Se o pedido existir no cache 1 [pedidosBuscarPedido], ele é apagado
+       2. Se o pedido existir no cache 2 [pedidosBuscarPedidos], ele é apagado
+       3. Se o pedido existir no levelDB de qualquer réplica da mmáquina de estado, ele é apagado de todas as réplicas da máquinas de estado
       
  3.  Cliente -> Admin 
  - Admin
