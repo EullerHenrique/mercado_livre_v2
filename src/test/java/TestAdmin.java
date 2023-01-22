@@ -27,11 +27,11 @@ class IniciarServidorAdmin{
 
 class TesteCriarCliente {
     public static void main(String[] args) throws InterruptedException {
-        for(int i = 1; i <=25;i++) {
+        for(int i = 1; i <=5;i++) {
             //Porta -- Operação -- Nome -- Email -- Telefone
             AdminClient.startServiceTeste.start(8081, new int[]{1}, new String[]{"Euller Henrique Bandeira Oliveira "+i, "eullerhenrique@outlook.com "+i, "(34) 996915315"+i});
         }
-        for(int i = 26; i <=50;i++) {
+        for(int i = 6; i <=10;i++) {
             //Porta -- Operação -- Nome -- Email -- Telefone
             AdminClient.startServiceTeste.start(8086, new int[]{1}, new String[]{"Euller Henrique Bandeira Oliveira "+i, "eullerhenrique@outlook.com "+i, "(34) 996915315"+i});
         }
@@ -41,11 +41,11 @@ class TesteCriarCliente {
 
 class TesteCriarProduto{
     public static void main(String[] args) throws InterruptedException {
-        for (int i = 1; i <= 25; i++) {
+        for (int i = 1; i <= 5; i++) {
             //Porta -- Operação -- Nome -- Quantidade -- Preço
             AdminClient.startServiceTeste.start(8082, new int[]{5}, new String[]{"PS " + i, String.valueOf(i * 400), String.valueOf(i * 100)});
         }
-        for (int i = 26; i <= 50; i++) {
+        for (int i = 6; i <= 10; i++) {
             //   //Porta -- Operação -- Nome -- Quantidade -- Preço
             AdminClient.startServiceTeste.start(8086, new int[]{5}, new String[]{"PS " + i, String.valueOf(i * 40), String.valueOf(i * 100)});
         }
