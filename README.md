@@ -440,11 +440,13 @@
         - Cria um servidor admin (AdminServer) na porta 8086
       
     3. TesteCriarCliente
-        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 50 clientes
+        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 25 clientes
+        - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) crie 25 clientes
         - Parâmetros: Porta -- Operação -- Nome -- Email -- Telefone
         
     4. TesteCriarProduto
-        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 50 produtos
+        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 25 produtos
+        - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) crie 25 produtos
         - Parâmetros: Porta -- Operação -- Nome -- Quantidade -- Preço
 
     5. TesteBuscarCliente
@@ -476,7 +478,7 @@
               - Escolha um dos 50 CIDs retornados no TesteCriarCliente 
 
     8. TesteModificarProduto
-        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) modifique um produto
+        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) modifique um produto
         - Parâmetros: Porta -- Operação -- CID -- Nome -- Quantidade -- Preço
         - Obs: 
               - Escolha um dos 50 PIDs retornados no TesteCriarProduto
@@ -496,7 +498,6 @@
 1. TesteClient.java
 
     1. IniciarServidorCliente
-        - Cria um servidor cliente (ClienteServer) na porta 9080
         - Cria um servidor cliente (ClienteServer) na porta 9091
         - Cria um servidor cliente (ClienteServer) na porta 9092
         - Cria um servidor cliente (ClienteServer) na porta 9093
