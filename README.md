@@ -442,13 +442,13 @@
         - Cria um servidor admin (AdminServer) na porta 8086
       
     3. TesteCriarCliente
-        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 25 clientes
-        - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) crie 25 clientes
+        - O portal admin (AdminServer) com a porta 8081 solicita que o servidor admin (ServerAdmin) crie 5 clientes
+        - O portal admin (AdminServer) com a porta 8086 solicita que o servidor admin (ServerAdmin) crie 5 clientes
         - Parâmetros: Porta -- Operação -- Nome -- Email -- Telefone
         
     4. TesteCriarProduto
-        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 25 produtos
-        - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) crie 25 produtos
+        - O portal admin (AdminServer) com a porta 8082 solicita que o servidor admin (ServerAdmin) crie 5 produtos
+        - O portal admin (AdminServer) com a porta 8085 solicita que o servidor admin (ServerAdmin) crie 5 produtos
         - Parâmetros: Porta -- Operação -- Nome -- Quantidade -- Preço
 
     5. TesteBuscarCliente
