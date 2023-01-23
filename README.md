@@ -563,8 +563,8 @@
     3. Dois tipos de comunicação foram utilizados RPC (Grpc) e PUB/SUB (Mosquitto)
     4. A documentação da configuração, execução e do uso foi feita
     5. As exçeções foram tratadas e os erros foram retornados
-    6. Os portais possuem cache 
-    7. Clientes e adminstradores possuem interface interativa (terminal)
+    6. Os servidores possuem cache 
+    7. Clientes e administradores possuem interface interativa (terminal)
     8. Testes automatizados foram criados
     9. 3 réplicas da máquina de estado foram criadas por meio do Ratis
     10. Cada réplica da máquina de estado contém um database levelDB
