@@ -17,6 +17,8 @@
 - [Testes Automatizados](#testesAutomatizados)
 - [Critérios Atendidos](#critérios-atendidos)
 - [Vídeo De Apresentação](#vídeo-de-apresentação) 
+- [Nota](#nota)
+
 ## Tecnologias Utilizadas
 
 - Java
@@ -573,8 +575,15 @@
 
 - https://ufubr-my.sharepoint.com/:v:/r/personal/eullerhenrique_ufu_br/Documents/Apresentacao_Trabalho_SD_2.mkv?csf=1&web=1&e=oHM978
 
+## Nota
 
+### Projeto Proveniente Da Disciplina
 
-                                                 
+- Sistemas Distribuídos [BSI-UFU]
+  - Professor : Paulo Rodolfo da Silva Leite Coelho
+  - Disciplina cursada entre : 09/2022 - 02/2023
+  - Nota Obtida [Parte 2 do Trabalho]: 29,5 de 30
+  - Nota Obtida [Disciplina] :  73
 
+                                                
 
